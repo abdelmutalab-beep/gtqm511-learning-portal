@@ -114,7 +114,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 </main>
 
-<footer>G TQM 511 Learning Portal • Week 1 student tracking enabled</footer>
+<footer>G TQM 511 Learning Portal • Week 1 student tracking enabled • Independent checklist items</footer>
 
 <script>
 const course=[
@@ -190,11 +190,17 @@ let currentWeek=1,currentTab="overview";
 function save(){localStorage.setItem("gtqm511_v2",JSON.stringify(db))}
 function student(){return db.students.find(s=>s.id===db.activeStudentId)||null}
 function pkey(id,w){return id+"_"+w}
-function getProg(id,w){return db.progress[pkey(id,w)]||{tasks:0,quiz:null,reflection:false,reflectionText:""}}
+function getProg(id,w){return db.progress[pkey(id,w)]||{tasks:0,taskStates:[false,false,false,false],quiz:null,reflection:false,reflectionText:""}}
+function getTaskStates(p){
+ if(Array.isArray(p.taskStates)) return [0,1,2,3].map(i=>!!p.taskStates[i]);
+ const n=Math.max(0,Math.min(4,Number(p.tasks)||0));
+ return [0,1,2,3].map(i=>i<n);
+}
+function completedTaskCount(p){return getTaskStates(p).filter(Boolean).length}
 function weekPct(id,w){
  const p=getProg(id,w);
  if(w!==1){return Math.min(100,(p.tasks||0)*20+(p.quiz!==null?20:0))}
- const checklist=Math.min(40,(p.tasks||0)*10);
+ const checklist=completedTaskCount(p)*10;
  const quizPart=p.quiz!==null?Math.round(p.quiz*0.4):0;
  const reflectionPart=p.reflection?20:0;
  return Math.min(100,checklist+quizPart+reflectionPart)
@@ -240,7 +246,7 @@ function renderGroups(){
 function renderInstructor(){
  iStudents.textContent=db.students.length;iGroups.textContent=db.groups.length;
  let vals=db.students.map(s=>weekPct(s.id,1)),avg=vals.length?Math.round(vals.reduce((a,b)=>a+b,0)/vals.length):0;iCompletion.textContent=avg+"%";iRisk.textContent=vals.filter(x=>x<50).length;
- rosterRows.innerHTML=db.students.map(s=>{let p=getProg(s.id,1),checklist=Math.min(40,(p.tasks||0)*10),quiz=p.quiz!==null?p.quiz+"%":"—",reflection=p.reflection?"✓":"—",total=weekPct(s.id,1),status=weekStatus(s.id,1);
+ rosterRows.innerHTML=db.students.map(s=>{let p=getProg(s.id,1),checklist=completedTaskCount(p)*10,quiz=p.quiz!==null?p.quiz+"%":"—",reflection=p.reflection?"✓":"—",total=weekPct(s.id,1),status=weekStatus(s.id,1);
  return `<tr><td>${s.name}</td><td>${s.id}</td><td>${s.group||"—"}</td><td>${checklist}/40</td><td>${quiz}</td><td>${reflection}</td><td>${total}%</td><td>${status}</td><td><button class="btn alt" onclick="db.activeStudentId='${s.id}';save();renderAll();showPage('student')">View</button></td></tr>`}).join("")
 }
 function renderAll(){renderGroupOptions();renderWeeks();renderStudent();renderGroups();renderInstructor()}
@@ -250,7 +256,7 @@ function renderWeekTabs(){let tabs=currentWeek===1?["overview","slides","content
 function renderWeekBody(){
  let d=currentWeek===1?week1:null,s=student(),p=s?getProg(s.id,currentWeek):{tasks:0,quiz:null,reflection:false,reflectionText:""};
  if(!d){weekBody.innerHTML=`<div class="card"><h3>${course[currentWeek-1][0]}</h3><p>${course[currentWeek-1][1]}</p><div class="notice">Detailed learning materials will be added in the next build.</div></div>`;return}
- if(currentTab==="overview")weekBody.innerHTML=`<div class="layout"><div class="card"><h3>Learning Outcomes</h3><ol>${d.objectives.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol></div><div class="card"><h3>Progress Checklist</h3>${["Preparation / Reading","Lecture content","Applied activity","Case discussion"].map((x,i)=>`<label class="task"><input type="checkbox" ${p.tasks>i?"checked":""} onchange="setTask(${i},this.checked)"> ${x} <span class="muted">(10%)</span></label>`).join("")}<div class="success">Week 1 weighting: Checklist 40% • Quiz 40% • Reflection 20%</div></div></div>`;
+ if(currentTab==="overview"){let states=getTaskStates(p);weekBody.innerHTML=`<div class="layout"><div class="card"><h3>Learning Outcomes</h3><ol>${d.objectives.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol></div><div class="card"><h3>Progress Checklist</h3>${["Preparation / Reading","Lecture content","Applied activity","Case discussion"].map((x,i)=>`<label class="task"><input type="checkbox" ${states[i]?"checked":""} onchange="setTask(${i},this.checked)"> ${x} <span class="muted">(10%)</span></label>`).join("")}<div class="success">Week 1 weighting: Checklist 40% • Quiz 40% • Reflection 20%. Each checklist item can be completed independently.</div></div></div>`;}
  if(currentTab==="slides")weekBody.innerHTML=`<div class="card"><h3>Week 1 Lecture Slides</h3><p class="muted">The complete 23-slide Week 1 presentation is embedded below.</p><div class="file-actions"><a class="btn" href="Week1_Lecture.pdf" target="_blank" style="text-decoration:none">Open PDF</a><a class="btn alt" href="Week1_Lecture.pptx" style="text-decoration:none">Open PowerPoint</a></div><iframe class="slide-frame" src="Week1_Lecture.pdf#view=FitH" title="Week 1 Lecture Slides"></iframe></div>`;
  if(currentTab==="content")weekBody.innerHTML=`<div class="card"><h3>Core Learning Content</h3>${d.topics.map(t=>`<div class="topic"><h4>${t[0]}</h4><p>${t[1]}</p></div>`).join("")}</div>`;
  if(currentTab==="activity")weekBody.innerHTML=`<div class="card"><h3>${d.activity.title}</h3><p><b>Scenario:</b> ${d.activity.scenario}</p><ol>${d.activity.tasks.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol><p><b>Deliverable:</b> ${d.activity.deliverable}</p></div>`;
@@ -259,7 +265,15 @@ function renderWeekBody(){
  if(currentTab==="assignment")weekBody.innerHTML=`<div class="card"><h3>${d.assignment.title}</h3><p>${d.assignment.text}</p><h4>Requirements</h4><ol>${d.assignment.requirements.map(x=>`<li style="margin:7px 0">${x}</li>`).join("")}</ol><div class="notice"><b>Assessment:</b> ${d.assignment.rubric}</div></div>`;
  if(currentTab==="reflection")weekBody.innerHTML=`<div class="card"><h3>Reflection</h3><p>Write one concept you will apply in your work or quality practice, and explain how.</p><textarea id="reflectionText" placeholder="Your reflection...">${p.reflectionText||""}</textarea><button class="btn good" style="margin-top:10px" onclick="saveReflection()">Save Reflection</button><p class="muted">${p.reflection?"Reflection completed ✓":"Not yet completed"}</p></div>`
 }
-function setTask(i,checked){let s=student();if(!s){alert("Register/select a student first.");renderWeekBody();return}let p=getProg(s.id,currentWeek);if(checked)p.tasks=Math.max(p.tasks,i+1);else if(p.tasks===i+1)p.tasks=i;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody()}
+function setTask(i,checked){
+ let s=student();if(!s){alert("Register/select a student first.");renderWeekBody();return}
+ let p=getProg(s.id,currentWeek),states=getTaskStates(p);
+ states[i]=checked;
+ p.taskStates=states;
+ p.tasks=states.filter(Boolean).length;
+ db.progress[pkey(s.id,currentWeek)]=p;
+ save();renderAll();renderWeekBody()
+}
 function renderQuiz(d){let p=student()?getProg(student().id,currentWeek):{quiz:null};weekBody.innerHTML=`<div class="card quiz"><h3>Knowledge Check</h3>${d.quiz.map((q,qi)=>`<div class="topic"><p><b>${qi+1}. ${q[0]}</b></p>${q[1].map((a,ai)=>`<label><input style="width:auto" type="radio" name="q${qi}" value="${ai}"> ${a}</label>`).join("")}</div>`).join("")}<button class="btn" onclick="gradeCurrentQuiz()">Submit Quiz</button><p id="quizMsg">${p.quiz!==null?`Previous score: ${p.quiz}%`:""}</p></div>`}
 function gradeCurrentQuiz(){let s=student();if(!s){alert("Register/select a student first.");return}let d=week1,correct=0;d.quiz.forEach((q,qi)=>{let x=document.querySelector(`input[name=q${qi}]:checked`);if(x&&+x.value===q[2])correct++});let score=Math.round(correct/d.quiz.length*100),p=getProg(s.id,currentWeek);p.quiz=score;db.progress[pkey(s.id,currentWeek)]=p;save();quizMsg.textContent=`Score: ${score}% (${correct}/${d.quiz.length})`;renderAll()}
 function saveReflection(){let s=student();if(!s){alert("Register/select a student first.");return}let text=(reflectionText.value||"").trim();if(!text){alert("Please write your reflection before saving.");return}let p=getProg(s.id,currentWeek);p.reflection=true;p.reflectionText=text;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody()}
