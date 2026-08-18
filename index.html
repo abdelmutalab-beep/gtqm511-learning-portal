@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>G TQM 511 Learning Portal v3</title>
+<style>
+:root{--navy:#10233f;--blue:#2457c5;--green:#14805e;--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#667085;--line:#e5e7eb;--soft:#eef4ff;--warn:#b54708}
+*{box-sizing:border-box} body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+header{background:var(--navy);color:#fff;position:sticky;top:0;z-index:10}
+.top{max-width:1250px;margin:auto;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand b{font-size:20px}.brand small{display:block;opacity:.75;margin-top:3px}
+nav{display:flex;gap:7px;flex-wrap:wrap}button{font:inherit}.nav,.btn{border:0;border-radius:9px;padding:9px 12px;cursor:pointer}
+.nav{background:#203b65;color:#fff}.nav.active{background:#fff;color:#13233d;font-weight:bold}
+.btn{background:var(--blue);color:#fff}.btn.alt{background:#eef2f7;color:#172033}.btn.good{background:var(--green)}
+main{max-width:1250px;margin:22px auto;padding:0 16px}.hidden{display:none!important}
+.hero{background:linear-gradient(135deg,#173566,#285dc9);color:#fff;padding:28px;border-radius:18px;display:grid;grid-template-columns:1.5fr 1fr;gap:20px}
+.hero h1{font-size:34px;margin:6px 0 10px}.hero p{line-height:1.6}.glass{background:#ffffff18;border:1px solid #ffffff2b;border-radius:14px;padding:17px}
+.pill{display:inline-block;padding:5px 9px;border-radius:99px;background:var(--soft);color:var(--blue);font-size:12px;margin:2px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.weeks{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}.card h3{margin-top:0}
+.week{cursor:pointer;transition:.15s}.week:hover{transform:translateY(-2px);box-shadow:0 8px 24px #17203312}
+.muted{color:var(--muted)}.section{margin-top:24px}.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}
+.stat strong{display:block;font-size:28px;margin-top:5px}.progress{height:8px;background:#edf0f5;border-radius:10px;overflow:hidden}.bar{height:100%;background:var(--green)}
+.layout{display:grid;grid-template-columns:2fr 1fr;gap:14px}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid var(--line);text-align:left;font-size:14px}th{background:#f2f4f7}
+input,select,textarea{width:100%;padding:10px;border:1px solid #cfd5df;border-radius:8px;background:#fff}textarea{min-height:90px;resize:vertical}
+.formrow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.task{display:flex;align-items:flex-start;gap:8px;padding:10px 0}.task input{width:auto;margin-top:3px}
+.topic{padding:12px 0;border-bottom:1px solid var(--line)}.topic:last-child{border-bottom:0}.topic h4{margin:0 0 5px}
+.notice{padding:12px;border-radius:10px;background:#fff8e7;border:1px solid #f4d18d;color:#704300}
+.success{padding:12px;border-radius:10px;background:#ecfdf3;border:1px solid #abefc6;color:#067647}
+.quiz label{display:block;padding:9px;border:1px solid var(--line);border-radius:8px;margin:7px 0;cursor:pointer}
+.weeknav{display:flex;gap:8px;flex-wrap:wrap}.tab{padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;cursor:pointer}.tab.active{background:var(--soft);color:var(--blue);border-color:#b9cdfb}
+.rtl{direction:rtl;text-align:right}.rtl th,.rtl td{text-align:right}
+.slide-frame{width:100%;height:72vh;min-height:520px;border:1px solid var(--line);border-radius:12px;background:#fff}
+.file-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);font-size:12px}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.weeks{grid-template-columns:1fr 1fr}.layout,.hero,.two,.formrow{grid-template-columns:1fr}}
+@media(max-width:600px){.grid,.weeks{grid-template-columns:1fr}.hero h1{font-size:27px}}
+</style>
+</head>
+<body>
+<header><div class="top">
+<div class="brand"><b>G TQM 511</b><small>Organizational Behavior and Quality</small></div>
+<nav>
+<button class="nav active" data-page="home">Home</button>
+<button class="nav" data-page="register">Register</button>
+<button class="nav" data-page="student">Student</button>
+<button class="nav" data-page="groups">Groups</button>
+<button class="nav" data-page="instructor">Instructor</button>
+<button class="nav" id="lang">العربية</button>
+</nav></div></header>
+
+<main>
+<section id="home" class="page">
+<div class="hero">
+<div><span class="pill">PGD TQM</span><span class="pill">15 Weeks</span><span class="pill">Local-first</span>
+<h1>Organizational Behavior and Quality</h1>
+<p id="heroText">A practical learning portal linking individual, group and organizational behavior to quality performance, service, engagement, leadership and continuous improvement.</p>
+<button class="btn" onclick="showPage('register')">Student Registration</button></div>
+<div class="glass"><h3>Learning Journey</h3><p>Prepare → Learn → Apply → Discuss → Assess → Reflect</p>
+<div class="progress"><div id="overallBar" class="bar" style="width:0%"></div></div><p><b id="overallPct">0%</b> local progress</p>
+<p style="font-size:12px;opacity:.8">No paid backend required in this version.</p></div>
+</div>
+<div class="section"><div class="section-head"><h2>15-Week Learning Path</h2><span class="muted">Week 1 and Week 3 are fully expanded</span></div><div id="weeks" class="weeks"></div></div>
+</section>
+
+<section id="register" class="page hidden">
+<div class="section-head"><h2>Student Registration</h2><span class="muted">Saved locally on this browser</span></div>
+<div class="card">
+<div class="formrow">
+<div><label>Student name</label><input id="regName" placeholder="Full name"></div>
+<div><label>Student ID</label><input id="regId" placeholder="e.g. PGD-001"></div>
+<div><label>Email</label><input id="regEmail" type="email" placeholder="name@example.com"></div>
+</div>
+<div class="formrow" style="margin-top:10px">
+<div><label>Group</label><select id="regGroup"></select></div>
+<div><label>Preferred language</label><select id="regLang"><option>English</option><option>Arabic</option></select></div>
+<div style="display:flex;align-items:end"><button class="btn good" style="width:100%" onclick="registerStudent()">Create / Update Profile</button></div>
+</div>
+<p id="regMsg"></p>
+</div>
+</section>
+
+<section id="student" class="page hidden">
+<div class="section-head"><h2>Student Dashboard</h2><span id="studentName" class="muted">No student registered</span></div>
+<div class="grid">
+<div class="card stat"><span class="muted">Progress</span><strong id="sProgress">0%</strong></div>
+<div class="card stat"><span class="muted">Quiz Average</span><strong id="sQuiz">0%</strong></div>
+<div class="card stat"><span class="muted">Weeks Started</span><strong id="sStarted">0/15</strong></div>
+<div class="card stat"><span class="muted">Group</span><strong id="sGroup">—</strong></div>
+</div>
+<div class="card section"><h3>Weekly Progress</h3><table><thead><tr><th>Week</th><th>Status</th><th>Quiz</th><th>Reflection</th></tr></thead><tbody id="studentRows"></tbody></table></div>
+</section>
+
+<section id="groups" class="page hidden">
+<div class="section-head"><h2>Group Dashboard</h2><span class="muted">Based on registered students</span></div>
+<div id="groupCards" class="grid"></div>
+<div class="card section"><h3>Group Membership</h3><table><thead><tr><th>Group</th><th>Students</th><th>Average Progress</th><th>Quiz Average</th></tr></thead><tbody id="groupRows"></tbody></table></div>
+</section>
+
+<section id="instructor" class="page hidden">
+<div class="section-head"><h2>Instructor Dashboard</h2><span class="muted">Local administration</span></div>
+<div class="grid">
+<div class="card stat"><span class="muted">Registered Students</span><strong id="iStudents">0</strong></div>
+<div class="card stat"><span class="muted">Groups</span><strong id="iGroups">4</strong></div>
+<div class="card stat"><span class="muted">Avg. Completion</span><strong id="iCompletion">0%</strong></div>
+<div class="card stat"><span class="muted">At-Risk</span><strong id="iRisk">0</strong></div>
+</div>
+<div class="layout section">
+<div class="card"><h3>Student Roster</h3><table><thead><tr><th>Name</th><th>ID</th><th>Group</th><th>Progress</th><th>Action</th></tr></thead><tbody id="rosterRows"></tbody></table></div>
+<div class="card"><h3>Bulk Import</h3>
+<p class="muted">Paste one student per line using: Name | ID | Email | Group A</p>
+<textarea id="bulkStudents" placeholder="Ahmed Ali | PGD-001 | ahmed@example.com | Group A"></textarea>
+<button class="btn" onclick="bulkImport()">Import Students</button>
+<hr style="border:0;border-top:1px solid var(--line);margin:18px 0">
+<h3>Groups</h3>
+<div class="two"><input id="newGroup" placeholder="New group name"><button class="btn alt" onclick="addGroup()">Add Group</button></div>
+<p id="adminMsg"></p>
+</div></div>
+</section>
+
+<section id="week" class="page hidden">
+<div class="section-head"><div><span class="muted" id="wkNum"></span><h2 id="wkTitle" style="margin:3px 0"></h2></div><button class="btn alt" onclick="showPage('home')">← Course</button></div>
+<div id="weekTabs" class="weeknav"></div>
+<div id="weekBody" class="section"></div>
+</section>
+</main>
+
+<footer>G TQM 511 Learning Portal v3 • Week 1 presentation embedded • Local prototype • Course structure aligned to the 15-week plan</footer>
+
+<script>
+const course=[
+["Introduction to Organizational Behavior and Quality","OB foundations and their connection to quality performance."],
+["Diversity in Organizations","Diversity, inclusion, bias and quality decisions."],
+["Attitudes and Job Satisfaction","Attitudes, satisfaction, engagement, commitment and quality behavior."],
+["Emotions and Moods","Emotions, moods and workplace behavior."],
+["Personality and Values","Personality, values and person–job fit."],
+["Perception and Individual Decision Making","Perception, bias and decision quality."],
+["Motivation, Engagement and Quality Performance","Motivation and discretionary quality effort."],
+["Learning and Organizational Learning","Learning, feedback and prevention of recurrence."],
+["Foundations of Group Behavior","Roles, norms, cohesion and group quality behavior."],
+["Understanding Work Teams and Quality Teams","Team effectiveness and improvement teams."],
+["Communication and Quality Performance","Communication, feedback and error reduction."],
+["Leadership for Quality and Organizational Excellence","Leadership and quality commitment."],
+["Organizational Culture and Quality","Culture, socialization and quality behavior."],
+["Human Resource Practices and Quality Performance","Selection, training, appraisal and rewards."],
+["Organizational Change, Resistance, Stress and Continuous Quality Improvement","Change, resistance, stress and continuous improvement."]
+];
+
+const week1={
+objectives:[
+"Define organizational behavior and explain why interpersonal skills matter for managerial effectiveness.",
+"Differentiate management functions, managerial roles, and technical, human, and conceptual skills.",
+"Contrast intuition with systematic study and evidence-based management.",
+"Use individual, group, and organizational levels and the Inputs–Processes–Outcomes model to diagnose a quality problem.",
+"Connect organizational behavior processes to quality, service, productivity, and institutional effectiveness."
+],
+topics:[
+["Why interpersonal skills matter","Managers achieve results through other people. Workplace relationships influence satisfaction, stress, commitment and turnover. Quality is delivered through handoffs, teamwork, communication, judgement and customer interaction."],
+["Managers and organizations","A manager achieves goals through other people. An organization is a consciously coordinated social unit. Quality is produced by people coordinated toward shared standards and improvement goals."],
+["Four management functions","Planning: set quality objectives. Organizing: assign responsibilities and process ownership. Leading: motivate, communicate and resolve conflict. Controlling: monitor results and correct deviations."],
+["Mintzberg’s managerial roles","Interpersonal roles build trust; informational roles move reliable information; decisional roles allocate resources and respond to problems. Quality managers connect people, evidence and action."],
+["Three managerial skills","Technical: specialized knowledge. Human: understanding and motivating people. Conceptual: analyzing complex situations and choosing among alternatives."],
+["What is Organizational Behavior?","OB studies the impact of individuals, groups and structure on behavior within organizations and applies that knowledge to improve organizational effectiveness."],
+["From intuition to evidence","Intuition can be useful but biased. Systematic study examines relationships and causes. Evidence-based management combines scientific evidence, context and professional judgement."],
+["Contributing disciplines","Psychology, social psychology, sociology and anthropology contribute different lenses. Quality problems are rarely one-dimensional."],
+["Contingency perspective","Human behavior is context dependent. The same intervention can produce different outcomes under different conditions."],
+["Basic OB model","Inputs shape processes, which shape outcomes. Analysis occurs at individual, group and organizational levels, with feedback from outcomes to future inputs."],
+["Applying OB to quality","Individual behavior affects task quality, safety and customer experience; group behavior affects coordination and problem solving; organizational systems affect reliability, improvement and sustainability."]
+],
+activity:{
+title:"In-Class Activity: Three-Level Diagnosis",
+scenario:"A university receives repeated complaints about slow student services. Staff say procedures are unclear; supervisors blame employee attitude; employees blame workload and poor systems; departments do not share information.",
+tasks:["List at least six possible causes.","Classify each cause as individual, group or organizational.","Identify the relevant behavioral processes.","State the quality outcome affected.","Select two priority interventions and justify their sequence.","Propose two indicators for monitoring improvement."],
+deliverable:"One-page diagnostic map: Inputs → Processes → Outcomes, plus a two-minute group explanation."
+},
+case:{
+title:"Mini Case: Reporting Errors Without Fear",
+text:"A logistics company introduced a zero-defect target. Managers praised teams with no reported errors. Formal error reports fell sharply, but customer complaints and rework increased. Employees learned that reporting errors damaged team reputation and triggered blame.",
+questions:["What individual attitudes or perceptions may explain the behavior?","What group norms and leadership signals reinforced under-reporting?","How should the performance and recognition system be redesigned?"],
+lesson:"A metric can change behavior in ways that damage the real quality objective. A system that hides errors cannot learn from them."
+},
+quiz:[
+["Which statement best defines organizational behavior?",["The study of financial performance","The study of individuals, groups and structure in organizations","The study of production technology","The study of marketing behavior"],1],
+["Which management function includes motivating and resolving conflict?",["Planning","Organizing","Leading","Controlling"],2],
+["Which skill is most directly concerned with understanding and motivating people?",["Technical","Human","Financial","Administrative"],1],
+["Evidence-based management relies primarily on:",["Habit","Seniority","Scientific evidence and contextual judgement","Informal opinion"],2],
+["Organizational culture is mainly an input at which level?",["Individual","Group","Organizational","Customer"],2]
+],
+assignment:{
+title:"Week 1 Assignment – OB–Quality Diagnostic Note",
+text:"Select one real or familiar quality-related problem and write a 600–800 word diagnostic note.",
+requirements:["Describe the problem and affected stakeholders.","Classify causes at individual, group and organizational levels.","Apply the Inputs–Processes–Outcomes model.","Identify evidence needed before action.","Recommend two feasible interventions.","Propose two monitoring indicators."],
+rubric:"Conceptual accuracy 30% • Quality of diagnosis 30% • Application to quality 20% • Evidence and feasibility 10% • Clarity and professionalism 10%"
+}
+};
+
+const week3={
+objectives:[
+"Explain the cognitive, affective and behavioral components of attitudes.",
+"Explain cognitive dissonance and the main moderators of the attitude–behavior relationship.",
+"Compare job satisfaction, job involvement, organizational commitment, perceived organizational support and employee engagement.",
+"Interpret job satisfaction using global and facet approaches.",
+"Use the exit–voice–loyalty–neglect model to diagnose employee responses to dissatisfaction.",
+"Connect employee attitudes and responses to service quality, reliability, error reporting and continuous improvement."
+],
+topics:[
+["Attitudes","Attitudes are evaluative statements or judgments about objects, people or events. They include cognitive, affective and behavioral components."],
+["Attitudes and behavior: cognitive dissonance","Dissonance occurs when attitudes and behavior are inconsistent. People are more motivated to reduce it when the issue is important, controllable, and when rewards do not fully explain the inconsistency."],
+["Major job attitudes","Job satisfaction, job involvement, organizational commitment, perceived organizational support and employee engagement capture different aspects of how employees relate to their work and organization."],
+["Job satisfaction","Job satisfaction is a positive feeling about a job resulting from an evaluation of its characteristics. It can be measured globally or through job facets; both approaches are useful but answer different questions."],
+["What causes job satisfaction?","Job conditions, social environment, personality, fairness and rewards can shape satisfaction. Pay matters, but meaningful work, support and conditions often matter strongly too."],
+["Satisfaction and performance","Satisfied employees are more likely to provide better service and show citizenship behavior, while dissatisfaction may be associated with withdrawal, counterproductive behavior and turnover."],
+["Exit–Voice–Loyalty–Neglect","Exit is active/destructive, voice active/constructive, loyalty passive/constructive, and neglect passive/destructive. The model helps managers interpret different responses to dissatisfaction."],
+["Quality connection","Voice can surface improvement opportunities and hidden defects. Neglect can increase lateness, reduced effort and error rates. Exit can remove valuable knowledge. Engagement can strengthen discretionary quality behavior."]
+],
+activity:{
+title:"Week 3 Case: Disengaged Service Team",
+scenario:"A customer-service team shows low enthusiasm, rising absenteeism, weak participation in improvement meetings, frequent complaints about workload and recognition, and inconsistent service quality. Some employees are considering leaving; others stay silent while service problems continue.",
+tasks:["Identify evidence of job dissatisfaction and disengagement.","Classify observed responses using Exit, Voice, Loyalty and Neglect.","Explain how attitudes could affect service quality and error rates.","Identify two management actions that address causes rather than symptoms.","Propose two indicators to monitor both employee experience and quality performance."],
+deliverable:"Group diagnostic brief linking Attitude → Behavior → Quality Outcome → Management Response."
+},
+case:{
+title:"Applied Discussion: Voice as a Quality Mechanism",
+text:"A process can look stable while employees know about recurring problems that are never formally reported. If speaking up is seen as risky or pointless, management may receive falsely positive quality data.",
+questions:["Why is employee voice important for continuous improvement?","What management behaviors make voice psychologically safer?","Which quality indicators could reveal hidden neglect or silence?"],
+lesson:"Quality systems need reliable upward information. Silence may protect appearances while allowing defects and service failures to continue."
+},
+quiz:[
+["Attitudes include cognitive, affective and ______ components.",["financial","behavioral","technical","structural"],1],
+["Which job attitude reflects enthusiasm and involvement in work?",["Employee engagement","Turnover intention","Neglect","Role ambiguity"],0],
+["What is one quality risk of employee neglect?",["Higher error rates","Automatic innovation","Better documentation","Lower absenteeism"],0],
+["Which response to dissatisfaction is active and constructive?",["Exit","Voice","Loyalty","Neglect"],1],
+["Why is employee voice important for quality improvement?",["It hides errors","It surfaces problems and improvement ideas","It eliminates all conflict","It replaces management systems"],1]
+],
+assignment:{
+title:"Week 3 Assignment – Attitudes, Satisfaction and Quality Diagnostic",
+text:"Analyze a real or familiar workplace situation where employee attitudes may influence service, safety, reliability or improvement.",
+requirements:["Describe the work context and the observable attitude indicators.","Distinguish satisfaction, involvement, commitment or engagement where relevant.","Use the Exit–Voice–Loyalty–Neglect model to interpret responses.","Explain the likely quality consequences.","Recommend two management actions.","Propose at least two behavioral and two quality indicators for follow-up."],
+rubric:"Conceptual accuracy 25% • Diagnostic reasoning 25% • Quality connection 25% • Feasibility of actions 15% • Clarity and professionalism 10%"
+}
+};
+
+let db=JSON.parse(localStorage.getItem("gtqm511_v2")||"null")||{students:[],groups:["Group A","Group B","Group C","Group D"],activeStudentId:"",progress:{}};
+let currentWeek=1,currentTab="overview";
+
+function save(){localStorage.setItem("gtqm511_v2",JSON.stringify(db))}
+function student(){return db.students.find(s=>s.id===db.activeStudentId)||null}
+function pkey(id,w){return id+"_"+w}
+function getProg(id,w){return db.progress[pkey(id,w)]||{tasks:0,quiz:null,reflection:false}}
+function weekPct(id,w){const p=getProg(id,w);return Math.min(100,(p.tasks||0)*20+(p.quiz!==null?20:0))}
+
+function renderWeeks(){
+let box=document.getElementById("weeks");box.innerHTML="";
+course.forEach((w,i)=>{let n=i+1,s=student(),pct=s?weekPct(s.id,n):0;let e=document.createElement("div");e.className="card week";
+e.innerHTML=`<small style="color:var(--blue);font-weight:bold">WEEK ${n}</small><h3>${w[0]}</h3><p class="muted">${w[1]}</p><div class="progress"><div class="bar" style="width:${pct}%"></div></div><small>${pct}% complete</small>${(n===1||n===3)?'<p><span class="pill">Full content</span></p>':''}`;
+e.onclick=()=>openWeek(n);box.appendChild(e)});overall()
+}
+function overall(){let s=student(),sum=0;if(s){for(let i=1;i<=15;i++)sum+=weekPct(s.id,i)}let pct=s?Math.round(sum/15):0;document.getElementById("overallPct").textContent=pct+"%";document.getElementById("overallBar").style.width=pct+"%"}
+function showPage(id){document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));document.getElementById(id).classList.remove("hidden");document.querySelectorAll(".nav[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===id));if(id==="student")renderStudent();if(id==="groups")renderGroups();if(id==="instructor")renderInstructor();if(id==="register")renderGroupOptions();window.scrollTo({top:0,behavior:"smooth"})}
+document.querySelectorAll(".nav[data-page]").forEach(b=>b.onclick=()=>showPage(b.dataset.page));
+
+function renderGroupOptions(){let sel=document.getElementById("regGroup");sel.innerHTML=db.groups.map(g=>`<option>${g}</option>`).join("")}
+function registerStudent(){
+let name=regName.value.trim(),id=regId.value.trim(),email=regEmail.value.trim(),group=regGroup.value;
+if(!name||!id){regMsg.className="notice";regMsg.textContent="Name and Student ID are required.";return}
+let existing=db.students.find(s=>s.id===id);if(existing){Object.assign(existing,{name,email,group})}else db.students.push({name,id,email,group});
+db.activeStudentId=id;save();regMsg.className="success";regMsg.textContent="Profile saved. Student dashboard is now linked to this record.";renderWeeks();renderAll()
+}
+function bulkImport(){
+let lines=bulkStudents.value.split(/\n+/).map(x=>x.trim()).filter(Boolean),added=0;
+lines.forEach(line=>{let [name,id,email,group]=line.split("|").map(x=>(x||"").trim());if(!name||!id)return;if(group&&!db.groups.includes(group))db.groups.push(group);
+let ex=db.students.find(s=>s.id===id);if(ex)Object.assign(ex,{name,email,group:group||ex.group||db.groups[0]});else db.students.push({name,id,email,group:group||db.groups[0]});added++});
+save();adminMsg.textContent=`Imported / updated ${added} students.`;bulkStudents.value="";renderAll()
+}
+function addGroup(){let g=newGroup.value.trim();if(g&&!db.groups.includes(g)){db.groups.push(g);save();newGroup.value="";renderAll()}}
+function deleteStudent(id){db.students=db.students.filter(s=>s.id!==id);if(db.activeStudentId===id)db.activeStudentId="";save();renderAll()}
+
+function renderStudent(){
+let s=student();studentName.textContent=s?`${s.name} • ${s.id}`:"No student registered";sGroup.textContent=s?s.group:"—";
+let sum=0,started=0,qsum=0,qn=0,rows="";
+for(let i=1;i<=15;i++){let p=s?getProg(s.id,i):{tasks:0,quiz:null,reflection:false},pct=s?weekPct(s.id,i):0;sum+=pct;if(pct>0)started++;if(p.quiz!==null){qsum+=p.quiz;qn++}
+rows+=`<tr><td>Week ${i}</td><td>${pct===100?"Complete":pct>0?pct+"%":"Not started"}</td><td>${p.quiz!==null?p.quiz+"%":"—"}</td><td>${p.reflection?"✓":"—"}</td></tr>`}
+sProgress.textContent=(s?Math.round(sum/15):0)+"%";sStarted.textContent=started+"/15";sQuiz.textContent=(qn?Math.round(qsum/qn):0)+"%";studentRows.innerHTML=rows
+}
+function renderGroups(){
+groupCards.innerHTML=db.groups.map(g=>{let members=db.students.filter(s=>s.group===g);let avg=members.length?Math.round(members.reduce((a,s)=>a+studentOverall(s.id),0)/members.length):0;return `<div class="card stat"><span class="muted">${g}</span><strong>${members.length}</strong><span class="muted">${avg}% avg progress</span></div>`}).join("");
+groupRows.innerHTML=db.groups.map(g=>{let m=db.students.filter(s=>s.group===g);let avg=m.length?Math.round(m.reduce((a,s)=>a+studentOverall(s.id),0)/m.length):0;let qs=[];m.forEach(s=>{for(let i=1;i<=15;i++){let q=getProg(s.id,i).quiz;if(q!==null)qs.push(q)}});let qa=qs.length?Math.round(qs.reduce((a,b)=>a+b,0)/qs.length):0;return `<tr><td>${g}</td><td>${m.map(x=>x.name).join(", ")||"—"}</td><td>${avg}%</td><td>${qa}%</td></tr>`}).join("")
+}
+function studentOverall(id){let x=0;for(let i=1;i<=15;i++)x+=weekPct(id,i);return Math.round(x/15)}
+function renderInstructor(){
+iStudents.textContent=db.students.length;iGroups.textContent=db.groups.length;let vals=db.students.map(s=>studentOverall(s.id));let avg=vals.length?Math.round(vals.reduce((a,b)=>a+b,0)/vals.length):0;iCompletion.textContent=avg+"%";iRisk.textContent=vals.filter(x=>x<50).length;
+rosterRows.innerHTML=db.students.map(s=>`<tr><td>${s.name}</td><td>${s.id}</td><td>${s.group||"—"}</td><td>${studentOverall(s.id)}%</td><td><button class="btn alt" onclick="db.activeStudentId='${s.id}';save();renderAll();showPage('student')">View</button> <button class="btn alt" onclick="deleteStudent('${s.id}')">Delete</button></td></tr>`).join("")
+}
+function renderAll(){renderGroupOptions();renderWeeks();renderStudent();renderGroups();renderInstructor()}
+
+function openWeek(n){currentWeek=n;currentTab="overview";wkNum.textContent="Week "+n;wkTitle.textContent=course[n-1][0];renderWeekTabs();renderWeekBody();showPage("week")}
+function renderWeekTabs(){let full=(currentWeek===1||currentWeek===3);let tabs=currentWeek===1?["overview","slides","content","activity","case","quiz","assignment","reflection"]:
+currentWeek===3?["overview","content","activity","case","quiz","assignment","reflection"]:["overview","reflection"];weekTabs.innerHTML=tabs.map(t=>`<button class="tab ${t===currentTab?"active":""}" onclick="currentTab='${t}';renderWeekTabs();renderWeekBody()">${t[0].toUpperCase()+t.slice(1)}</button>`).join("")}
+function activeData(){return currentWeek===1?week1:currentWeek===3?week3:null}
+function renderWeekBody(){
+let d=activeData(),s=student(),p=s?getProg(s.id,currentWeek):{tasks:0,quiz:null,reflection:false};
+if(!d){weekBody.innerHTML=`<div class="card"><h3>${course[currentWeek-1][0]}</h3><p>${course[currentWeek-1][1]}</p><div class="notice">Detailed learning materials will be added in the next build. The week is already part of the fixed 15-week pathway.</div></div>`;return}
+if(currentTab==="overview")weekBody.innerHTML=`<div class="layout"><div class="card"><h3>Learning Outcomes</h3><ol>${d.objectives.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol></div><div class="card"><h3>Progress Checklist</h3>${["Preparation / Reading","Lecture content","Applied activity","Case discussion"].map((x,i)=>`<label class="task"><input type="checkbox" ${p.tasks>i?"checked":""} onchange="setTask(${i},this.checked)"> ${x}</label>`).join("")}<p class="muted">Quiz adds the final 20%.</p></div></div>`;
+if(currentTab==="slides" && currentWeek===1){
+weekBody.innerHTML=`<div class="card">
+<h3>Week 1 Lecture Slides</h3>
+<p class="muted">The complete 23-slide Week 1 presentation is embedded below. You can also open the PDF or the original PowerPoint file.</p>
+<div class="file-actions">
+<a class="btn" href="assets/Week1_Lecture.pdf" target="_blank" style="text-decoration:none">Open PDF</a>
+<a class="btn alt" href="assets/Week1_Lecture.pptx" style="text-decoration:none">Open PowerPoint</a>
+</div>
+<iframe class="slide-frame" src="assets/Week1_Lecture.pdf#view=FitH" title="Week 1 Lecture Slides"></iframe>
+<p class="muted" style="margin-top:10px">If your browser blocks the embedded viewer, use Open PDF.</p>
+</div>`;
+}
+if(currentTab==="content")weekBody.innerHTML=`<div class="card"><h3>Core Learning Content</h3>${d.topics.map(t=>`<div class="topic"><h4>${t[0]}</h4><p>${t[1]}</p></div>`).join("")}</div>`;
+if(currentTab==="activity")weekBody.innerHTML=`<div class="card"><h3>${d.activity.title}</h3><p><b>Scenario:</b> ${d.activity.scenario}</p><ol>${d.activity.tasks.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol><p><b>Deliverable:</b> ${d.activity.deliverable}</p></div>`;
+if(currentTab==="case")weekBody.innerHTML=`<div class="card"><h3>${d.case.title}</h3><p>${d.case.text}</p><ol>${d.case.questions.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol><div class="success"><b>Core lesson:</b> ${d.case.lesson}</div></div>`;
+if(currentTab==="quiz")renderQuiz(d);
+if(currentTab==="assignment")weekBody.innerHTML=`<div class="card"><h3>${d.assignment.title}</h3><p>${d.assignment.text}</p><h4>Requirements</h4><ol>${d.assignment.requirements.map(x=>`<li style="margin:7px 0">${x}</li>`).join("")}</ol><div class="notice"><b>Assessment:</b> ${d.assignment.rubric}</div></div>`;
+if(currentTab==="reflection")weekBody.innerHTML=`<div class="card"><h3>Reflection</h3><p>Write one concept you will apply in your work or quality practice, and explain how.</p><textarea id="reflectionText" placeholder="Your reflection..."></textarea><button class="btn good" style="margin-top:10px" onclick="saveReflection()">Save Reflection</button><p class="muted">${p.reflection?"Reflection completed ✓":"Not yet completed"}</p></div>`;
+}
+function setTask(i,checked){let s=student();if(!s){alert("Register a student first.");renderWeekBody();return}let p=getProg(s.id,currentWeek);if(checked)p.tasks=Math.max(p.tasks,i+1);else if(p.tasks===i+1)p.tasks=i;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll()}
+function renderQuiz(d){let p=student()?getProg(student().id,currentWeek):{quiz:null};weekBody.innerHTML=`<div class="card quiz"><h3>Knowledge Check</h3>${d.quiz.map((q,qi)=>`<div class="topic"><p><b>${qi+1}. ${q[0]}</b></p>${q[1].map((a,ai)=>`<label><input style="width:auto" type="radio" name="q${qi}" value="${ai}"> ${a}</label>`).join("")}</div>`).join("")}<button class="btn" onclick="gradeCurrentQuiz()">Submit Quiz</button><p id="quizMsg">${p.quiz!==null?`Previous score: ${p.quiz}%`:""}</p></div>`}
+function gradeCurrentQuiz(){let s=student();if(!s){alert("Register a student first.");return}let d=activeData(),correct=0;d.quiz.forEach((q,qi)=>{let x=document.querySelector(`input[name=q${qi}]:checked`);if(x&&+x.value===q[2])correct++});let score=Math.round(correct/d.quiz.length*100),p=getProg(s.id,currentWeek);p.quiz=score;db.progress[pkey(s.id,currentWeek)]=p;save();quizMsg.textContent=`Score: ${score}% (${correct}/${d.quiz.length})`;renderAll()}
+function saveReflection(){let s=student();if(!s){alert("Register a student first.");return}let p=getProg(s.id,currentWeek);p.reflection=true;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody()}
+document.getElementById("lang").onclick=()=>{let ar=document.body.classList.toggle("rtl");document.documentElement.dir=ar?"rtl":"ltr";lang.textContent=ar?"English":"العربية";heroText.textContent=ar?"بوابة تعلم تطبيقية تربط السلوك على مستوى الفرد والمجموعة والمنظمة بأداء الجودة والخدمة والمشاركة والقيادة والتحسين المستمر.":"A practical learning portal linking individual, group and organizational behavior to quality performance, service, engagement, leadership and continuous improvement."}
+renderAll();
+</script>
+</body>
+</html>
