@@ -50,7 +50,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 <div class="progress"><div id="overallBar" class="bar" style="width:0%"></div></div><p><b id="overallPct">0%</b> local progress</p>
 <p style="font-size:12px;opacity:.8">Week 1 tracking: Checklist 40% • Quiz 40% • Reflection 20%</p></div>
 </div>
-<div class="section"><div class="section-head"><h2>15-Week Learning Path</h2><span class="muted">Week 1 is fixed and fully expanded</span></div><div id="weeks" class="weeks"></div></div>
+<div class="section"><div class="section-head"><h2>15-Week Learning Path</h2><span class="muted">Week 1 fixed • Week 2 fully expanded</span></div><div id="weeks" class="weeks"></div></div>
 </section>
 
 <section id="register" class="page hidden">
@@ -114,7 +114,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 </main>
 
-<footer>G TQM 511 Learning Portal • Week 1 student tracking enabled • Independent checklist items</footer>
+<footer>G TQM 511 Learning Portal • Week 1 central tracking enabled • Week 2 Diversity in Organizations added</footer>
 
 <script>
 const course=[
@@ -183,6 +183,73 @@ rubric:"Conceptual accuracy 30% • Quality of diagnosis 30% • Application to 
 }
 };
 
+
+const week2={
+objectives:[
+"Define workplace diversity and distinguish surface-level from deep-level diversity.",
+"Explain how stereotypes, bias, discrimination and exclusion can influence employee behavior and organizational decisions.",
+"Describe how biographical characteristics and individual abilities may relate to work outcomes without relying on stereotypes.",
+"Explain why inclusive practices improve participation, communication, problem solving and decision quality.",
+"Apply diversity-management principles to quality teams, customer service and continuous improvement."
+],
+topics:[
+["What is diversity?","Workplace diversity refers to differences among people that may shape identities, experiences, perspectives and interactions. Diversity is broader than demographic categories and includes both visible and less visible differences."],
+["Surface-level and deep-level diversity","Surface-level diversity includes readily observable characteristics. Deep-level diversity includes values, personality, attitudes, knowledge and experience. As people work together, deep-level characteristics often become increasingly important for collaboration."],
+["Stereotypes, bias and discrimination","A stereotype is a generalized belief about a group. Bias can influence perception and judgement, while discrimination occurs when people are treated differently because of group membership rather than relevant job-related evidence. These processes can distort selection, appraisal, communication and quality decisions."],
+["Biographical characteristics","Age, gender, race and ethnicity, disability, religion, tenure and other characteristics may be relevant to organizational experiences, but managers should avoid assuming that group averages determine individual capability or performance."],
+["Ability and person–job fit","Ability refers to an individual's capacity to perform job tasks. Intellectual and physical abilities differ across tasks. Quality improves when job requirements, employee capabilities, training and support are aligned rather than when decisions are based on demographic assumptions."],
+["Diversity and teams","Diverse teams can provide broader information, perspectives and problem-solving approaches. Benefits are more likely when teams have inclusive norms, psychological safety, clear goals and effective communication."],
+["Inclusion","Diversity describes differences; inclusion concerns whether people are respected, heard, able to contribute and treated fairly. Representation without meaningful participation may not improve team decisions or quality outcomes."],
+["Managing diversity effectively","Effective practices include objective selection criteria, structured decision processes, accessibility, fair development opportunities, bias-aware evaluation, inclusive leadership and mechanisms for employee voice."],
+["Diversity and customer quality","A workforce that understands different customer needs can improve service design, accessibility and responsiveness. Managers should use customer evidence and inclusive consultation rather than assumptions about groups."],
+["Quality connection","Bias can create defects in human decisions just as process variation creates defects in operations. Inclusive quality systems improve access to information, employee voice, root-cause analysis and the reliability of decisions."]
+],
+activity:{
+title:"In-Class Activity: Bias-Proofing a Quality Decision",
+scenario:"A service organization must select four employees for a process-improvement team. Managers informally propose the people they 'trust most.' The proposed team has similar backgrounds and seniority, while several employees with relevant customer, data and frontline experience are excluded.",
+tasks:[
+"Identify where bias or similarity preference may enter the decision.",
+"Define job-related criteria for selecting the improvement team.",
+"Distinguish surface-level and deep-level diversity relevant to the task.",
+"Recommend a transparent selection process.",
+"Explain how broader perspectives could improve root-cause analysis.",
+"Propose two indicators for monitoring inclusion and team effectiveness."
+],
+deliverable:"A one-page team-selection matrix plus a two-minute justification linking Diversity → Inclusion → Decision Quality."
+},
+case:{
+title:"Mini Case: The Improvement Meeting Where Only Some Voices Count",
+text:"A hospital support unit formed a cross-functional quality team to reduce delays. Meetings included staff from several departments, but junior employees rarely spoke because senior members interrupted them and decisions were usually made before frontline evidence was discussed. The team appeared diverse on paper, yet recurring causes of delay remained unidentified.",
+questions:[
+"Is the problem mainly diversity, inclusion, or both? Explain.",
+"What group processes are suppressing useful information?",
+"Which meeting practices could increase psychological safety and employee voice?",
+"How could the team test whether inclusion is improving decision quality?"
+],
+lesson:"Diversity creates access to different perspectives; inclusion determines whether those perspectives actually enter the decision process."
+},
+quiz:[
+["Which statement best describes surface-level diversity?",["Differences in values and personality","Readily observable demographic differences","Differences in professional knowledge only","Differences in motivation only"],1],
+["Which concept refers to generalized beliefs about members of a group?",["Stereotype","Job involvement","Role clarity","Procedural control"],0],
+["Why can inclusive teams improve quality decisions?",["They eliminate disagreement","They allow more relevant information and perspectives to be considered","They make data unnecessary","They guarantee consensus"],1],
+["Which is the strongest basis for assigning an employee to a quality-improvement task?",["Demographic similarity to the manager","Job-related competence and relevant experience","Age alone","Personal familiarity"],1],
+["What is a quality risk of employee exclusion?",["More reliable upward information","Hidden problems and weaker root-cause analysis","Automatic process standardization","Guaranteed higher engagement"],1]
+],
+assignment:{
+title:"Week 2 Assignment – Diversity, Inclusion and Quality Decision Review",
+text:"Select a real or familiar workplace process involving selection, teamwork, customer service, appraisal or improvement. Analyze how diversity and inclusion may affect the quality of decisions and outcomes.",
+requirements:[
+"Describe the workplace process and decision involved.",
+"Identify relevant surface-level and deep-level diversity considerations.",
+"Identify at least two possible sources of bias, stereotyping or exclusion.",
+"Explain the potential effect on quality, service, safety or improvement.",
+"Recommend two evidence-based inclusive practices.",
+"Propose at least two indicators for monitoring both inclusion and quality outcomes."
+],
+rubric:"Conceptual accuracy 25% • Quality of analysis 25% • Application to quality 25% • Feasibility of recommendations 15% • Clarity and professionalism 10%"
+}
+};
+
 const API_URL="https://script.google.com/macros/s/AKfycbxnbCjhDwhYbhQ9WT3yeVqHqzxE3T39f129hGCfA0jbUrwlLihRUr9zxt3NBcBgZVKl/exec";
 let centralOnline=false;
 let db=JSON.parse(localStorage.getItem("gtqm511_v2")||"null")||{students:[],groups:["Group A","Group B","Group C","Group D"],activeStudentId:"",progress:{}};
@@ -201,7 +268,7 @@ function getTaskStates(p){
 function completedTaskCount(p){return getTaskStates(p).filter(Boolean).length}
 function weekPct(id,w){
  const p=getProg(id,w);
- if(w!==1){return Math.min(100,(p.tasks||0)*20+(p.quiz!==null?20:0))}
+ if(w!==1&&w!==2){return Math.min(100,(p.tasks||0)*20+(p.quiz!==null?20:0))}
  const checklist=completedTaskCount(p)*10;
  const quizPart=p.quiz!==null?Math.round(p.quiz*0.4):0;
  const reflectionPart=p.reflection?20:0;
@@ -251,7 +318,7 @@ async function pushProgress(id,w){
 function renderWeeks(){
  let box=document.getElementById("weeks");box.innerHTML="";
  course.forEach((w,i)=>{let n=i+1,s=student(),pct=s?weekPct(s.id,n):0,e=document.createElement("div");e.className="card week";
- e.innerHTML=`<small style="color:var(--blue);font-weight:bold">WEEK ${n}</small><h3>${w[0]}</h3><p class="muted">${w[1]}</p><div class="progress"><div class="bar" style="width:${pct}%"></div></div><small>${pct}% complete</small>${n===1?'<p><span class="pill">Full content</span></p>':''}`;
+ e.innerHTML=`<small style="color:var(--blue);font-weight:bold">WEEK ${n}</small><h3>${w[0]}</h3><p class="muted">${w[1]}</p><div class="progress"><div class="bar" style="width:${pct}%"></div></div><small>${pct}% complete</small>${(n===1||n===2)?'<p><span class="pill">Full content</span></p>':''}`;
  e.onclick=()=>openWeek(n);box.appendChild(e)});overall()
 }
 function overall(){let s=student(),sum=0;if(s){for(let i=1;i<=15;i++)sum+=weekPct(s.id,i)}let pct=s?Math.round(sum/15):0;overallPct.textContent=pct+"%";overallBar.style.width=pct+"%"}
@@ -293,9 +360,9 @@ function renderInstructor(){
 function renderAll(){renderGroupOptions();renderWeeks();renderStudent();renderGroups();renderInstructor()}
 
 function openWeek(n){currentWeek=n;currentTab="overview";wkNum.textContent="Week "+n;wkTitle.textContent=course[n-1][0];renderWeekTabs();renderWeekBody();showPage("week")}
-function renderWeekTabs(){let tabs=currentWeek===1?["overview","slides","content","activity","case","quiz","assignment","reflection"]:["overview","reflection"];weekTabs.innerHTML=tabs.map(t=>`<button class="tab ${t===currentTab?"active":""}" onclick="currentTab='${t}';renderWeekTabs();renderWeekBody()">${t[0].toUpperCase()+t.slice(1)}</button>`).join("")}
+function renderWeekTabs(){let tabs=currentWeek===1?["overview","slides","content","activity","case","quiz","assignment","reflection"]:currentWeek===2?["overview","content","activity","case","quiz","assignment","reflection"]:["overview","reflection"];weekTabs.innerHTML=tabs.map(t=>`<button class="tab ${t===currentTab?"active":""}" onclick="currentTab='${t}';renderWeekTabs();renderWeekBody()">${t[0].toUpperCase()+t.slice(1)}</button>`).join("")}
 function renderWeekBody(){
- let d=currentWeek===1?week1:null,s=student(),p=s?getProg(s.id,currentWeek):{tasks:0,quiz:null,reflection:false,reflectionText:""};
+ let d=currentWeek===1?week1:currentWeek===2?week2:null,s=student(),p=s?getProg(s.id,currentWeek):{tasks:0,quiz:null,reflection:false,reflectionText:""};
  if(!d){weekBody.innerHTML=`<div class="card"><h3>${course[currentWeek-1][0]}</h3><p>${course[currentWeek-1][1]}</p><div class="notice">Detailed learning materials will be added in the next build.</div></div>`;return}
  if(currentTab==="overview"){let states=getTaskStates(p);weekBody.innerHTML=`<div class="layout"><div class="card"><h3>Learning Outcomes</h3><ol>${d.objectives.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol></div><div class="card"><h3>Progress Checklist</h3>${["Preparation / Reading","Lecture content","Applied activity","Case discussion"].map((x,i)=>`<label class="task"><input type="checkbox" ${states[i]?"checked":""} onchange="setTask(${i},this.checked)"> ${x} <span class="muted">(10%)</span></label>`).join("")}<div class="success">Week 1 weighting: Checklist 40% • Quiz 40% • Reflection 20%. Each checklist item can be completed independently.</div></div></div>`;}
  if(currentTab==="slides")weekBody.innerHTML=`<div class="card"><h3>Week 1 Lecture Slides</h3><p class="muted">The complete 23-slide Week 1 presentation is embedded below.</p><div class="file-actions"><a class="btn" href="Week1_Lecture.pdf" target="_blank" style="text-decoration:none">Open PDF</a><a class="btn alt" href="Week1_Lecture.pptx" style="text-decoration:none">Open PowerPoint</a></div><iframe class="slide-frame" src="Week1_Lecture.pdf#view=FitH" title="Week 1 Lecture Slides"></iframe></div>`;
@@ -316,7 +383,7 @@ function setTask(i,checked){
  save();renderAll();renderWeekBody();pushProgress(s.id,currentWeek)
 }
 function renderQuiz(d){let p=student()?getProg(student().id,currentWeek):{quiz:null};weekBody.innerHTML=`<div class="card quiz"><h3>Knowledge Check</h3>${d.quiz.map((q,qi)=>`<div class="topic"><p><b>${qi+1}. ${q[0]}</b></p>${q[1].map((a,ai)=>`<label><input style="width:auto" type="radio" name="q${qi}" value="${ai}"> ${a}</label>`).join("")}</div>`).join("")}<button class="btn" onclick="gradeCurrentQuiz()">Submit Quiz</button><p id="quizMsg">${p.quiz!==null?`Previous score: ${p.quiz}%`:""}</p></div>`}
-function gradeCurrentQuiz(){let s=student();if(!s){alert("Register/select a student first.");return}let d=week1,correct=0;d.quiz.forEach((q,qi)=>{let x=document.querySelector(`input[name=q${qi}]:checked`);if(x&&+x.value===q[2])correct++});let score=Math.round(correct/d.quiz.length*100),p=getProg(s.id,currentWeek);p.quiz=score;db.progress[pkey(s.id,currentWeek)]=p;save();quizMsg.textContent=`Score: ${score}% (${correct}/${d.quiz.length})`;renderAll();pushProgress(s.id,currentWeek)}
+function gradeCurrentQuiz(){let s=student();if(!s){alert("Register/select a student first.");return}let d=currentWeek===1?week1:currentWeek===2?week2:null;if(!d)return;let correct=0;d.quiz.forEach((q,qi)=>{let x=document.querySelector(`input[name=q${qi}]:checked`);if(x&&+x.value===q[2])correct++});let score=Math.round(correct/d.quiz.length*100),p=getProg(s.id,currentWeek);p.quiz=score;db.progress[pkey(s.id,currentWeek)]=p;save();quizMsg.textContent=`Score: ${score}% (${correct}/${d.quiz.length})`;renderAll();pushProgress(s.id,currentWeek)}
 function saveReflection(){let s=student();if(!s){alert("Register/select a student first.");return}let text=(reflectionText.value||"").trim();if(!text){alert("Please write your reflection before saving.");return}let p=getProg(s.id,currentWeek);p.reflection=true;p.reflectionText=text;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();pushProgress(s.id,currentWeek)}
 lang.onclick=()=>{let ar=document.body.classList.toggle("rtl");document.documentElement.dir=ar?"rtl":"ltr";lang.textContent=ar?"English":"العربية";heroText.textContent=ar?"بوابة تعلم تطبيقية تربط السلوك على مستوى الفرد والمجموعة والمنظمة بأداء الجودة والخدمة والمشاركة والقيادة والتحسين المستمر.":"A practical learning portal linking individual, group and organizational behavior to quality performance, service, engagement, leadership and continuous improvement."}
 renderAll();updateSyncStatus();syncFromCentral();
