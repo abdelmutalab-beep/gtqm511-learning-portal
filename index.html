@@ -18,7 +18,49 @@ button{font:inherit}.nav,.btn{border:0;border-radius:9px;padding:9px 12px;cursor
 .section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}.stat strong{display:block;font-size:28px;margin-top:5px}.progress{height:8px;background:#edf0f5;border-radius:10px;overflow:hidden}.bar{height:100%;background:var(--green)}
 .layout{display:grid;grid-template-columns:2fr 1fr;gap:14px}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}table{width:100%;border-collapse:collapse}th,td{padding:9px;border-bottom:1px solid var(--line);text-align:left;font-size:13px}th{background:#f2f4f7}
 input,select,textarea{width:100%;padding:10px;border:1px solid #cfd5df;border-radius:8px;background:#fff}textarea{min-height:100px;resize:vertical}.formrow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.task{display:flex;align-items:flex-start;gap:8px;padding:10px 0}.task input{width:auto;margin-top:3px}.topic{padding:12px 0;border-bottom:1px solid var(--line)}.topic:last-child{border-bottom:0}
+.student-week{
+border:1px solid var(--line);
+border-radius:12px;
+padding:15px;
+margin:14px 0;
+background:#fff
+}
+
+.student-week-head{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:12px;
+flex-wrap:wrap
+}
+
+.student-activities{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:8px;
+margin-top:12px
+}
+
+.student-activity{
+border:1px solid var(--line);
+border-radius:9px;
+padding:10px;
+background:#fafbfc
+}
+
+.activity-done{
+color:var(--green);
+font-weight:bold
+}
+
+.activity-pending{
+color:var(--muted);
+font-weight:bold
+}
+
+@media(max-width:750px){
+.student-activities{grid-template-columns:1fr}
+}.task{display:flex;align-items:flex-start;gap:8px;padding:10px 0}.task input{width:auto;margin-top:3px}.topic{padding:12px 0;border-bottom:1px solid var(--line)}.topic:last-child{border-bottom:0}
 .notice{padding:12px;border-radius:10px;background:#fff8e7;border:1px solid #f4d18d;color:#704300}.success{padding:12px;border-radius:10px;background:#ecfdf3;border:1px solid #abefc6;color:#067647}
 .quiz label{display:block;padding:9px;border:1px solid var(--line);border-radius:8px;margin:7px 0;cursor:pointer}.weeknav{display:flex;gap:8px;flex-wrap:wrap}.tab{padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;cursor:pointer}.tab.active{background:var(--soft);color:var(--blue);border-color:#b9cdfb}
 .rtl{direction:rtl;text-align:right}.rtl th,.rtl td{text-align:right}.slide-frame{width:100%;height:72vh;min-height:520px;border:1px solid var(--line);border-radius:12px;background:#fff}.file-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
@@ -65,14 +107,102 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 
 <section id="student" class="page hidden">
-<div class="section-head"><h2>Student Dashboard</h2><span class="muted">Progress updates after each saved action</span><span id="studentName" class="muted">No student registered</span></div>
-<div class="grid">
-<div class="card stat"><span class="muted">Progress</span><strong id="sProgress">0%</strong></div>
-<div class="card stat"><span class="muted">Quiz Average</span><strong id="sQuiz">0%</strong></div>
-<div class="card stat"><span class="muted">Weeks Started</span><strong id="sStarted">0/15</strong></div>
-<div class="card stat"><span class="muted">Group</span><strong id="sGroup">—</strong></div>
+
+<div class="section-head">
+<div>
+<h2 style="margin-bottom:4px">Student Progress</h2>
+<span id="studentName" class="muted">No student registered</span>
 </div>
-<div class="card section"><h3>Weekly Progress</h3><table><thead><tr><th>Week</th><th>Status</th><th>Quiz</th><th>Reflection</th></tr></thead><tbody id="studentRows"></tbody></table></div>
+<span class="muted">Individual and group learning progress</span>
+</div>
+
+<div class="grid">
+
+<div class="card stat">
+<span class="muted">Overall Course Progress</span>
+<strong id="sProgress">0%</strong>
+<div class="progress">
+<div id="studentOverallBar" class="bar" style="width:0%"></div>
+</div>
+</div>
+
+<div class="card stat">
+<span class="muted">Weeks 1–3 Progress</span>
+<strong id="sFirst3">0%</strong>
+</div>
+
+<div class="card stat">
+<span class="muted">Quiz Average</span>
+<strong id="sQuiz">0%</strong>
+</div>
+
+<div class="card stat">
+<span class="muted">Group</span>
+<strong id="sGroup">—</strong>
+</div>
+
+</div>
+
+<div class="card section">
+
+<div class="section-head">
+<h3 style="margin:0">Weeks 1–3 Detailed Progress</h3>
+<span class="muted">Tracked learning activities</span>
+</div>
+
+<div id="studentWeekDetails"></div>
+
+</div>
+
+<div class="card section">
+
+<div class="section-head">
+<h3 style="margin:0">Group Progress</h3>
+<span id="studentGroupLabel" class="muted">—</span>
+</div>
+
+<div class="two">
+
+<div>
+<p class="muted">Your Progress</p>
+<div class="progress">
+<div id="studentGroupBar" class="bar" style="width:0%"></div>
+</div>
+<p><b id="studentGroupPct">0%</b></p>
+</div>
+
+<div>
+<p class="muted">Group Average</p>
+<div class="progress">
+<div id="groupAverageBar" class="bar" style="width:0%"></div>
+</div>
+<p><b id="groupAveragePct">0%</b></p>
+</div>
+
+</div>
+
+</div>
+
+<div class="card section">
+<h3>15-Week Course Progress</h3>
+
+<table>
+<thead>
+<tr>
+<th>Week</th>
+<th>Topic</th>
+<th>Status</th>
+<th>Progress</th>
+<th>Quiz</th>
+<th>Reflection</th>
+</tr>
+</thead>
+
+<tbody id="studentRows"></tbody>
+</table>
+
+</div>
+
 </section>
 
 <section id="groups" class="page hidden">
@@ -506,15 +636,275 @@ function addGroup(){let g=newGroup.value.trim();if(g&&!db.groups.includes(g)){db
 function deleteStudent(id){db.students=db.students.filter(s=>s.id!==id);if(db.activeStudentId===id)db.activeStudentId="";save();renderAll()}
 
 function renderStudent(){
- let s=student();studentName.textContent=s?`${s.name} • ${s.id}`:"No student registered";sGroup.textContent=s?s.group:"—";
- let sum=0,started=0,qsum=0,qn=0,rows="";
- for(let i=1;i<=15;i++){let p=s?getProg(s.id,i):{tasks:0,quiz:null,reflection:false},pct=s?weekPct(s.id,i):0;sum+=pct;if(pct>0)started++;if(p.quiz!==null){qsum+=p.quiz;qn++}
- rows+=`<tr><td>Week ${i}</td><td>${s?weekStatus(s.id,i):"Not Started"}${pct>0&&pct<100?` (${pct}%)`:""}</td><td>${p.quiz!==null?p.quiz+"%":"—"}</td><td>${p.reflection?"✓":"—"}</td></tr>`}
- sProgress.textContent=(s?Math.round(sum/15):0)+"%";sStarted.textContent=started+"/15";sQuiz.textContent=(qn?Math.round(qsum/qn):0)+"%";studentRows.innerHTML=rows
+
+ let s=student();
+
+ studentName.textContent=s
+   ? `${s.name} • ${s.id}`
+   : "No student registered";
+
+ sGroup.textContent=s ? (s.group||"—") : "—";
+ studentGroupLabel.textContent=s ? (s.group||"—") : "—";
+
+ if(!s){
+   sProgress.textContent="0%";
+   sFirst3.textContent="0%";
+   sQuiz.textContent="0%";
+   studentOverallBar.style.width="0%";
+   studentGroupBar.style.width="0%";
+   studentGroupPct.textContent="0%";
+   studentWeekDetails.innerHTML="";
+   studentRows.innerHTML="";
+   return;
+ }
+
+ let sum=0;
+ let first3=0;
+ let qsum=0;
+ let qn=0;
+ let rows="";
+
+ for(let i=1;i<=15;i++){
+
+   let p=getProg(s.id,i);
+   let pct=weekPct(s.id,i);
+
+   sum+=pct;
+
+   if(i<=3) first3+=pct;
+
+   if(p.quiz!==null){
+     qsum+=p.quiz;
+     qn++;
+   }
+
+   rows+=`
+   <tr>
+     <td>Week ${i}</td>
+     <td>${course[i-1][0]}</td>
+     <td>${weekStatus(s.id,i)}</td>
+     <td>
+       <div class="progress" style="min-width:90px">
+         <div class="bar" style="width:${pct}%"></div>
+       </div>
+       <small>${pct}%</small>
+     </td>
+     <td>${p.quiz!==null?p.quiz+"%":"—"}</td>
+     <td>${p.reflection?"✓":"—"}</td>
+   </tr>`;
+ }
+
+ let overall=Math.round(sum/15);
+ let first3Average=Math.round(first3/3);
+ let quizAverage=qn?Math.round(qsum/qn):0;
+
+ sProgress.textContent=overall+"%";
+ sFirst3.textContent=first3Average+"%";
+ sQuiz.textContent=quizAverage+"%";
+
+ studentOverallBar.style.width=overall+"%";
+ studentGroupBar.style.width=overall+"%";
+ studentGroupPct.textContent=overall+"%";
+
+ studentRows.innerHTML=rows;
+
+ const activityNames={
+   1:[
+     "Preparation / Guided Reading",
+     "Lecture Content",
+     "Applied In-Class Activity",
+     "Case / Assignment"
+   ],
+   2:[
+     "Preparation / Guided Reading",
+     "Lecture Content",
+     "Applied In-Class Activity",
+     "Case / Assignment"
+   ],
+   3:[
+     "Guided Reading / Preparation",
+     "Lecture Content",
+     "In-Class Activity",
+     "Mini Case / Assignment"
+   ]
+ };
+
+ studentWeekDetails.innerHTML=[1,2,3].map(w=>{
+
+   let p=getProg(s.id,w);
+   let states=getTaskStates(p);
+   let pct=weekPct(s.id,w);
+
+   let activities=activityNames[w].map((name,i)=>`
+     <div class="student-activity">
+       <b>${name}</b>
+       <div class="${states[i]?'activity-done':'activity-pending'}">
+         ${states[i]?'Completed ✓':'Pending'}
+       </div>
+     </div>
+   `).join("");
+
+   activities+=`
+     <div class="student-activity">
+       <b>Knowledge Check / Quiz</b>
+       <div class="${p.quiz!==null?'activity-done':'activity-pending'}">
+         ${p.quiz!==null?p.quiz+"%":"Pending"}
+       </div>
+     </div>
+
+     <div class="student-activity">
+       <b>Reflection</b>
+       <div class="${p.reflection?'activity-done':'activity-pending'}">
+         ${p.reflection?'Completed ✓':'Pending'}
+       </div>
+     </div>
+   `;
+
+   return `
+   <div class="student-week">
+
+     <div class="student-week-head">
+       <div>
+         <b>Week ${w}: ${course[w-1][0]}</b>
+         <div class="muted">${weekStatus(s.id,w)}</div>
+       </div>
+
+       <strong>${pct}%</strong>
+     </div>
+
+     <div class="progress" style="margin-top:9px">
+       <div class="bar" style="width:${pct}%"></div>
+     </div>
+
+     <div class="student-activities">
+       ${activities}
+     </div>
+
+   </div>`;
+ }).join("");
+
+ calculateStudentGroupAverage(s);
+
+}function calculateStudentGroupAverage(s){
+
+ if(!s || !s.group){
+   groupAveragePct.textContent="—";
+   groupAverageBar.style.width="0%";
+   return;
+ }
+
+ let members=db.students.filter(x=>x.group===s.group);
+
+ if(!members.length){
+   groupAveragePct.textContent="—";
+   groupAverageBar.style.width="0%";
+   return;
+ }
+
+ let total=0;
+
+ members.forEach(member=>{
+
+   let memberTotal=0;
+
+   for(let w=1;w<=15;w++){
+     memberTotal+=weekPct(member.id,w);
+   }
+
+   total+=memberTotal/15;
+
+ });
+
+ let avg=Math.round(total/members.length);
+
+ groupAveragePct.textContent=avg+"%";
+ groupAverageBar.style.width=avg+"%";
+
 }
 function renderGroups(){
- groupCards.innerHTML=db.groups.map(g=>{let members=db.students.filter(s=>s.group===g);let avg=members.length?Math.round(members.reduce((a,s)=>a+weekPct(s.id,1),0)/members.length):0;return `<div class="card stat"><span class="muted">${g}</span><strong>${members.length}</strong><span class="muted">${avg}% Week 1 avg</span></div>`}).join("");
- groupRows.innerHTML=db.groups.map(g=>{let m=db.students.filter(s=>s.group===g);let avg=m.length?Math.round(m.reduce((a,s)=>a+weekPct(s.id,1),0)/m.length):0;let qs=m.map(s=>getProg(s.id,1).quiz).filter(q=>q!==null);let qa=qs.length?Math.round(qs.reduce((a,b)=>a+b,0)/qs.length):0;return `<tr><td>${g}</td><td>${m.map(x=>x.name).join(", ")||"—"}</td><td>${avg}%</td><td>${qa}%</td></tr>`}).join("")
+
+ groupCards.innerHTML=db.groups.map(g=>{
+
+   let members=db.students.filter(s=>s.group===g);
+
+   let avg=0;
+
+   if(members.length){
+
+     let totals=members.map(s=>{
+
+       let sum=0;
+
+       for(let w=1;w<=15;w++){
+         sum+=weekPct(s.id,w);
+       }
+
+       return sum/15;
+
+     });
+
+     avg=Math.round(
+       totals.reduce((a,b)=>a+b,0)/totals.length
+     );
+   }
+
+   return `
+   <div class="card stat">
+     <span class="muted">${g}</span>
+     <strong>${members.length}</strong>
+     <span class="muted">${avg}% overall group progress</span>
+   </div>`;
+
+ }).join("");
+
+ groupRows.innerHTML=db.groups.map(g=>{
+
+   let members=db.students.filter(s=>s.group===g);
+
+   let avg=0;
+
+   if(members.length){
+
+     let totals=members.map(s=>{
+
+       let sum=0;
+
+       for(let w=1;w<=15;w++){
+         sum+=weekPct(s.id,w);
+       }
+
+       return sum/15;
+
+     });
+
+     avg=Math.round(
+       totals.reduce((a,b)=>a+b,0)/totals.length
+     );
+   }
+
+   let qs=[];
+
+   members.forEach(s=>{
+     for(let w=1;w<=3;w++){
+       let q=getProg(s.id,w).quiz;
+       if(q!==null)qs.push(q);
+     }
+   });
+
+   let qa=qs.length
+      ?Math.round(qs.reduce((a,b)=>a+b,0)/qs.length)
+      :0;
+
+   return `
+   <tr>
+     <td>${g}</td>
+     <td>${members.map(x=>x.name).join(", ")||"—"}</td>
+     <td>${avg}%</td>
+     <td>${qa}%</td>
+   </tr>`;
+
+ }).join("");
+
 }
 
 async function refreshInstructor(){
