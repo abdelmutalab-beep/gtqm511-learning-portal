@@ -29,7 +29,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </head>
 <body>
 <header><div class="top">
-<div class="brand"><b>G TQM 511</b><small>Organizational Behavior and Quality</small></div>
+<div class="brand"><b>G TQM 511</b><small>Organizational Behavior and Quality • <span id="syncStatus">Connecting...</span></small></div>
 <nav>
 <button class="nav active" data-page="home">Home</button>
 <button class="nav" data-page="register">Register</button>
@@ -183,6 +183,8 @@ rubric:"Conceptual accuracy 30% • Quality of diagnosis 30% • Application to 
 }
 };
 
+const API_URL="https://script.google.com/macros/s/AKfycbxnbCjhDwhYbhQ9WT3yeVqHqzxE3T39f129hGCfA0jbUrwlLihRUr9zxt3NBcBgZVKl/exec";
+let centralOnline=false;
 let db=JSON.parse(localStorage.getItem("gtqm511_v2")||"null")||{students:[],groups:["Group A","Group B","Group C","Group D"],activeStudentId:"",progress:{}};
 if(!db.progress)db.progress={}; if(!db.students)db.students=[]; if(!db.groups)db.groups=["Group A","Group B","Group C","Group D"];
 let currentWeek=1,currentTab="overview";
@@ -205,7 +207,46 @@ function weekPct(id,w){
  const reflectionPart=p.reflection?20:0;
  return Math.min(100,checklist+quizPart+reflectionPart)
 }
+
 function weekStatus(id,w){const pct=weekPct(id,w);return pct===100?"Completed":pct>0?"In Progress":"Not Started"}
+
+async function apiGet(params={}){
+ const u=new URL(API_URL); Object.entries(params).forEach(([k,v])=>u.searchParams.set(k,v));
+ const r=await fetch(u,{cache:"no-store"}); if(!r.ok)throw new Error("GET failed"); return r.json();
+}
+async function apiPost(payload){
+ const r=await fetch(API_URL,{method:"POST",body:JSON.stringify(payload)});
+ if(!r.ok)throw new Error("POST failed"); const d=await r.json(); if(d&&d.ok===false)throw new Error(d.error||"API error"); return d;
+}
+function updateSyncStatus(){
+ const e=document.getElementById("syncStatus"); if(!e)return;
+ e.textContent=centralOnline?"Central database connected ✓":"Local mode";
+ e.style.color=centralOnline?"#abefc6":"#f4d18d";
+}
+async function syncFromCentral(){
+ try{
+   const [students,progress]=await Promise.all([apiGet({action:"students"}),apiGet({action:"progress"})]);
+   if(Array.isArray(students)){
+     db.students=students.map(s=>({name:s.name,id:String(s.id),email:s.email||"",group:s.group||db.groups[0]}));
+     const gs=[...new Set(db.students.map(s=>s.group).filter(Boolean))]; if(gs.length)db.groups=gs;
+   }
+   if(Array.isArray(progress))progress.forEach(x=>{
+     const st=Array.isArray(x.taskStates)?x.taskStates.map(Boolean):[false,false,false,false];
+     db.progress[pkey(String(x.studentId),Number(x.week))]={tasks:st.filter(Boolean).length,taskStates:st,quiz:x.quiz===null||x.quiz===undefined?null:Number(x.quiz),reflection:Boolean(x.reflection),reflectionText:x.reflectionText||""};
+   });
+   centralOnline=true; save(); renderAll(); updateSyncStatus();
+ }catch(e){centralOnline=false;updateSyncStatus();console.warn(e)}
+}
+async function pushStudent(s){
+ try{await apiPost({action:"upsertStudent",student:s});centralOnline=true;updateSyncStatus()}
+ catch(e){centralOnline=false;updateSyncStatus();console.warn(e)}
+}
+async function pushProgress(id,w){
+ const q=getProg(id,w),st=getTaskStates(q);
+ try{await apiPost({action:"saveProgress",progress:{studentId:String(id),week:Number(w),taskStates:st,quiz:q.quiz,reflection:Boolean(q.reflection),reflectionText:q.reflectionText||"",total:weekPct(id,w)}});centralOnline=true;updateSyncStatus()}
+ catch(e){centralOnline=false;updateSyncStatus();console.warn(e)}
+}
+
 
 function renderWeeks(){
  let box=document.getElementById("weeks");box.innerHTML="";
@@ -218,16 +259,16 @@ function showPage(id){document.querySelectorAll(".page").forEach(x=>x.classList.
 document.querySelectorAll(".nav[data-page]").forEach(b=>b.onclick=()=>showPage(b.dataset.page));
 
 function renderGroupOptions(){regGroup.innerHTML=db.groups.map(g=>`<option>${g}</option>`).join("")}
-function registerStudent(){
+async function registerStudent(){
  let name=regName.value.trim(),id=regId.value.trim(),email=regEmail.value.trim(),group=regGroup.value;
  if(!name||!id){regMsg.className="notice";regMsg.textContent="Name and Student ID are required.";return}
  let existing=db.students.find(s=>s.id===id);if(existing)Object.assign(existing,{name,email,group});else db.students.push({name,id,email,group});
- db.activeStudentId=id;save();regMsg.className="success";regMsg.textContent="Profile saved.";renderAll()
+ db.activeStudentId=id;save();renderAll();regMsg.className="muted";regMsg.textContent="Saving centrally...";await pushStudent({name,id,email,group});regMsg.className=centralOnline?"success":"notice";regMsg.textContent=centralOnline?"Profile saved centrally ✓":"Saved locally; central connection unavailable."
 }
-function bulkImport(){
+async function bulkImport(){
  let lines=bulkStudents.value.split(/\n+/).map(x=>x.trim()).filter(Boolean),added=0;
  lines.forEach(line=>{let [name,id,email,group]=line.split("|").map(x=>(x||"").trim());if(!name||!id)return;if(group&&!db.groups.includes(group))db.groups.push(group);let ex=db.students.find(s=>s.id===id);if(ex)Object.assign(ex,{name,email,group:group||ex.group||db.groups[0]});else db.students.push({name,id,email,group:group||db.groups[0]});added++});
- save();adminMsg.textContent=`Imported / updated ${added} students.`;bulkStudents.value="";renderAll()
+ save();renderAll();adminMsg.textContent=`Saving ${added} students centrally...`;for(const s of db.students)await pushStudent(s);adminMsg.textContent=centralOnline?`Imported / updated ${added} students centrally ✓`:`Imported ${added} locally; central sync unavailable.`;bulkStudents.value=""
 }
 function addGroup(){let g=newGroup.value.trim();if(g&&!db.groups.includes(g)){db.groups.push(g);save();newGroup.value="";renderAll()}}
 function deleteStudent(id){db.students=db.students.filter(s=>s.id!==id);if(db.activeStudentId===id)db.activeStudentId="";save();renderAll()}
@@ -272,13 +313,13 @@ function setTask(i,checked){
  p.taskStates=states;
  p.tasks=states.filter(Boolean).length;
  db.progress[pkey(s.id,currentWeek)]=p;
- save();renderAll();renderWeekBody()
+ save();renderAll();renderWeekBody();pushProgress(s.id,currentWeek)
 }
 function renderQuiz(d){let p=student()?getProg(student().id,currentWeek):{quiz:null};weekBody.innerHTML=`<div class="card quiz"><h3>Knowledge Check</h3>${d.quiz.map((q,qi)=>`<div class="topic"><p><b>${qi+1}. ${q[0]}</b></p>${q[1].map((a,ai)=>`<label><input style="width:auto" type="radio" name="q${qi}" value="${ai}"> ${a}</label>`).join("")}</div>`).join("")}<button class="btn" onclick="gradeCurrentQuiz()">Submit Quiz</button><p id="quizMsg">${p.quiz!==null?`Previous score: ${p.quiz}%`:""}</p></div>`}
-function gradeCurrentQuiz(){let s=student();if(!s){alert("Register/select a student first.");return}let d=week1,correct=0;d.quiz.forEach((q,qi)=>{let x=document.querySelector(`input[name=q${qi}]:checked`);if(x&&+x.value===q[2])correct++});let score=Math.round(correct/d.quiz.length*100),p=getProg(s.id,currentWeek);p.quiz=score;db.progress[pkey(s.id,currentWeek)]=p;save();quizMsg.textContent=`Score: ${score}% (${correct}/${d.quiz.length})`;renderAll()}
-function saveReflection(){let s=student();if(!s){alert("Register/select a student first.");return}let text=(reflectionText.value||"").trim();if(!text){alert("Please write your reflection before saving.");return}let p=getProg(s.id,currentWeek);p.reflection=true;p.reflectionText=text;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody()}
+function gradeCurrentQuiz(){let s=student();if(!s){alert("Register/select a student first.");return}let d=week1,correct=0;d.quiz.forEach((q,qi)=>{let x=document.querySelector(`input[name=q${qi}]:checked`);if(x&&+x.value===q[2])correct++});let score=Math.round(correct/d.quiz.length*100),p=getProg(s.id,currentWeek);p.quiz=score;db.progress[pkey(s.id,currentWeek)]=p;save();quizMsg.textContent=`Score: ${score}% (${correct}/${d.quiz.length})`;renderAll();pushProgress(s.id,currentWeek)}
+function saveReflection(){let s=student();if(!s){alert("Register/select a student first.");return}let text=(reflectionText.value||"").trim();if(!text){alert("Please write your reflection before saving.");return}let p=getProg(s.id,currentWeek);p.reflection=true;p.reflectionText=text;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();pushProgress(s.id,currentWeek)}
 lang.onclick=()=>{let ar=document.body.classList.toggle("rtl");document.documentElement.dir=ar?"rtl":"ltr";lang.textContent=ar?"English":"العربية";heroText.textContent=ar?"بوابة تعلم تطبيقية تربط السلوك على مستوى الفرد والمجموعة والمنظمة بأداء الجودة والخدمة والمشاركة والقيادة والتحسين المستمر.":"A practical learning portal linking individual, group and organizational behavior to quality performance, service, engagement, leadership and continuous improvement."}
-renderAll();
+renderAll();updateSyncStatus();syncFromCentral();
 </script>
 </body>
 </html>
