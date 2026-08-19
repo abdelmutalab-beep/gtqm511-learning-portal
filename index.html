@@ -29,7 +29,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </head>
 <body>
 <header><div class="top">
-<div class="brand"><b>G TQM 511</b><small>Organizational Behavior and Quality • <span id="syncStatus">Connecting...</span></small></div>
+<div class="brand"><b>G TQM 511</b><small>Organizational Behavior and Quality • <span id="syncStatus">Connecting...</span> <span id="saveStatus" style="margin-left:12px"></span></small></div>
 <nav>
 <button class="nav active" data-page="home">Home</button>
 <button class="nav" data-page="register">Register</button>
@@ -65,7 +65,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 
 <section id="student" class="page hidden">
-<div class="section-head"><h2>Student Dashboard</h2><span id="studentName" class="muted">No student registered</span></div>
+<div class="section-head"><h2>Student Dashboard</h2><span class="muted">Progress updates after each saved action</span><span id="studentName" class="muted">No student registered</span></div>
 <div class="grid">
 <div class="card stat"><span class="muted">Progress</span><strong id="sProgress">0%</strong></div>
 <div class="card stat"><span class="muted">Quiz Average</span><strong id="sQuiz">0%</strong></div>
@@ -82,7 +82,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 
 <section id="instructor" class="page hidden">
-<div class="section-head"><h2>Instructor Dashboard</h2><span class="muted">Week 1 tracking</span></div>
+<div class="section-head"><h2>Instructor Dashboard</h2><button class="btn alt" onclick="refreshInstructor()">Refresh Data</button><span class="muted">Week 1 tracking</span></div>
 <div class="grid">
 <div class="card stat"><span class="muted">Registered Students</span><strong id="iStudents">0</strong></div>
 <div class="card stat"><span class="muted">Groups</span><strong id="iGroups">4</strong></div>
@@ -360,6 +360,13 @@ function updateSyncStatus(){
  e.textContent=centralOnline?"Central database connected ✓":"Connecting...";
  e.style.color=centralOnline?"#abefc6":"#f4d18d";
 }
+function setSaveStatus(msg,ok=true){
+ const e=document.getElementById("saveStatus"); if(!e)return;
+ e.textContent=msg||"";
+ e.style.color=ok?"#abefc6":"#ffb4b4";
+ if(msg) setTimeout(()=>{if(e.textContent===msg)e.textContent=""},3500);
+}
+
 async function checkCentral(){
  try{
    await apiGet({});
@@ -397,16 +404,25 @@ async function loadStudentById(id){
 }
 async function pushProgress(id,w){
  const q=getProg(id,w),st=getTaskStates(q);
+ setSaveStatus("Saving...",true);
  try{
    await apiPost({action:"saveProgress",progress:{
      studentId:String(id),week:Number(w),taskStates:st,
      quiz:q.quiz,reflection:Boolean(q.reflection),
      reflectionText:q.reflectionText||"",total:weekPct(id,w)
    }});
-   centralOnline=true;updateSyncStatus();
+   centralOnline=true;
+   updateSyncStatus();
+   setSaveStatus("Saved ✓",true);
+   save();
+   renderStudent();
+   if(adminUnlocked)renderInstructor();
+   return true;
  }catch(e){
-   alert("Progress could not be saved centrally. Please try again.");
+   setSaveStatus("Save failed ✕",false);
+   alert("Your work was not saved. Please check your internet connection and try again.");
    console.warn(e);
+   return false;
  }
 }
 async function unlockInstructor(){
@@ -500,6 +516,22 @@ function renderGroups(){
  groupCards.innerHTML=db.groups.map(g=>{let members=db.students.filter(s=>s.group===g);let avg=members.length?Math.round(members.reduce((a,s)=>a+weekPct(s.id,1),0)/members.length):0;return `<div class="card stat"><span class="muted">${g}</span><strong>${members.length}</strong><span class="muted">${avg}% Week 1 avg</span></div>`}).join("");
  groupRows.innerHTML=db.groups.map(g=>{let m=db.students.filter(s=>s.group===g);let avg=m.length?Math.round(m.reduce((a,s)=>a+weekPct(s.id,1),0)/m.length):0;let qs=m.map(s=>getProg(s.id,1).quiz).filter(q=>q!==null);let qa=qs.length?Math.round(qs.reduce((a,b)=>a+b,0)/qs.length):0;return `<tr><td>${g}</td><td>${m.map(x=>x.name).join(", ")||"—"}</td><td>${avg}%</td><td>${qa}%</td></tr>`}).join("")
 }
+
+async function refreshInstructor(){
+ if(!adminUnlocked)return;
+ setSaveStatus("Refreshing...",true);
+ try{
+   const snap=await apiPost({action:"adminSnapshot",pin:adminPin});
+   db.students=(snap.students||[]).map(s=>({name:s.name,id:String(s.id),email:s.email||"",group:s.group||""}));
+   applyProgressRows(snap.progress||[]);
+   save();
+   renderInstructor();
+   setSaveStatus("Instructor data refreshed ✓",true);
+ }catch(e){
+   setSaveStatus("Refresh failed ✕",false);
+   alert("Could not refresh instructor data.");
+ }
+}
 function renderInstructor(){
  iStudents.textContent=db.students.length;iGroups.textContent=db.groups.length;
  let vals=db.students.map(s=>weekPct(s.id,1)),avg=vals.length?Math.round(vals.reduce((a,b)=>a+b,0)/vals.length):0;iCompletion.textContent=avg+"%";iRisk.textContent=vals.filter(x=>x<50).length;
@@ -527,21 +559,36 @@ function renderWeekBody(){
  if(currentTab==="activity")weekBody.innerHTML=`<div class="card"><h3>${d.activity.title}</h3><p><b>Scenario:</b> ${d.activity.scenario}</p><ol>${d.activity.tasks.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol><p><b>Deliverable:</b> ${d.activity.deliverable}</p></div>`;
  if(currentTab==="case")weekBody.innerHTML=`<div class="card"><h3>${d.case.title}</h3><p>${d.case.text}</p><ol>${d.case.questions.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol><div class="success"><b>Core lesson:</b> ${d.case.lesson}</div></div>`;
  if(currentTab==="quiz")renderQuiz(d);
- if(currentTab==="assignment")weekBody.innerHTML=`<div class="card"><h3>${d.assignment.title}</h3><p>${d.assignment.text}</p><h4>Requirements</h4><ol>${d.assignment.requirements.map(x=>`<li style="margin:7px 0">${x}</li>`).join("")}</ol><div class="notice"><b>Assessment:</b> ${d.assignment.rubric}</div></div>`;
+ if(currentTab==="assignment")weekBody.innerHTML=`<div class="card"><h3>${d.assignment.title}</h3><p>${d.assignment.text}</p><h4>Requirements</h4><ol>${d.assignment.requirements.map(x=>`<li style="margin:7px 0">${x}</li>`).join("")}</ol><div class="notice"><b>Assessment:</b> ${d.assignment.rubric}</div><div class="file-actions" style="margin-top:16px"><button class="btn good" onclick="markAssignmentCompleted()">Mark Assignment Completed</button></div></div>`;
  if(currentTab==="reflection")weekBody.innerHTML=`<div class="card"><h3>Reflection</h3><p>Write one concept you will apply in your work or quality practice, and explain how.</p><textarea id="reflectionText" placeholder="Your reflection...">${p.reflectionText||""}</textarea><button class="btn good" style="margin-top:10px" onclick="saveReflection()">Save Reflection</button><p class="muted">${p.reflection?"Reflection completed ✓":"Not yet completed"}</p></div>`
 }
-function setTask(i,checked){
+async function setTask(i,checked){
  let s=student();if(!s){alert("Register/select a student first.");renderWeekBody();return}
  let p=getProg(s.id,currentWeek),states=getTaskStates(p);
  states[i]=checked;
  p.taskStates=states;
  p.tasks=states.filter(Boolean).length;
  db.progress[pkey(s.id,currentWeek)]=p;
- save();renderAll();renderWeekBody();pushProgress(s.id,currentWeek)
+ save();renderAll();renderWeekBody();await pushProgress(s.id,currentWeek)
 }
 function renderQuiz(d){let p=student()?getProg(student().id,currentWeek):{quiz:null};weekBody.innerHTML=`<div class="card quiz"><h3>Knowledge Check</h3>${d.quiz.map((q,qi)=>`<div class="topic"><p><b>${qi+1}. ${q[0]}</b></p>${q[1].map((a,ai)=>`<label><input style="width:auto" type="radio" name="q${qi}" value="${ai}"> ${a}</label>`).join("")}</div>`).join("")}<button class="btn" onclick="gradeCurrentQuiz()">Submit Quiz</button><p id="quizMsg">${p.quiz!==null?`Previous score: ${p.quiz}%`:""}</p></div>`}
-function gradeCurrentQuiz(){let s=student();if(!s){alert("Register/select a student first.");return}let d=currentWeek===1?week1:currentWeek===2?week2:currentWeek===3?week3:null;if(!d)return;let correct=0;d.quiz.forEach((q,qi)=>{let x=document.querySelector(`input[name=q${qi}]:checked`);if(x&&+x.value===q[2])correct++});let score=Math.round(correct/d.quiz.length*100),p=getProg(s.id,currentWeek);p.quiz=score;db.progress[pkey(s.id,currentWeek)]=p;save();quizMsg.textContent=`Score: ${score}% (${correct}/${d.quiz.length})`;renderAll();pushProgress(s.id,currentWeek)}
-function saveReflection(){let s=student();if(!s){alert("Register/select a student first.");return}let text=(reflectionText.value||"").trim();if(!text){alert("Please write your reflection before saving.");return}let p=getProg(s.id,currentWeek);p.reflection=true;p.reflectionText=text;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();pushProgress(s.id,currentWeek)}
+
+async function markAssignmentCompleted(){
+ const id=db.activeStudentId;
+ if(!id){alert("Please enter the course using your Student ID first.");return}
+ const p=getProg(id,currentWeek);
+ const states=getTaskStates(p);
+ states[3]=true;
+ p.taskStates=states;
+ p.tasks=states.filter(Boolean).length;
+ save();
+ renderWeekBody();
+ renderStudent();
+ const ok=await await pushProgress(id,currentWeek);
+ if(ok) setSaveStatus("Assignment saved ✓",true);
+}
+async function gradeCurrentQuiz(){let s=student();if(!s){alert("Register/select a student first.");return}let d=currentWeek===1?week1:currentWeek===2?week2:currentWeek===3?week3:null;if(!d)return;let correct=0;d.quiz.forEach((q,qi)=>{let x=document.querySelector(`input[name=q${qi}]:checked`);if(x&&+x.value===q[2])correct++});let score=Math.round(correct/d.quiz.length*100),p=getProg(s.id,currentWeek);p.quiz=score;db.progress[pkey(s.id,currentWeek)]=p;save();quizMsg.textContent=`Score: ${score}% (${correct}/${d.quiz.length})`;renderAll();pushProgress(s.id,currentWeek)}
+async function saveReflection(){let s=student();if(!s){alert("Register/select a student first.");return}let text=(reflectionText.value||"").trim();if(!text){alert("Please write your reflection before saving.");return}let p=getProg(s.id,currentWeek);p.reflection=true;p.reflectionText=text;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();await pushProgress(s.id,currentWeek)}
 lang.onclick=()=>{let ar=document.body.classList.toggle("rtl");document.documentElement.dir=ar?"rtl":"ltr";lang.textContent=ar?"English":"العربية";heroText.textContent=ar?"بوابة تعلم تطبيقية تربط السلوك على مستوى الفرد والمجموعة والمنظمة بأداء الجودة والخدمة والمشاركة والقيادة والتحسين المستمر.":"A practical learning portal linking individual, group and organizational behavior to quality performance, service, engagement, leadership and continuous improvement."}
 db.activeStudentId="";db.students=[];db.progress={};save();renderAll();updateSyncStatus();checkCentral();initAccess();
 </script>
