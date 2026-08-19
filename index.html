@@ -363,10 +363,15 @@ async function syncFromCentral(){
      db.students=students.map(s=>({name:s.name,id:String(s.id),email:s.email||"",group:s.group||db.groups[0]}));
      const gs=[...new Set(db.students.map(s=>s.group).filter(Boolean))]; if(gs.length)db.groups=gs;
    }
-   if(Array.isArray(progress))progress.forEach(x=>{
-     const st=Array.isArray(x.taskStates)?x.taskStates.map(Boolean):[false,false,false,false];
-     db.progress[pkey(String(x.studentId),Number(x.week))]={tasks:st.filter(Boolean).length,taskStates:st,quiz:x.quiz===null||x.quiz===undefined?null:Number(x.quiz),reflection:Boolean(x.reflection),reflectionText:x.reflectionText||""};
-   });
+   if(Array.isArray(progress)){
+     // Central database is the source of truth.
+     // Clear stale local progress first so deleted/reset records disappear from this browser too.
+     db.progress={};
+     progress.forEach(x=>{
+       const st=Array.isArray(x.taskStates)?x.taskStates.map(Boolean):[false,false,false,false];
+       db.progress[pkey(String(x.studentId),Number(x.week))]={tasks:st.filter(Boolean).length,taskStates:st,quiz:x.quiz===null||x.quiz===undefined?null:Number(x.quiz),reflection:Boolean(x.reflection),reflectionText:x.reflectionText||""};
+     });
+   }
    centralOnline=true; save(); renderAll(); updateSyncStatus();
  }catch(e){centralOnline=false;updateSyncStatus();console.warn(e)}
 }
