@@ -130,7 +130,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 </main>
 
-<footer>G TQM 511 Learning Portal • Progress Tracking v11 • Student submissions + Instructor review • Reset enabled</footer>
+<footer>G TQM 511 Learning Portal • Progress Tracking v12 • PDF Assignment Upload + Instructor Review • Reset enabled</footer>
 
 <script>
 const course=[
@@ -203,15 +203,15 @@ let currentWeek=1,currentTab="overview",adminUnlocked=false,adminPin="";
 function save(){localStorage.setItem("gtqm511_v3",JSON.stringify(db))}
 function student(){return db.students.find(s=>s.id===db.activeStudentId)||null}
 function pkey(id,w){return id+"_"+w}
-function blankProg(){return{tasks:0,taskStates:[false,false,false,false],quiz:null,reflection:false,reflectionText:"",preClassReflection:false,preClassText:"",miniCase:false,activityText:"",caseText:"",assignmentText:"",reviews:{preclass:{status:"Submitted",feedback:""},activity:{status:"Submitted",feedback:""},case:{status:"Submitted",feedback:""},assignment:{status:"Submitted",feedback:""},reflection:{status:"Submitted",feedback:""}}}}
+function blankProg(){return{tasks:0,taskStates:[false,false,false,false],quiz:null,reflection:false,reflectionText:"",preClassReflection:false,preClassText:"",miniCase:false,activityText:"",caseText:"",assignmentText:"",assignmentPdfUrl:"",assignmentPdfName:"",reviews:{preclass:{status:"Submitted",feedback:""},activity:{status:"Submitted",feedback:""},case:{status:"Submitted",feedback:""},assignment:{status:"Submitted",feedback:""},reflection:{status:"Submitted",feedback:""}}}}
 const META_PREFIX="GTQM511_META::";
 function encodeReflectionPayload(p){
- return META_PREFIX+JSON.stringify({post:p.reflectionText||"",pre:p.preClassText||"",preDone:Boolean(p.preClassReflection),mini:Boolean(p.miniCase),activityText:p.activityText||"",caseText:p.caseText||"",assignmentText:p.assignmentText||"",reviews:p.reviews||{}})
+ return META_PREFIX+JSON.stringify({post:p.reflectionText||"",pre:p.preClassText||"",preDone:Boolean(p.preClassReflection),mini:Boolean(p.miniCase),activityText:p.activityText||"",caseText:p.caseText||"",assignmentText:p.assignmentText||"",assignmentPdfUrl:p.assignmentPdfUrl||"",assignmentPdfName:p.assignmentPdfName||"",reviews:p.reviews||{}})
 }
 function decodeReflectionPayload(raw){
  const s=String(raw||"");
- if(!s.startsWith(META_PREFIX))return{post:s,pre:"",preDone:false,mini:false,activityText:"",caseText:"",assignmentText:"",reviews:{}};
- try{const x=JSON.parse(s.slice(META_PREFIX.length));return{post:x.post||"",pre:x.pre||"",preDone:Boolean(x.preDone),mini:Boolean(x.mini),activityText:x.activityText||"",caseText:x.caseText||"",assignmentText:x.assignmentText||"",reviews:x.reviews||{}}}catch(e){return{post:"",pre:"",preDone:false,mini:false,activityText:"",caseText:"",assignmentText:"",reviews:{}}}
+ if(!s.startsWith(META_PREFIX))return{post:s,pre:"",preDone:false,mini:false,activityText:"",caseText:"",assignmentText:"",assignmentPdfUrl:"",assignmentPdfName:"",reviews:{}};
+ try{const x=JSON.parse(s.slice(META_PREFIX.length));return{post:x.post||"",pre:x.pre||"",preDone:Boolean(x.preDone),mini:Boolean(x.mini),activityText:x.activityText||"",caseText:x.caseText||"",assignmentText:x.assignmentText||"",assignmentPdfUrl:x.assignmentPdfUrl||"",assignmentPdfName:x.assignmentPdfName||"",reviews:x.reviews||{}}}catch(e){return{post:"",pre:"",preDone:false,mini:false,activityText:"",caseText:"",assignmentText:"",assignmentPdfUrl:"",assignmentPdfName:"",reviews:{}}}
 }
 function ensureReviews(p){
  const base={preclass:{status:"Submitted",feedback:""},activity:{status:"Submitted",feedback:""},case:{status:"Submitted",feedback:""},assignment:{status:"Submitted",feedback:""},reflection:{status:"Submitted",feedback:""}};
@@ -238,7 +238,7 @@ function applyProgressRows(rows){
  (rows||[]).forEach(x=>{
    const st=Array.isArray(x.taskStates)?x.taskStates.map(Boolean):[false,false,false,false];
    const meta=decodeReflectionPayload(x.reflectionText||"");
-   db.progress[pkey(String(x.studentId),Number(x.week))]=ensureReviews({tasks:st.filter(Boolean).length,taskStates:st,quiz:x.quiz===null||x.quiz===undefined||x.quiz===""?null:Number(x.quiz),reflection:Boolean(x.reflection),reflectionText:meta.post,preClassReflection:meta.preDone,preClassText:meta.pre,miniCase:meta.mini,activityText:meta.activityText||"",caseText:meta.caseText||"",assignmentText:meta.assignmentText||"",reviews:meta.reviews||{}});
+   db.progress[pkey(String(x.studentId),Number(x.week))]=ensureReviews({tasks:st.filter(Boolean).length,taskStates:st,quiz:x.quiz===null||x.quiz===undefined||x.quiz===""?null:Number(x.quiz),reflection:Boolean(x.reflection),reflectionText:meta.post,preClassReflection:meta.preDone,preClassText:meta.pre,miniCase:meta.mini,activityText:meta.activityText||"",caseText:meta.caseText||"",assignmentText:meta.assignmentText||"",assignmentPdfUrl:meta.assignmentPdfUrl||"",assignmentPdfName:meta.assignmentPdfName||"",reviews:meta.reviews||{}});
  });
 }
 async function loadStudentById(id){
@@ -385,7 +385,7 @@ function renderInstructor(){
 function workTextFor(p,key){if(key==="preclass")return p.preClassText||"";if(key==="activity")return p.activityText||"";if(key==="case")return p.caseText||"";if(key==="assignment")return p.assignmentText||"";if(key==="reflection")return p.reflectionText||"";return""}
 function workSubmitted(p,key){if(key==="preclass")return!!p.preClassReflection;if(key==="activity")return!!getTaskStates(p)[2];if(key==="case")return!!p.miniCase;if(key==="assignment")return!!getTaskStates(p)[3];if(key==="reflection")return!!p.reflection;return false}
 function escapeHtml(str){return String(str||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]))}
-function openStudentReview(id){if(!adminUnlocked)return;const s=db.students.find(x=>String(x.id)===String(id));if(!s)return;const labels={preclass:"Pre-Class Reflection",activity:"In-Class Activity",case:"Mini Case",assignment:"Assignment",reflection:"Post-Class Reflection"};let cards="";for(let w=1;w<=4;w++){const p=getProg(id,w);let inner="";Object.keys(labels).forEach(key=>{const submitted=workSubmitted(p,key),txt=workTextFor(p,key),r=p.reviews[key]||{status:"Submitted",feedback:""};inner+=`<div class="review-card"><b>Week ${w} • ${labels[key]}</b><div class="muted">${submitted?"Submitted":"Not submitted"} • Review status: ${r.status||"Submitted"}</div>${submitted?`<div class="review-text">${escapeHtml(txt)||"<i>No text stored</i>"}</div><label>Feedback</label><textarea id="fb_${id}_${w}_${key}" placeholder="Instructor feedback...">${escapeHtml(r.feedback||"")}</textarea><div class="file-actions"><button class="btn good" onclick="saveReview('${id}',${w},'${key}','Reviewed')">Mark Reviewed</button><button class="btn alt" onclick="saveReview('${id}',${w},'${key}','Needs Revision')">Needs Revision</button></div>`:""}</div>`});cards+=`<div class="student-week"><h3>Week ${w}: ${course[w-1][0]}</h3>${inner}</div>`}reviewWorkspace.innerHTML=`<div class="section-head"><div><b>${s.name}</b><div class="muted">${s.id} • ${s.group||"—"}</div></div><button class="btn alt" onclick="reviewWorkspace.innerHTML='Choose Review beside a student.'">Close Review</button></div>${cards}`;reviewWorkspace.scrollIntoView({behavior:"smooth",block:"start"})}
+function openStudentReview(id){if(!adminUnlocked)return;const s=db.students.find(x=>String(x.id)===String(id));if(!s)return;const labels={preclass:"Pre-Class Reflection",activity:"In-Class Activity",case:"Mini Case",assignment:"Assignment",reflection:"Post-Class Reflection"};let cards="";for(let w=1;w<=4;w++){const p=getProg(id,w);let inner="";Object.keys(labels).forEach(key=>{const submitted=workSubmitted(p,key),txt=workTextFor(p,key),r=p.reviews[key]||{status:"Submitted",feedback:""};inner+=`<div class="review-card"><b>Week ${w} • ${labels[key]}</b><div class="muted">${submitted?"Submitted":"Not submitted"} • Review status: ${r.status||"Submitted"}</div>${submitted?`${txt?`<div class="review-text">${escapeHtml(txt)}</div>`:""}${key==="assignment"&&p.assignmentPdfUrl?`<div class="success"><b>PDF:</b> <a href="${p.assignmentPdfUrl}" target="_blank" rel="noopener">${escapeHtml(p.assignmentPdfName||"Open submitted PDF")}</a></div>`:""}${!txt && !(key==="assignment"&&p.assignmentPdfUrl)?"<div class=\"review-text\"><i>No text stored</i></div>":""}<label>Feedback</label><textarea id="fb_${id}_${w}_${key}" placeholder="Instructor feedback...">${escapeHtml(r.feedback||"")}</textarea><div class="file-actions"><button class="btn good" onclick="saveReview('${id}',${w},'${key}','Reviewed')">Mark Reviewed</button><button class="btn alt" onclick="saveReview('${id}',${w},'${key}','Needs Revision')">Needs Revision</button></div>`:""}</div>`});cards+=`<div class="student-week"><h3>Week ${w}: ${course[w-1][0]}</h3>${inner}</div>`}reviewWorkspace.innerHTML=`<div class="section-head"><div><b>${s.name}</b><div class="muted">${s.id} • ${s.group||"—"}</div></div><button class="btn alt" onclick="reviewWorkspace.innerHTML='Choose Review beside a student.'">Close Review</button></div>${cards}`;reviewWorkspace.scrollIntoView({behavior:"smooth",block:"start"})}
 async function saveReview(id,w,key,status){if(!adminUnlocked)return;const p=getProg(id,w),el=document.getElementById(`fb_${id}_${w}_${key}`);ensureReviews(p);p.reviews[key]={status,feedback:el?(el.value||"").trim():""};db.progress[pkey(id,w)]=p;save();const ok=await pushProgress(id,w);if(ok){setSaveStatus("Review saved ✓",true);openStudentReview(id)}else alert("Review could not be saved centrally.")}
 function initAccess(){const p=new URLSearchParams(location.search);if(p.get("admin")==="1"){adminNav.style.display="";adminNav.onclick=()=>unlockInstructor()}}
 function renderAll(){renderWeeks();renderStudent();renderGroups();if(adminUnlocked)renderInstructor()}
@@ -411,14 +411,86 @@ function renderWeekBody(){
  if(currentTab==="activity")weekBody.innerHTML=`<div class="card"><h3>In-Class Activity</h3><p>${d.activity}</p><p class="muted">Write your response or a brief summary of your group output. The instructor can review it and provide feedback.</p><textarea id="activityText" placeholder="Write your activity response...">${p.activityText||""}</textarea><div class="file-actions"><button class="btn good" onclick="submitActivity()">Submit Activity</button></div>${reviewPanelStudent(p.reviews.activity)}</div>`;
  if(currentTab==="case")weekBody.innerHTML=`<div class="card"><h3>${d.caseTitle}</h3><p>${d.caseText}</p><ol>${d.caseQuestions.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol><p class="muted">Write your case analysis below. Your instructor can review it and return feedback.</p><textarea id="caseText" placeholder="Write your case analysis...">${p.caseText||""}</textarea><div class="file-actions"><button class="btn good" onclick="submitCase()">Submit Mini Case</button></div>${reviewPanelStudent(p.reviews.case)}</div>`;
  if(currentTab==="quiz")renderQuiz(d);
- if(currentTab==="assignment")weekBody.innerHTML=`<div class="card"><h3>Week ${currentWeek} Assignment</h3><p>${d.assignment}</p><p class="muted">Submit your assignment as text here. PDF upload can be added later when file storage is connected.</p><textarea id="assignmentText" placeholder="Write or paste your assignment here...">${p.assignmentText||""}</textarea><div class="file-actions"><button class="btn good" onclick="submitAssignment()">Submit Assignment</button></div>${reviewPanelStudent(p.reviews.assignment)}</div>`;
+ if(currentTab==="assignment")weekBody.innerHTML=`<div class="card"><h3>Week ${currentWeek} Assignment</h3><p>${d.assignment}</p>
+<p class="muted">You may write your answer below, upload a PDF, or submit both. Maximum PDF size: 10 MB.</p>
+<label><b>Written response</b></label>
+<textarea id="assignmentText" placeholder="Write or paste your assignment here...">${p.assignmentText||""}</textarea>
+<div style="margin-top:14px"><label><b>PDF file</b></label><input id="assignmentPdf" type="file" accept="application/pdf,.pdf"></div>
+${p.assignmentPdfUrl?`<div class="success" style="margin-top:12px"><b>Uploaded PDF:</b> <a href="${p.assignmentPdfUrl}" target="_blank" rel="noopener">${p.assignmentPdfName||"Open PDF"}</a></div>`:""}
+<div class="file-actions"><button id="assignmentSubmitBtn" class="btn good" onclick="submitAssignment()">Submit Assignment</button></div>
+<p id="assignmentMsg" class="muted"></p>
+${reviewPanelStudent(p.reviews.assignment)}</div>`;
  if(currentTab==="reflection")weekBody.innerHTML=`<div class="card"><h3>Post-Class Reflection</h3><p>Write one concept you will apply in your work or quality practice, and explain how.</p><textarea id="reflectionText" placeholder="Your reflection...">${p.reflectionText||""}</textarea><div class="file-actions"><button class="btn good" onclick="saveReflection()">Save Reflection</button></div><p class="muted">${p.reflection?"Completed ✓":"Not yet completed"}</p>${reviewPanelStudent(p.reviews.reflection)}</div>`
 }
 function reviewPanelStudent(r){if(!r)return"";const status=r.status||"Submitted",fb=(r.feedback||"").trim(),cls=status==="Reviewed"?"success":status==="Needs Revision"?"notice":"muted";return `<div class="${cls}" style="margin-top:12px"><b>Instructor review:</b> ${status}${fb?`<br><b>Feedback:</b> ${fb}`:""}</div>`}
 function setReviewSubmitted(p,key){ensureReviews(p);p.reviews[key]={status:"Submitted",feedback:""}}
 async function submitActivity(){const s=student();if(!s){alert("Please register first.");return}const text=(activityText.value||"").trim();if(!text){alert("Please write your activity response before submitting.");return}const p=getProg(s.id,currentWeek),st=getTaskStates(p);p.activityText=text;st[2]=true;p.taskStates=st;p.tasks=st.filter(Boolean).length;setReviewSubmitted(p,"activity");db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();const ok=await pushProgress(s.id,currentWeek);alert(ok?"Activity submitted and saved ✓":"Activity saved locally, but central saving failed.")}
 async function submitCase(){const s=student();if(!s){alert("Please register first.");return}const text=(caseText.value||"").trim();if(!text){alert("Please write your case analysis before submitting.");return}const p=getProg(s.id,currentWeek);p.caseText=text;p.miniCase=true;setReviewSubmitted(p,"case");db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();const ok=await pushProgress(s.id,currentWeek);alert(ok?"Mini Case submitted and saved ✓":"Mini Case saved locally, but central saving failed.")}
-async function submitAssignment(){const s=student();if(!s){alert("Please register first.");return}const text=(assignmentText.value||"").trim();if(!text){alert("Please write or paste your assignment before submitting.");return}const p=getProg(s.id,currentWeek),st=getTaskStates(p);p.assignmentText=text;st[3]=true;p.taskStates=st;p.tasks=st.filter(Boolean).length;setReviewSubmitted(p,"assignment");db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();const ok=await pushProgress(s.id,currentWeek);alert(ok?"Assignment submitted and saved ✓":"Assignment saved locally, but central saving failed.")}
+function readFileAsDataURL(file){
+ return new Promise((resolve,reject)=>{
+   const reader=new FileReader();
+   reader.onload=()=>resolve(String(reader.result||""));
+   reader.onerror=()=>reject(new Error("Could not read file"));
+   reader.readAsDataURL(file);
+ });
+}
+async function uploadAssignmentPdf(file,studentId,week){
+ if(!file)return null;
+ if(file.type!=="application/pdf" && !file.name.toLowerCase().endsWith(".pdf"))throw new Error("Only PDF files are allowed.");
+ const max=10*1024*1024;
+ if(file.size>max)throw new Error("PDF is larger than 10 MB.");
+ const dataUrl=await readFileAsDataURL(file);
+ const base64=dataUrl.split(",")[1]||"";
+ const resp=await apiPost({
+   action:"uploadAssignmentPdf",
+   studentId:String(studentId),
+   week:Number(week),
+   fileName:file.name,
+   mimeType:"application/pdf",
+   base64
+ });
+ if(!resp || !resp.url)throw new Error(resp&&resp.error?resp.error:"PDF upload failed");
+ return {url:resp.url,name:resp.name||file.name};
+}
+async function submitAssignment(){
+ const s=student();if(!s){alert("Please register first.");return}
+ const text=(assignmentText.value||"").trim();
+ const fileInput=document.getElementById("assignmentPdf");
+ const file=fileInput&&fileInput.files?fileInput.files[0]:null;
+ const p=getProg(s.id,currentWeek);
+
+ if(!text && !file && !p.assignmentPdfUrl){
+   assignmentMsg.className="error";
+   assignmentMsg.textContent="Please write an answer or choose a PDF file before submitting.";
+   return;
+ }
+
+ const btn=document.getElementById("assignmentSubmitBtn");
+ btn.disabled=true;btn.textContent=file?"Uploading PDF...":"Submitting...";
+ assignmentMsg.className="muted";assignmentMsg.textContent=file?"Uploading your PDF...":"Saving your assignment...";
+
+ try{
+   if(file){
+     const uploaded=await uploadAssignmentPdf(file,s.id,currentWeek);
+     p.assignmentPdfUrl=uploaded.url;
+     p.assignmentPdfName=uploaded.name;
+   }
+   p.assignmentText=text;
+   const st=getTaskStates(p);st[3]=true;p.taskStates=st;p.tasks=st.filter(Boolean).length;
+   setReviewSubmitted(p,"assignment");
+   db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();
+   const ok=await pushProgress(s.id,currentWeek);
+   if(!ok)throw new Error("Assignment metadata could not be saved centrally.");
+   assignmentMsg.className="success";
+   assignmentMsg.textContent="Assignment submitted and saved ✓";
+   btn.textContent="Submitted ✓";
+   setTimeout(()=>renderWeekBody(),700);
+ }catch(e){
+   assignmentMsg.className="error";
+   assignmentMsg.textContent=e.message||"Assignment upload failed. Please try again.";
+   btn.disabled=false;btn.textContent="Retry Submit";
+ }
+}
 async function setTask(i,checked){
  const s=student();if(!s){alert("Please register/select a student first.");renderWeekBody();return}
  const p=getProg(s.id,currentWeek),st=getTaskStates(p);st[i]=checked;p.taskStates=st;p.tasks=st.filter(Boolean).length;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();
