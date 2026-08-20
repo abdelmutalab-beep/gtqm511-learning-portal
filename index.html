@@ -130,7 +130,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 </main>
 
-<footer>G TQM 511 Learning Portal • Progress Tracking v10 • 8-Activity Completion Model</footer>
+<footer>G TQM 511 Learning Portal • Progress Tracking v10.1 • 8-Activity Completion Model • Instructor Reset restored</footer>
 
 <script>
 const course=[
@@ -312,11 +312,68 @@ async function refreshInstructor(){
  if(!adminUnlocked)return;
  try{const snap=await apiPost({action:"adminSnapshot",pin:adminPin});db.students=(snap.students||[]).map(s=>({name:s.name,id:String(s.id),email:s.email||"",group:s.group||""}));applyProgressRows(snap.progress||[]);save();renderAll();setSaveStatus("Instructor data refreshed ✓",true)}catch(e){alert("Could not refresh instructor data.")}
 }
+
+async function resetStudentProgress(id){
+ if(!adminUnlocked){alert("Instructor access is required.");return}
+ const target=db.students.find(s=>String(s.id)===String(id));
+ const name=target?target.name:String(id);
+ const ok=confirm(`Reset Weeks 1–4 for ${name} to zero? This clears all 8 tracked activities, quiz scores, pre/post reflections, mini case, and assignment status.`);
+ if(!ok)return;
+
+ setSaveStatus("Resetting...",true);
+
+ for(let w=1;w<=4;w++){
+   const blank=blankProg();
+   db.progress[pkey(id,w)]=blank;
+   save();
+   try{
+     await apiPost({
+       action:"saveProgress",
+       progress:{
+         studentId:String(id),
+         week:Number(w),
+         taskStates:[false,false,false,false],
+         quiz:null,
+         reflection:false,
+         reflectionText:encodeReflectionPayload(blank),
+         preClassReflection:false,
+         preClassText:"",
+         miniCase:false,
+         total:0
+       }
+     });
+   }catch(e){
+     setSaveStatus("Reset failed ✕",false);
+     alert(`Could not reset Week ${w}. Please check the central database connection and try again.`);
+     return;
+   }
+ }
+
+ for(let w=1;w<=4;w++) db.progress[pkey(id,w)]=blankProg();
+ save();
+ renderAll();
+
+ try{
+   const snap=await apiPost({action:"adminSnapshot",pin:adminPin});
+   db.students=(snap.students||[]).map(s=>({name:s.name,id:String(s.id),email:s.email||"",group:s.group||""}));
+   applyProgressRows(snap.progress||[]);
+   save();
+   renderAll();
+   setSaveStatus("Student reset to zero ✓",true);
+ }catch(e){
+   renderAll();
+   setSaveStatus("Reset saved; refresh data",true);
+ }
+}
+
 function renderInstructor(){
  iStudents.textContent=db.students.length;const groups=[...new Set(db.students.map(s=>s.group).filter(Boolean))];iGroups.textContent=groups.length;
  const active=db.students.filter(s=>studentStarted(s.id)),vals=active.map(s=>studentFirst4Average(s.id)),avg=vals.length?Math.round(vals.reduce((a,b)=>a+b,0)/vals.length):0;iCompletion.textContent=avg+"%";
  iRisk.textContent=db.students.filter(s=>studentRiskStatus(s.id)==="At Risk").length;
- rosterRows.innerHTML=db.students.map(s=>{const av=studentFirst4Average(s.id),status=studentRiskStatus(s.id);return `<tr><td>${s.name}</td><td>${s.id}</td><td>${s.group||"—"}</td><td>${weekPct(s.id,1)}%</td><td>${weekPct(s.id,2)}%</td><td>${weekPct(s.id,3)}%</td><td>${weekPct(s.id,4)}%</td><td>${studentStarted(s.id)?av+"%":"—"}</td><td>${status}</td><td><button class="btn alt" onclick="db.activeStudentId='${s.id}';save();renderAll();showPage('student')">View</button></td></tr>`}).join("")
+ rosterRows.innerHTML=db.students.map(s=>{const av=studentFirst4Average(s.id),status=studentRiskStatus(s.id);return `<tr><td>${s.name}</td><td>${s.id}</td><td>${s.group||"—"}</td><td>${weekPct(s.id,1)}%</td><td>${weekPct(s.id,2)}%</td><td>${weekPct(s.id,3)}%</td><td>${weekPct(s.id,4)}%</td><td>${studentStarted(s.id)?av+"%":"—"}</td><td>${status}</td><td><div class="file-actions" style="margin:0">
+<button class="btn alt" onclick="db.activeStudentId='${s.id}';save();renderAll();showPage('student')">View</button>
+<button class="btn danger" onclick="resetStudentProgress('${s.id}')">Reset</button>
+</div></td></tr>`}).join("")
 }
 function initAccess(){const p=new URLSearchParams(location.search);if(p.get("admin")==="1"){adminNav.style.display="";adminNav.onclick=()=>unlockInstructor()}}
 function renderAll(){renderWeeks();renderStudent();renderGroups();if(adminUnlocked)renderInstructor()}
