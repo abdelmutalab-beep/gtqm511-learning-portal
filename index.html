@@ -130,7 +130,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 </main>
 
-<footer>G TQM 511 Learning Portal • Progress Tracking v16 • Revised Weekly Access Schedule • Makkah Time</footer>
+<footer>G TQM 511 Learning Portal • Progress Tracking v17 • Thursday Noon Submission Close • Makkah Time</footer>
 
 <script>
 const course=[
@@ -229,16 +229,17 @@ function weekSchedule(w){
  // Assignment opens 10:30 PM.
  const assignmentOpen=addMinutes(lecture,150);
 
- // Assignment due Thursday 11:59 PM Makkah.
+ // Assignment due Thursday 12:00 PM Makkah.
  const due=addDays(lecture,5);
- due.setUTCHours(20,59,0,0);
+ due.setUTCHours(9,0,0,0); // 12:00 PM Makkah (UTC+3)
 
- // Late submission window closes Friday 11:59 PM Makkah.
- const lateUntil=addDays(due,1);
+ // Short late window closes Thursday 6:00 PM Makkah.
+ const lateUntil=addDays(lecture,5);
+ lateUntil.setUTCHours(15,0,0,0); // 6:00 PM Makkah
 
- // Post-class reflection closes Tuesday 11:59 PM Makkah.
- const postclassClose=addDays(lecture,3);
- postclassClose.setUTCHours(20,59,0,0);
+ // Post-class reflection closes Thursday 12:00 PM Makkah.
+ const postclassClose=addDays(lecture,5);
+ postclassClose.setUTCHours(9,0,0,0);
 
  return {
    lecture,guidedOpen,preclassOpen,preclassReminder,preclassClose,
