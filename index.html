@@ -50,7 +50,7 @@ textarea{min-height:110px;resize:vertical}
 .student-activity{border:1px solid var(--line);border-radius:9px;padding:10px;background:#fafbfc}
 .activity-done{color:var(--green);font-weight:bold}.activity-pending{color:var(--muted);font-weight:bold}
 .rtl{direction:rtl;text-align:right}.rtl th,.rtl td{text-align:right}
-footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);font-size:12px}
+footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);font-size:12px}.review-card{border:1px solid var(--line);border-radius:10px;padding:12px;margin:10px 0;background:#fafbfc}.review-text{white-space:pre-wrap;background:#fff;border:1px solid var(--line);padding:10px;border-radius:8px;margin:8px 0;max-height:220px;overflow:auto}
 @media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.weeks{grid-template-columns:1fr 1fr}.layout,.hero,.two,.formrow{grid-template-columns:1fr}.student-activities{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.grid,.weeks,.student-activities{grid-template-columns:1fr}.hero h1{font-size:27px}}
 </style>
@@ -121,7 +121,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 <div class="card stat"><span class="muted">At-Risk Students</span><strong id="iRisk">0</strong></div>
 </div>
 <div class="section card" style="overflow:auto"><h3>Student Tracking</h3>
-<table><thead><tr><th>Name</th><th>ID</th><th>Group</th><th>W1</th><th>W2</th><th>W3</th><th>W4</th><th>W1–4 Avg.</th><th>Risk</th><th>Action</th></tr></thead><tbody id="rosterRows"></tbody></table></div>
+<table><thead><tr><th>Name</th><th>ID</th><th>Group</th><th>W1</th><th>W2</th><th>W3</th><th>W4</th><th>W1–4 Avg.</th><th>Risk</th><th>Action</th></tr></thead><tbody id="rosterRows"></tbody></table></div><div class="section card"><div class="section-head"><h3 style="margin:0">Review Student Work</h3><span class="muted">Pre-Class • Activity • Case • Assignment • Post-Class</span></div><div id="reviewWorkspace" class="muted">Choose Review beside a student.</div></div>
 </section>
 
 <section id="week" class="page hidden">
@@ -130,7 +130,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 </main>
 
-<footer>G TQM 511 Learning Portal • Progress Tracking v10.1 • 8-Activity Completion Model • Instructor Reset restored</footer>
+<footer>G TQM 511 Learning Portal • Progress Tracking v11 • Student submissions + Instructor review • Reset enabled</footer>
 
 <script>
 const course=[
@@ -203,15 +203,21 @@ let currentWeek=1,currentTab="overview",adminUnlocked=false,adminPin="";
 function save(){localStorage.setItem("gtqm511_v3",JSON.stringify(db))}
 function student(){return db.students.find(s=>s.id===db.activeStudentId)||null}
 function pkey(id,w){return id+"_"+w}
-function blankProg(){return{tasks:0,taskStates:[false,false,false,false],quiz:null,reflection:false,reflectionText:"",preClassReflection:false,preClassText:"",miniCase:false}}
+function blankProg(){return{tasks:0,taskStates:[false,false,false,false],quiz:null,reflection:false,reflectionText:"",preClassReflection:false,preClassText:"",miniCase:false,activityText:"",caseText:"",assignmentText:"",reviews:{preclass:{status:"Submitted",feedback:""},activity:{status:"Submitted",feedback:""},case:{status:"Submitted",feedback:""},assignment:{status:"Submitted",feedback:""},reflection:{status:"Submitted",feedback:""}}}}
 const META_PREFIX="GTQM511_META::";
-function encodeReflectionPayload(p){return META_PREFIX+JSON.stringify({post:p.reflectionText||"",pre:p.preClassText||"",preDone:Boolean(p.preClassReflection),mini:Boolean(p.miniCase)})}
+function encodeReflectionPayload(p){
+ return META_PREFIX+JSON.stringify({post:p.reflectionText||"",pre:p.preClassText||"",preDone:Boolean(p.preClassReflection),mini:Boolean(p.miniCase),activityText:p.activityText||"",caseText:p.caseText||"",assignmentText:p.assignmentText||"",reviews:p.reviews||{}})
+}
 function decodeReflectionPayload(raw){
  const s=String(raw||"");
- if(!s.startsWith(META_PREFIX))return{post:s,pre:"",preDone:false,mini:false};
- try{const x=JSON.parse(s.slice(META_PREFIX.length));return{post:x.post||"",pre:x.pre||"",preDone:Boolean(x.preDone),mini:Boolean(x.mini)}}catch(e){return{post:"",pre:"",preDone:false,mini:false}}
+ if(!s.startsWith(META_PREFIX))return{post:s,pre:"",preDone:false,mini:false,activityText:"",caseText:"",assignmentText:"",reviews:{}};
+ try{const x=JSON.parse(s.slice(META_PREFIX.length));return{post:x.post||"",pre:x.pre||"",preDone:Boolean(x.preDone),mini:Boolean(x.mini),activityText:x.activityText||"",caseText:x.caseText||"",assignmentText:x.assignmentText||"",reviews:x.reviews||{}}}catch(e){return{post:"",pre:"",preDone:false,mini:false,activityText:"",caseText:"",assignmentText:"",reviews:{}}}
 }
-function getProg(id,w){return Object.assign(blankProg(),db.progress[pkey(id,w)]||{})}
+function ensureReviews(p){
+ const base={preclass:{status:"Submitted",feedback:""},activity:{status:"Submitted",feedback:""},case:{status:"Submitted",feedback:""},assignment:{status:"Submitted",feedback:""},reflection:{status:"Submitted",feedback:""}};
+ p.reviews=Object.assign({},base,p.reviews||{});Object.keys(base).forEach(k=>p.reviews[k]=Object.assign({},base[k],p.reviews[k]||{}));return p
+}
+function getProg(id,w){return ensureReviews(Object.assign(blankProg(),db.progress[pkey(id,w)]||{}))}
 function getTaskStates(p){if(Array.isArray(p.taskStates))return[0,1,2,3].map(i=>!!p.taskStates[i]);const n=Math.max(0,Math.min(4,Number(p.tasks)||0));return[0,1,2,3].map(i=>i<n)}
 function trackedActivityCount(id,w){
  const p=getProg(id,w),st=getTaskStates(p); let n=st.filter(Boolean).length;
@@ -232,7 +238,7 @@ function applyProgressRows(rows){
  (rows||[]).forEach(x=>{
    const st=Array.isArray(x.taskStates)?x.taskStates.map(Boolean):[false,false,false,false];
    const meta=decodeReflectionPayload(x.reflectionText||"");
-   db.progress[pkey(String(x.studentId),Number(x.week))]={tasks:st.filter(Boolean).length,taskStates:st,quiz:x.quiz===null||x.quiz===undefined||x.quiz===""?null:Number(x.quiz),reflection:Boolean(x.reflection),reflectionText:meta.post,preClassReflection:meta.preDone,preClassText:meta.pre,miniCase:meta.mini};
+   db.progress[pkey(String(x.studentId),Number(x.week))]=ensureReviews({tasks:st.filter(Boolean).length,taskStates:st,quiz:x.quiz===null||x.quiz===undefined||x.quiz===""?null:Number(x.quiz),reflection:Boolean(x.reflection),reflectionText:meta.post,preClassReflection:meta.preDone,preClassText:meta.pre,miniCase:meta.mini,activityText:meta.activityText||"",caseText:meta.caseText||"",assignmentText:meta.assignmentText||"",reviews:meta.reviews||{}});
  });
 }
 async function loadStudentById(id){
@@ -372,9 +378,15 @@ function renderInstructor(){
  iRisk.textContent=db.students.filter(s=>studentRiskStatus(s.id)==="At Risk").length;
  rosterRows.innerHTML=db.students.map(s=>{const av=studentFirst4Average(s.id),status=studentRiskStatus(s.id);return `<tr><td>${s.name}</td><td>${s.id}</td><td>${s.group||"—"}</td><td>${weekPct(s.id,1)}%</td><td>${weekPct(s.id,2)}%</td><td>${weekPct(s.id,3)}%</td><td>${weekPct(s.id,4)}%</td><td>${studentStarted(s.id)?av+"%":"—"}</td><td>${status}</td><td><div class="file-actions" style="margin:0">
 <button class="btn alt" onclick="db.activeStudentId='${s.id}';save();renderAll();showPage('student')">View</button>
+<button class="btn" onclick="openStudentReview('${s.id}')">Review</button>
 <button class="btn danger" onclick="resetStudentProgress('${s.id}')">Reset</button>
 </div></td></tr>`}).join("")
 }
+function workTextFor(p,key){if(key==="preclass")return p.preClassText||"";if(key==="activity")return p.activityText||"";if(key==="case")return p.caseText||"";if(key==="assignment")return p.assignmentText||"";if(key==="reflection")return p.reflectionText||"";return""}
+function workSubmitted(p,key){if(key==="preclass")return!!p.preClassReflection;if(key==="activity")return!!getTaskStates(p)[2];if(key==="case")return!!p.miniCase;if(key==="assignment")return!!getTaskStates(p)[3];if(key==="reflection")return!!p.reflection;return false}
+function escapeHtml(str){return String(str||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]))}
+function openStudentReview(id){if(!adminUnlocked)return;const s=db.students.find(x=>String(x.id)===String(id));if(!s)return;const labels={preclass:"Pre-Class Reflection",activity:"In-Class Activity",case:"Mini Case",assignment:"Assignment",reflection:"Post-Class Reflection"};let cards="";for(let w=1;w<=4;w++){const p=getProg(id,w);let inner="";Object.keys(labels).forEach(key=>{const submitted=workSubmitted(p,key),txt=workTextFor(p,key),r=p.reviews[key]||{status:"Submitted",feedback:""};inner+=`<div class="review-card"><b>Week ${w} • ${labels[key]}</b><div class="muted">${submitted?"Submitted":"Not submitted"} • Review status: ${r.status||"Submitted"}</div>${submitted?`<div class="review-text">${escapeHtml(txt)||"<i>No text stored</i>"}</div><label>Feedback</label><textarea id="fb_${id}_${w}_${key}" placeholder="Instructor feedback...">${escapeHtml(r.feedback||"")}</textarea><div class="file-actions"><button class="btn good" onclick="saveReview('${id}',${w},'${key}','Reviewed')">Mark Reviewed</button><button class="btn alt" onclick="saveReview('${id}',${w},'${key}','Needs Revision')">Needs Revision</button></div>`:""}</div>`});cards+=`<div class="student-week"><h3>Week ${w}: ${course[w-1][0]}</h3>${inner}</div>`}reviewWorkspace.innerHTML=`<div class="section-head"><div><b>${s.name}</b><div class="muted">${s.id} • ${s.group||"—"}</div></div><button class="btn alt" onclick="reviewWorkspace.innerHTML='Choose Review beside a student.'">Close Review</button></div>${cards}`;reviewWorkspace.scrollIntoView({behavior:"smooth",block:"start"})}
+async function saveReview(id,w,key,status){if(!adminUnlocked)return;const p=getProg(id,w),el=document.getElementById(`fb_${id}_${w}_${key}`);ensureReviews(p);p.reviews[key]={status,feedback:el?(el.value||"").trim():""};db.progress[pkey(id,w)]=p;save();const ok=await pushProgress(id,w);if(ok){setSaveStatus("Review saved ✓",true);openStudentReview(id)}else alert("Review could not be saved centrally.")}
 function initAccess(){const p=new URLSearchParams(location.search);if(p.get("admin")==="1"){adminNav.style.display="";adminNav.onclick=()=>unlockInstructor()}}
 function renderAll(){renderWeeks();renderStudent();renderGroups();if(adminUnlocked)renderInstructor()}
 
@@ -387,21 +399,26 @@ function renderWeekBody(){
  const d=packs[currentWeek],s=student(),p=s?getProg(s.id,currentWeek):blankProg();
  if(!d){weekBody.innerHTML=`<div class="card"><h3>${course[currentWeek-1][0]}</h3><p>${course[currentWeek-1][1]}</p><div class="notice">Detailed learning materials will be added in the next build.</div></div>`;return}
  if(currentTab==="overview"){
-   const st=getTaskStates(p),labels=["Guided Reading","Lecture Viewed","In-Class Activity","Assignment"];
-   weekBody.innerHTML=`<div class="layout"><div class="card"><h3>Learning Outcomes</h3><ol>${d.objectives.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol></div><div class="card"><h3>Progress Checklist</h3>${labels.map((x,i)=>`<label class="task"><input type="checkbox" ${st[i]?"checked":""} onchange="setTask(${i},this.checked)"> ${x}</label>`).join("")}<div class="success">Weekly completion is based on 8 equal activities. Each completed activity = 12.5%.</div></div></div>`
+   const st=getTaskStates(p);
+   weekBody.innerHTML=`<div class="layout"><div class="card"><h3>Learning Outcomes</h3><ol>${d.objectives.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol></div><div class="card"><h3>Progress Checklist</h3><label class="task"><input type="checkbox" ${st[0]?"checked":""} onchange="setTask(0,this.checked)"> Guided Reading</label><label class="task"><input type="checkbox" ${st[1]?"checked":""} disabled> Lecture Viewed <span class="muted">(automatic)</span></label><div class="task">Pre-Class Reflection: <b>${p.preClassReflection?"Completed ✓":"Pending"}</b></div><div class="task">In-Class Activity: <b>${st[2]?"Submitted ✓":"Pending"}</b></div><div class="task">Mini Case: <b>${p.miniCase?"Submitted ✓":"Pending"}</b></div><div class="task">Knowledge Check / Quiz: <b>${p.quiz!==null?"Submitted ✓":"Pending"}</b></div><div class="task">Assignment: <b>${st[3]?"Submitted ✓":"Pending"}</b></div><div class="task">Post-Class Reflection: <b>${p.reflection?"Completed ✓":"Pending"}</b></div><div class="success">Weekly completion is based on 8 equal activities. Each completed activity = 12.5%. Quiz score is separate from completion.</div></div></div>`
  }
  if(currentTab==="slides"){
    const pdf=`Week${currentWeek}_Lecture.pdf`,ppt=`Week${currentWeek}_Lecture.pptx`;
    weekBody.innerHTML=`<div class="card"><h3>Week ${currentWeek} Lecture Slides</h3><div class="file-actions"><a class="btn" href="${pdf}" target="_blank" onclick="markLectureViewed()">Open PDF</a><a class="btn alt" href="${ppt}" onclick="markLectureViewed()">Open PowerPoint</a></div><iframe class="slide-frame" src="${pdf}#view=FitH" onload="markLectureViewed()"></iframe></div>`
  }
- if(currentTab==="preclass")weekBody.innerHTML=`<div class="card"><h3>Pre-Class Reflection</h3><p>Write one short observation, question, or workplace example related to this week’s topic.</p><textarea id="preClassText" placeholder="Your pre-class reflection...">${p.preClassText||""}</textarea><div class="file-actions"><button class="btn good" onclick="savePreClassReflection()">Save Pre-Class Reflection</button></div><p class="muted">${p.preClassReflection?"Completed ✓":"Not yet completed"}</p></div>`;
+ if(currentTab==="preclass")weekBody.innerHTML=`<div class="card"><h3>Pre-Class Reflection</h3><p>Write one short observation, question, or workplace example related to this week’s topic.</p><textarea id="preClassText" placeholder="Your pre-class reflection...">${p.preClassText||""}</textarea><div class="file-actions"><button class="btn good" onclick="savePreClassReflection()">Save Pre-Class Reflection</button></div><p class="muted">${p.preClassReflection?"Completed ✓":"Not yet completed"}</p>${reviewPanelStudent(p.reviews.preclass)}</div>`;
  if(currentTab==="content")weekBody.innerHTML=`<div class="card"><h3>Core Learning Content</h3>${d.topics.map(t=>`<div class="topic"><h4>${t[0]}</h4><p>${t[1]}</p></div>`).join("")}<div class="file-actions"><button class="btn good" onclick="markGuidedReading()">Mark Guided Reading Completed</button></div></div>`;
- if(currentTab==="activity")weekBody.innerHTML=`<div class="card"><h3>In-Class Activity</h3><p>${d.activity}</p><div class="file-actions"><button class="btn good" onclick="markActivityCompleted()">Mark In-Class Activity Completed</button></div></div>`;
- if(currentTab==="case")weekBody.innerHTML=`<div class="card"><h3>${d.caseTitle}</h3><p>${d.caseText}</p><ol>${d.caseQuestions.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol><div class="file-actions"><button class="btn good" onclick="markMiniCaseCompleted()">Mark Mini Case Completed</button></div></div>`;
+ if(currentTab==="activity")weekBody.innerHTML=`<div class="card"><h3>In-Class Activity</h3><p>${d.activity}</p><p class="muted">Write your response or a brief summary of your group output. The instructor can review it and provide feedback.</p><textarea id="activityText" placeholder="Write your activity response...">${p.activityText||""}</textarea><div class="file-actions"><button class="btn good" onclick="submitActivity()">Submit Activity</button></div>${reviewPanelStudent(p.reviews.activity)}</div>`;
+ if(currentTab==="case")weekBody.innerHTML=`<div class="card"><h3>${d.caseTitle}</h3><p>${d.caseText}</p><ol>${d.caseQuestions.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol><p class="muted">Write your case analysis below. Your instructor can review it and return feedback.</p><textarea id="caseText" placeholder="Write your case analysis...">${p.caseText||""}</textarea><div class="file-actions"><button class="btn good" onclick="submitCase()">Submit Mini Case</button></div>${reviewPanelStudent(p.reviews.case)}</div>`;
  if(currentTab==="quiz")renderQuiz(d);
- if(currentTab==="assignment")weekBody.innerHTML=`<div class="card"><h3>Week ${currentWeek} Assignment</h3><p>${d.assignment}</p><div class="file-actions"><button class="btn good" onclick="markAssignmentCompleted()">Mark Assignment Completed</button></div></div>`;
- if(currentTab==="reflection")weekBody.innerHTML=`<div class="card"><h3>Post-Class Reflection</h3><p>Write one concept you will apply in your work or quality practice, and explain how.</p><textarea id="reflectionText" placeholder="Your reflection...">${p.reflectionText||""}</textarea><div class="file-actions"><button class="btn good" onclick="saveReflection()">Save Reflection</button></div><p class="muted">${p.reflection?"Completed ✓":"Not yet completed"}</p></div>`
+ if(currentTab==="assignment")weekBody.innerHTML=`<div class="card"><h3>Week ${currentWeek} Assignment</h3><p>${d.assignment}</p><p class="muted">Submit your assignment as text here. PDF upload can be added later when file storage is connected.</p><textarea id="assignmentText" placeholder="Write or paste your assignment here...">${p.assignmentText||""}</textarea><div class="file-actions"><button class="btn good" onclick="submitAssignment()">Submit Assignment</button></div>${reviewPanelStudent(p.reviews.assignment)}</div>`;
+ if(currentTab==="reflection")weekBody.innerHTML=`<div class="card"><h3>Post-Class Reflection</h3><p>Write one concept you will apply in your work or quality practice, and explain how.</p><textarea id="reflectionText" placeholder="Your reflection...">${p.reflectionText||""}</textarea><div class="file-actions"><button class="btn good" onclick="saveReflection()">Save Reflection</button></div><p class="muted">${p.reflection?"Completed ✓":"Not yet completed"}</p>${reviewPanelStudent(p.reviews.reflection)}</div>`
 }
+function reviewPanelStudent(r){if(!r)return"";const status=r.status||"Submitted",fb=(r.feedback||"").trim(),cls=status==="Reviewed"?"success":status==="Needs Revision"?"notice":"muted";return `<div class="${cls}" style="margin-top:12px"><b>Instructor review:</b> ${status}${fb?`<br><b>Feedback:</b> ${fb}`:""}</div>`}
+function setReviewSubmitted(p,key){ensureReviews(p);p.reviews[key]={status:"Submitted",feedback:""}}
+async function submitActivity(){const s=student();if(!s){alert("Please register first.");return}const text=(activityText.value||"").trim();if(!text){alert("Please write your activity response before submitting.");return}const p=getProg(s.id,currentWeek),st=getTaskStates(p);p.activityText=text;st[2]=true;p.taskStates=st;p.tasks=st.filter(Boolean).length;setReviewSubmitted(p,"activity");db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();const ok=await pushProgress(s.id,currentWeek);alert(ok?"Activity submitted and saved ✓":"Activity saved locally, but central saving failed.")}
+async function submitCase(){const s=student();if(!s){alert("Please register first.");return}const text=(caseText.value||"").trim();if(!text){alert("Please write your case analysis before submitting.");return}const p=getProg(s.id,currentWeek);p.caseText=text;p.miniCase=true;setReviewSubmitted(p,"case");db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();const ok=await pushProgress(s.id,currentWeek);alert(ok?"Mini Case submitted and saved ✓":"Mini Case saved locally, but central saving failed.")}
+async function submitAssignment(){const s=student();if(!s){alert("Please register first.");return}const text=(assignmentText.value||"").trim();if(!text){alert("Please write or paste your assignment before submitting.");return}const p=getProg(s.id,currentWeek),st=getTaskStates(p);p.assignmentText=text;st[3]=true;p.taskStates=st;p.tasks=st.filter(Boolean).length;setReviewSubmitted(p,"assignment");db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();const ok=await pushProgress(s.id,currentWeek);alert(ok?"Assignment submitted and saved ✓":"Assignment saved locally, but central saving failed.")}
 async function setTask(i,checked){
  const s=student();if(!s){alert("Please register/select a student first.");renderWeekBody();return}
  const p=getProg(s.id,currentWeek),st=getTaskStates(p);st[i]=checked;p.taskStates=st;p.tasks=st.filter(Boolean).length;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();
@@ -412,7 +429,7 @@ async function markLectureViewed(){if(student() && !getTaskStates(getProg(studen
 async function markActivityCompleted(){await setTask(2,true)}
 async function markAssignmentCompleted(){await setTask(3,true)}
 async function markMiniCaseCompleted(){const s=student();if(!s){alert("Please register first.");return}const p=getProg(s.id,currentWeek);p.miniCase=true;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();const ok=await pushProgress(s.id,currentWeek);if(!ok)alert("Mini Case completion could not be saved centrally.")}
-async function savePreClassReflection(){const s=student();if(!s){alert("Please register first.");return}const text=(preClassText.value||"").trim();if(!text){alert("Please write your pre-class reflection.");return}const p=getProg(s.id,currentWeek);p.preClassReflection=true;p.preClassText=text;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();const ok=await pushProgress(s.id,currentWeek);if(!ok)alert("Reflection could not be saved centrally.")}
+async function savePreClassReflection(){const s=student();if(!s){alert("Please register first.");return}const text=(preClassText.value||"").trim();if(!text){alert("Please write your pre-class reflection.");return}const p=getProg(s.id,currentWeek);p.preClassReflection=true;p.preClassText=text;setReviewSubmitted(p,"preclass");db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();const ok=await pushProgress(s.id,currentWeek);if(!ok)alert("Reflection could not be saved centrally.")}
 function renderQuiz(d){
  const p=student()?getProg(student().id,currentWeek):blankProg();
  weekBody.innerHTML=`<div class="card quiz"><h3>Knowledge Check</h3><div class="notice">Answer all questions before submitting. The quiz counts as one completed activity; your score is recorded separately.</div>${d.quiz.map((q,qi)=>`<div class="topic"><p><b>${qi+1}. ${q[0]}</b></p>${q[1].map((a,ai)=>`<label><input style="width:auto" type="radio" name="q${qi}" value="${ai}"> ${a}</label>`).join("")}</div>`).join("")}<div class="file-actions"><button id="submitQuizBtn" class="btn" onclick="gradeCurrentQuiz()">Submit Quiz</button></div><p id="quizMsg" class="${p.quiz!==null?'success':'muted'}">${p.quiz!==null?`Previous score: ${p.quiz}%`:""}</p></div>`
@@ -430,7 +447,7 @@ async function gradeCurrentQuiz(){
  if(ok){quizMsg.className="success";quizMsg.textContent=`Submitted and saved ✓ Score: ${score}% (${correct}/${d.quiz.length})`;btn.textContent="Submitted ✓"}
  else{quizMsg.className="error";quizMsg.textContent=`Score calculated: ${score}%, but central saving failed. Please check the connection and press Submit Quiz again.`;btn.disabled=false;btn.textContent="Retry Submit"}
 }
-async function saveReflection(){const s=student();if(!s){alert("Please register first.");return}const text=(reflectionText.value||"").trim();if(!text){alert("Please write your reflection.");return}const p=getProg(s.id,currentWeek);p.reflection=true;p.reflectionText=text;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();const ok=await pushProgress(s.id,currentWeek);if(!ok)alert("Reflection could not be saved centrally.")}
+async function saveReflection(){const s=student();if(!s){alert("Please register first.");return}const text=(reflectionText.value||"").trim();if(!text){alert("Please write your reflection.");return}const p=getProg(s.id,currentWeek);p.reflection=true;p.reflectionText=text;setReviewSubmitted(p,"reflection");db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();const ok=await pushProgress(s.id,currentWeek);if(!ok)alert("Reflection could not be saved centrally.")}
 
 lang.onclick=()=>{const ar=document.body.classList.toggle("rtl");document.documentElement.dir=ar?"rtl":"ltr";lang.textContent=ar?"English":"العربية";heroText.textContent=ar?"بوابة تعلم تطبيقية تربط السلوك التنظيمي بأداء الجودة والخدمة والمشاركة والتحسين المستمر.":"A practical learning portal linking individual, group and organizational behavior to quality performance, service, engagement, leadership and continuous improvement."};
 
