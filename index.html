@@ -134,7 +134,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 </main>
 
-<footer>G TQM 511 Learning Portal • Progress Tracking v18 • Pending Manual Review Queue • Makkah Time</footer>
+<footer>G TQM 511 Learning Portal • Progress Tracking v19 • Student Time Locks • Instructor Bypass</footer>
 
 <script>
 const course=[
@@ -256,6 +256,10 @@ function fmtRiyadh(d){
 }
 function nowMs(){return Date.now()}
 function activityAvailability(w,tab){
+ // Instructor bypass: once the instructor dashboard is unlocked,
+ // all weeks and activities remain fully accessible regardless of schedule.
+ if(adminUnlocked)return {open:true,label:"Instructor access • no time restriction",instructor:true};
+
  if(w<4)return {open:true,label:"Available"};
  const s=weekSchedule(w),now=nowMs();
 
@@ -317,7 +321,10 @@ function activityAvailability(w,tab){
 function scheduleCard(w){
  if(w<4)return "";
  const s=weekSchedule(w);
- return `<div class="card" style="margin-bottom:14px"><h3>Week ${w} Schedule • Makkah Time</h3>
+ const accessNote=adminUnlocked
+   ? `<div class="success" style="margin-bottom:10px"><b>Instructor access:</b> Time restrictions are bypassed for teaching, review and preparation.</div>`
+   : `<div class="notice" style="margin-bottom:10px"><b>Student access:</b> The opening and closing times below are enforced.</div>`;
+ return `<div class="card" style="margin-bottom:14px"><h3>Week ${w} Schedule • Makkah Time</h3>${accessNote}
  <div class="two">
   <div><b>Guided Reading / Core Content</b><p class="muted">Opens: ${fmtRiyadh(s.guidedOpen)}<br>Remains available after opening.</p></div>
   <div><b>Pre-Class Reflection</b><p class="muted">Opens: ${fmtRiyadh(s.preclassOpen)}<br>Final reminder window: ${fmtRiyadh(s.preclassReminder)}<br>Closes: ${fmtRiyadh(s.preclassClose)}</p></div>
@@ -399,7 +406,7 @@ function renderWeeks(){
  course.forEach((w,i)=>{const n=i+1,s=student(),pct=s?weekPct(s.id,n):0,e=document.createElement("div");e.className="card week";
  const sInfo=n>=4?weekSchedule(n):null;
  const access=n>=4?activityAvailability(n,"content"):null;
- e.innerHTML=`<small style="color:var(--blue);font-weight:bold">WEEK ${n}</small><h3>${w[0]}</h3><p class="muted">${w[1]}</p><div class="progress"><div class="bar" style="width:${pct}%"></div></div><small>${pct}% complete</small>${n<=4?'<p><span class="pill">Full content</span></p>':''}${n>=4?`<p><span class="pill">${access.open?"Scheduled":"🔒 "+access.label}</span></p>`:""}`;
+ e.innerHTML=`<small style="color:var(--blue);font-weight:bold">WEEK ${n}</small><h3>${w[0]}</h3><p class="muted">${w[1]}</p><div class="progress"><div class="bar" style="width:${pct}%"></div></div><small>${pct}% complete</small>${n<=4?'<p><span class="pill">Full content</span></p>':''}${n>=4?`<p><span class="pill">${adminUnlocked?"Instructor access":(access.open?"Scheduled":"🔒 "+access.label)}</span></p>`:""}`;
  e.onclick=()=>openWeek(n);weeks.appendChild(e)});overall()
 }
 function overall(){const s=student();let sum=0;if(s)for(let i=1;i<=15;i++)sum+=weekPct(s.id,i);const pct=s?Math.round(sum/15):0;overallPct.textContent=pct+"%";overallBar.style.width=pct+"%"}
@@ -695,14 +702,15 @@ function renderWeekTabs(){
  let tabs=currentWeek<=4?["overview","slides","preclass","content","activity","case","quiz","assignment","reflection"]:["overview"];
  if(currentWeek>=4 && currentWeek<=15)tabs=["overview","slides","preclass","content","activity","case","quiz","assignment","reflection"];
  weekTabs.innerHTML=tabs.map(t=>{
-   const av=activityAvailability(currentWeek,t),lock=av.open?"":" 🔒";
+   const av=activityAvailability(currentWeek,t);
+   const lock=(!adminUnlocked && !av.open)?" 🔒":"";
    return `<button class="tab ${t===currentTab?"active":""}" onclick="currentTab='${t}';renderWeekTabs();renderWeekBody()">${t[0].toUpperCase()+t.slice(1)}${lock}</button>`
  }).join("")
 }
 function renderWeekBody(){
  const d=packs[currentWeek],s=student(),p=s?getProg(s.id,currentWeek):blankProg();
  const av=activityAvailability(currentWeek,currentTab);
- if(!av.open && currentTab!=="overview"){lockedCard(currentTab,av);return}
+ if(!adminUnlocked && !av.open && currentTab!=="overview"){lockedCard(currentTab,av);return}
  if(!d){
    weekBody.innerHTML=`${scheduleCard(currentWeek)}<div class="card"><h3>${course[currentWeek-1][0]}</h3><p>${course[currentWeek-1][1]}</p><div class="notice">Detailed learning materials will be added in the next build.</div></div>`;
    return
@@ -734,8 +742,10 @@ ${reviewPanelStudent(p.reviews.assignment)}</div>`;
 }
 function reviewPanelStudent(r){if(!r)return"";const status=r.status||"Submitted",fb=(r.feedback||"").trim(),cls=status==="Reviewed"?"success":status==="Needs Revision"?"notice":"muted";return `<div class="${cls}" style="margin-top:12px"><b>Instructor review:</b> ${status}${fb?`<br><b>Feedback:</b> ${fb}`:""}</div>`}
 function setReviewSubmitted(p,key){ensureReviews(p);p.reviews[key]={status:"Submitted",feedback:""}}
-async function submitActivity(){const s=student();if(!s){alert("Please register first.");return}const text=(activityText.value||"").trim();if(!text){alert("Please write your activity response before submitting.");return}const p=getProg(s.id,currentWeek),st=getTaskStates(p);p.activityText=text;st[2]=true;p.taskStates=st;p.tasks=st.filter(Boolean).length;setReviewSubmitted(p,"activity");db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();const ok=await pushProgress(s.id,currentWeek);alert(ok?"Activity submitted and saved ✓":"Activity saved locally, but central saving failed.")}
-async function submitCase(){const s=student();if(!s){alert("Please register first.");return}const text=(caseText.value||"").trim();if(!text){alert("Please write your case analysis before submitting.");return}const p=getProg(s.id,currentWeek);p.caseText=text;p.miniCase=true;setReviewSubmitted(p,"case");db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();const ok=await pushProgress(s.id,currentWeek);alert(ok?"Mini Case submitted and saved ✓":"Mini Case saved locally, but central saving failed.")}
+async function submitActivity(){
+ if(adminUnlocked){alert("Instructor mode is view-only for student submissions.");return}const s=student();if(!s){alert("Please register first.");return}const text=(activityText.value||"").trim();if(!text){alert("Please write your activity response before submitting.");return}const p=getProg(s.id,currentWeek),st=getTaskStates(p);p.activityText=text;st[2]=true;p.taskStates=st;p.tasks=st.filter(Boolean).length;setReviewSubmitted(p,"activity");db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();const ok=await pushProgress(s.id,currentWeek);alert(ok?"Activity submitted and saved ✓":"Activity saved locally, but central saving failed.")}
+async function submitCase(){
+ if(adminUnlocked){alert("Instructor mode is view-only for student submissions.");return}const s=student();if(!s){alert("Please register first.");return}const text=(caseText.value||"").trim();if(!text){alert("Please write your case analysis before submitting.");return}const p=getProg(s.id,currentWeek);p.caseText=text;p.miniCase=true;setReviewSubmitted(p,"case");db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();const ok=await pushProgress(s.id,currentWeek);alert(ok?"Mini Case submitted and saved ✓":"Mini Case saved locally, but central saving failed.")}
 function readFileAsDataURL(file){
  return new Promise((resolve,reject)=>{
    const reader=new FileReader();
@@ -763,6 +773,7 @@ async function uploadAssignmentPdf(file,studentId,week){
  return {url:resp.url,name:resp.name||file.name};
 }
 async function submitAssignment(){
+ if(adminUnlocked){alert("Instructor mode is view-only for student submissions.");return}
  const s=student();if(!s){alert("Please register first.");return}
  const av=activityAvailability(currentWeek,"assignment");
  if(!av.open){alert(av.label);renderWeekTabs();renderWeekBody();return}
@@ -804,16 +815,23 @@ async function submitAssignment(){
  }
 }
 async function setTask(i,checked){
+ if(adminUnlocked){return}
  const s=student();if(!s){alert("Please register/select a student first.");renderWeekBody();return}
  const p=getProg(s.id,currentWeek),st=getTaskStates(p);st[i]=checked;p.taskStates=st;p.tasks=st.filter(Boolean).length;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();
  const ok=await pushProgress(s.id,currentWeek);if(!ok)alert("The activity was saved on this device, but could not be saved centrally. Please check the connection and try again.")
 }
 async function markGuidedReading(){const av=activityAvailability(currentWeek,"content");if(!av.open){alert(av.label);return}await setTask(0,true)}
-async function markLectureViewed(){const av=activityAvailability(currentWeek,"slides");if(!av.open)return;if(student() && !getTaskStates(getProg(student().id,currentWeek))[1]) await setTask(1,true)}
+async function markLectureViewed(){
+ if(adminUnlocked)return;
+ const av=activityAvailability(currentWeek,"slides");
+ if(!av.open)return;
+ if(student() && !getTaskStates(getProg(student().id,currentWeek))[1]) await setTask(1,true)
+}
 async function markActivityCompleted(){const av=activityAvailability(currentWeek,"activity");if(!av.open){alert(av.label);return}await setTask(2,true)}
 async function markAssignmentCompleted(){await setTask(3,true)}
 async function markMiniCaseCompleted(){const s=student();if(!s){alert("Please register first.");return}const p=getProg(s.id,currentWeek);p.miniCase=true;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();const ok=await pushProgress(s.id,currentWeek);if(!ok)alert("Mini Case completion could not be saved centrally.")}
-async function savePreClassReflection(){const s=student();if(!s){alert("Please register first.");return}const av=activityAvailability(currentWeek,"preclass");if(!av.open){alert(av.label);renderWeekTabs();renderWeekBody();return}const text=(preClassText.value||"").trim();if(!text){alert("Please write your pre-class reflection.");return}const p=getProg(s.id,currentWeek);p.preClassReflection=true;p.preClassText=text;setReviewSubmitted(p,"preclass");db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();const ok=await pushProgress(s.id,currentWeek);if(!ok)alert("Reflection could not be saved centrally.")}
+async function savePreClassReflection(){
+ if(adminUnlocked){alert("Instructor mode is view-only for student submissions.");return}const s=student();if(!s){alert("Please register first.");return}const av=activityAvailability(currentWeek,"preclass");if(!av.open){alert(av.label);renderWeekTabs();renderWeekBody();return}const text=(preClassText.value||"").trim();if(!text){alert("Please write your pre-class reflection.");return}const p=getProg(s.id,currentWeek);p.preClassReflection=true;p.preClassText=text;setReviewSubmitted(p,"preclass");db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();const ok=await pushProgress(s.id,currentWeek);if(!ok)alert("Reflection could not be saved centrally.")}
 function renderQuiz(d){
  const p=student()?getProg(student().id,currentWeek):blankProg();
  if(currentWeek>=4 && p.quiz!==null){
@@ -823,6 +841,7 @@ function renderQuiz(d){
  weekBody.innerHTML=`${scheduleCard(currentWeek)}<div class="card quiz"><h3>Knowledge Check</h3><div class="notice">Answer all questions before submitting. The quiz counts as one completed activity; your score is recorded separately.</div>${d.quiz.map((q,qi)=>`<div class="topic"><p><b>${qi+1}. ${q[0]}</b></p>${q[1].map((a,ai)=>`<label><input style="width:auto" type="radio" name="q${qi}" value="${ai}"> ${a}</label>`).join("")}</div>`).join("")}<div class="file-actions"><button id="submitQuizBtn" class="btn" onclick="gradeCurrentQuiz()">Submit Quiz</button></div><p id="quizMsg" class="${p.quiz!==null?'success':'muted'}">${p.quiz!==null?`Previous score: ${p.quiz}%`:""}</p></div>`
 }
 async function gradeCurrentQuiz(){
+ if(adminUnlocked){alert("Instructor mode is view-only for student submissions.");return}
  const s=student();if(!s){alert("Please register first.");return}
  const av=activityAvailability(currentWeek,"quiz");
  if(!av.open){alert(av.label);renderWeekTabs();renderWeekBody();return}
@@ -839,7 +858,8 @@ async function gradeCurrentQuiz(){
  if(ok){quizMsg.className="success";quizMsg.textContent=`Submitted and saved ✓ Score: ${score}% (${correct}/${d.quiz.length})`;btn.textContent="Submitted ✓"}
  else{quizMsg.className="error";quizMsg.textContent=`Score calculated: ${score}%, but central saving failed. Please check the connection and press Submit Quiz again.`;btn.disabled=false;btn.textContent="Retry Submit"}
 }
-async function saveReflection(){const s=student();if(!s){alert("Please register first.");return}const av=activityAvailability(currentWeek,"reflection");if(!av.open){alert(av.label);renderWeekTabs();renderWeekBody();return}const text=(reflectionText.value||"").trim();if(!text){alert("Please write your reflection.");return}const p=getProg(s.id,currentWeek);p.reflection=true;p.reflectionText=text;setReviewSubmitted(p,"reflection");db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();const ok=await pushProgress(s.id,currentWeek);if(!ok)alert("Reflection could not be saved centrally.")}
+async function saveReflection(){
+ if(adminUnlocked){alert("Instructor mode is view-only for student submissions.");return}const s=student();if(!s){alert("Please register first.");return}const av=activityAvailability(currentWeek,"reflection");if(!av.open){alert(av.label);renderWeekTabs();renderWeekBody();return}const text=(reflectionText.value||"").trim();if(!text){alert("Please write your reflection.");return}const p=getProg(s.id,currentWeek);p.reflection=true;p.reflectionText=text;setReviewSubmitted(p,"reflection");db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();const ok=await pushProgress(s.id,currentWeek);if(!ok)alert("Reflection could not be saved centrally.")}
 
 lang.onclick=()=>{const ar=document.body.classList.toggle("rtl");document.documentElement.dir=ar?"rtl":"ltr";lang.textContent=ar?"English":"العربية";heroText.textContent=ar?"بوابة تعلم تطبيقية تربط السلوك التنظيمي بأداء الجودة والخدمة والمشاركة والتحسين المستمر.":"A practical learning portal linking individual, group and organizational behavior to quality performance, service, engagement, leadership and continuous improvement."};
 
