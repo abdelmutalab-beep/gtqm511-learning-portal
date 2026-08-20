@@ -82,9 +82,9 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 
 <section id="register" class="page hidden">
-<div class="section-head"><h2>Student Access</h2><span class="muted">Only pre-registered Student IDs are accepted</span></div>
+<div class="section-head"><h2>Student Access</h2><span class="muted">Use your registered email address or Student ID</span></div>
 <div class="card"><div class="formrow" style="grid-template-columns:2fr 1fr">
-<div><label>Student ID</label><input id="regId" placeholder="Enter your Student ID"></div>
+<div><label>Email or Student ID</label><input id="regId" placeholder="Enter your registered email or Student ID" autocomplete="email"></div>
 <div style="display:flex;align-items:end"><button class="btn good" style="width:100%" onclick="registerStudent()">Enter Course</button></div>
 </div><p id="regMsg"></p></div>
 </section>
@@ -130,7 +130,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 </main>
 
-<footer>G TQM 511 Learning Portal • Progress Tracking v12 • PDF Assignment Upload + Instructor Review • Reset enabled</footer>
+<footer>G TQM 511 Learning Portal • Progress Tracking v13 • Email or Student ID Login • PDF Upload • Instructor Review</footer>
 
 <script>
 const course=[
@@ -242,8 +242,8 @@ function applyProgressRows(rows){
  });
 }
 async function loadStudentById(id){
- const sResp=await apiGet({action:"student",studentId:id});if(!sResp.student)return null;
- const pResp=await apiGet({action:"progress",studentId:id});const s=sResp.student;
+ const sResp=await apiGet({action:"student",identifier:id});if(!sResp.student)return null;
+ const pResp=await apiGet({action:"progress",studentId:String(sResp.student.id)});const s=sResp.student;
  db.students=[{name:s.name,id:String(s.id),email:s.email||"",group:s.group||""}];db.activeStudentId=String(s.id);
  if(s.group&&!db.groups.includes(s.group))db.groups.push(s.group);applyProgressRows(pResp.progress||[]);save();renderAll();return s
 }
@@ -273,11 +273,11 @@ async function showPage(id){
 document.querySelectorAll(".nav[data-page]").forEach(b=>{if(b.id!=="adminNav")b.onclick=()=>showPage(b.dataset.page)});
 
 async function registerStudent(){
- const id=(regId.value||"").trim();if(!id){regMsg.className="notice";regMsg.textContent="Student ID is required.";return}
- regMsg.className="muted";regMsg.textContent="Checking Student ID...";
- try{const s=await loadStudentById(id);if(!s){regMsg.className="notice";regMsg.textContent="This Student ID is not registered.";return}
+ const id=(regId.value||"").trim();if(!id){regMsg.className="notice";regMsg.textContent="Email or Student ID is required.";return}
+ regMsg.className="muted";regMsg.textContent="Checking your account...";
+ try{const s=await loadStudentById(id);if(!s){regMsg.className="notice";regMsg.textContent="This email or Student ID is not registered.";return}
  regMsg.className="success";regMsg.textContent=`Welcome ${s.name}. Your course record is ready.`;setTimeout(()=>showPage("student"),300)}
- catch(e){regMsg.className="notice";regMsg.textContent="This Student ID is not registered, or the central service is unavailable."}
+ catch(e){regMsg.className="notice";regMsg.textContent="This email or Student ID is not registered, or the central service is unavailable."}
 }
 function renderStudent(){
  const s=student();studentName.textContent=s?`${s.name} • ${s.id}`:"No student registered";sGroup.textContent=s?(s.group||"—"):"—";studentGroupLabel.textContent=s?(s.group||"—"):"—";
