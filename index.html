@@ -89,15 +89,33 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 
 <section id="instructor" class="page hidden">
-<div class="section-head"><h2>Instructor Dashboard</h2><button class="btn alt" onclick="refreshInstructor()">Refresh Data</button><span class="muted">Central snapshot</span></div>
+<div class="section-head">
+  <div><h2 style="margin-bottom:4px">Instructor Dashboard</h2><span class="muted">Central cohort overview for Weeks 1–3</span></div>
+  <button class="btn alt" onclick="refreshInstructor()">Refresh Data</button>
+</div>
+
 <div class="grid">
 <div class="card stat"><span class="muted">Registered Students</span><strong id="iStudents">0</strong></div>
 <div class="card stat"><span class="muted">Groups</span><strong id="iGroups">0</strong></div>
-<div class="card stat"><span class="muted">Weeks 1–3 Avg.</span><strong id="iCompletion">0%</strong></div>
-<div class="card stat"><span class="muted">At-Risk (&lt;50%)</span><strong id="iRisk">0</strong></div>
+<div class="card stat"><span class="muted">Weeks 1–3 Average</span><strong id="iCompletion">0%</strong></div>
+<div class="card stat"><span class="muted">At-Risk Students</span><strong id="iRisk">0</strong><small class="muted">Average below 50%</small></div>
 </div>
-<div class="section card" style="overflow:auto"><h3>Student Tracking</h3>
-<table><thead><tr><th>Name</th><th>ID</th><th>Group</th><th>W1</th><th>W2</th><th>W3</th><th>W1–3 Avg.</th><th>Action</th></tr></thead><tbody id="rosterRows"></tbody></table></div>
+
+<div class="section card">
+  <div class="section-head"><h3 style="margin:0">Group Performance</h3><span class="muted">Calculated from the central snapshot</span></div>
+  <div id="instructorGroupCards" class="grid"></div>
+</div>
+
+<div class="section card" style="overflow:auto">
+<h3>Student Tracking</h3>
+<table>
+<thead><tr>
+<th>Name</th><th>ID</th><th>Group</th><th>W1</th><th>W2</th><th>W3</th>
+<th>W3 Activities</th><th>W1–3 Avg.</th><th>Risk</th><th>Action</th>
+</tr></thead>
+<tbody id="rosterRows"></tbody>
+</table>
+</div>
 </section>
 
 <section id="week" class="page hidden">
@@ -106,7 +124,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 </main>
 
-<footer>G TQM 511 Learning Portal • Central tracking enabled • Student Progress v2</footer>
+<footer>G TQM 511 Learning Portal • Central tracking enabled • Student Progress v3 • Instructor Analytics</footer>
 
 <script>
 const course=[
@@ -269,13 +287,39 @@ function detailWeek(id,w){
 }
 function calculateStudentGroupAverage(s){
  const members=db.students.filter(x=>x.group===s.group);
- if(!s.group||members.length<2){groupAveragePct.textContent="—";groupAverageBar.style.width="0%";groupNote.textContent="Group average will appear when multiple group members are loaded in the instructor session.";return}
- let total=0;members.forEach(m=>{let v=0;for(let w=1;w<=15;w++)v+=weekPct(m.id,w);total+=v/15});const avg=Math.round(total/members.length);
- groupAveragePct.textContent=avg+"%";groupAverageBar.style.width=avg+"%";groupNote.textContent=`Based on ${members.length} group members available in this session.`
+ if(!s.group||members.length<2){
+   groupAveragePct.textContent="—";
+   groupAverageBar.style.width="0%";
+   groupNote.textContent="Open the Instructor Dashboard first to load the full central cohort, then return to this student to compare with the group average.";
+   return;
+ }
+ let total=0;
+ members.forEach(m=>{total+=studentFirst3Average(m.id)});
+ const avg=Math.round(total/members.length);
+ groupAveragePct.textContent=avg+"%";
+ groupAverageBar.style.width=avg+"%";
+ groupNote.textContent=`Group average for Weeks 1–3 based on ${members.length} centrally loaded students.`;
 }
 function renderGroups(){
- groupCards.innerHTML=db.groups.map(g=>{const members=db.students.filter(s=>s.group===g);let avg=0;if(members.length){avg=Math.round(members.reduce((tot,m)=>{let s=0;for(let w=1;w<=15;w++)s+=weekPct(m.id,w);return tot+s/15},0)/members.length)}return `<div class="card stat"><span class="muted">${g}</span><strong>${members.length}</strong><span class="muted">${avg}% overall group progress</span></div>`}).join("");
- groupRows.innerHTML=db.groups.map(g=>{const m=db.students.filter(s=>s.group===g);let avg=0;if(m.length)avg=Math.round(m.reduce((tot,x)=>{let s=0;for(let w=1;w<=15;w++)s+=weekPct(x.id,w);return tot+s/15},0)/m.length);let qs=[];m.forEach(x=>{for(let w=1;w<=3;w++){const q=getProg(x.id,w).quiz;if(q!==null)qs.push(q)}});const qa=qs.length?Math.round(qs.reduce((a,b)=>a+b,0)/qs.length):0;return `<tr><td>${g}</td><td>${m.map(x=>x.name).join(", ")||"—"}</td><td>${avg}%</td><td>${qa}%</td></tr>`}).join("")
+ const groups=[...new Set(db.students.map(s=>s.group).filter(Boolean))];
+ groupCards.innerHTML=groups.map(g=>{
+   const members=db.students.filter(s=>s.group===g);
+   const avg=members.length?Math.round(members.reduce((a,s)=>a+studentFirst3Average(s.id),0)/members.length):0;
+   const w3avg=members.length?Math.round(members.reduce((a,s)=>a+weekPct(s.id,3),0)/members.length):0;
+   return `<div class="card stat">
+     <span class="muted">${g}</span>
+     <strong>${avg}%</strong>
+     <span class="muted">${members.length} students • W3 avg ${w3avg}%</span>
+   </div>`;
+ }).join("");
+
+ groupRows.innerHTML=groups.map(g=>{
+   const m=db.students.filter(s=>s.group===g);
+   const avg=m.length?Math.round(m.reduce((a,s)=>a+studentFirst3Average(s.id),0)/m.length):0;
+   let qs=[];m.forEach(x=>{for(let w=1;w<=3;w++){const q=getProg(x.id,w).quiz;if(q!==null)qs.push(q)}});
+   const qa=qs.length?Math.round(qs.reduce((a,b)=>a+b,0)/qs.length):0;
+   return `<tr><td>${g}</td><td>${m.map(x=>x.name).join(", ")||"—"}</td><td>${avg}%</td><td>${qa}%</td></tr>`;
+ }).join("");
 }
 
 async function unlockInstructor(){
@@ -283,11 +327,59 @@ async function unlockInstructor(){
  try{const snap=await apiPost({action:"adminSnapshot",pin});adminPin=pin;adminUnlocked=true;db.students=(snap.students||[]).map(s=>({name:s.name,id:String(s.id),email:s.email||"",group:s.group||""}));const gs=[...new Set(db.students.map(s=>s.group).filter(Boolean))];if(gs.length)db.groups=gs;applyProgressRows(snap.progress||[]);save();renderAll();adminNav.style.display="";showPage("instructor")}catch(e){alert("Incorrect instructor PIN.")}
 }
 async function refreshInstructor(){if(!adminUnlocked)return;try{const snap=await apiPost({action:"adminSnapshot",pin:adminPin});db.students=(snap.students||[]).map(s=>({name:s.name,id:String(s.id),email:s.email||"",group:s.group||""}));applyProgressRows(snap.progress||[]);save();renderAll();setSaveStatus("Instructor data refreshed ✓",true)}catch(e){alert("Could not refresh instructor data.")}}
+function week3ActivityCount(id){
+ const p=getProg(id,3),st=getTaskStates(p);
+ let n=st.filter(Boolean).length;
+ if(p.preClassReflection)n++;
+ if(p.miniCase)n++;
+ if(p.quiz!==null)n++;
+ if(p.reflection)n++;
+ return Math.min(8,n);
+}
+function studentFirst3Average(id){
+ return Math.round((weekPct(id,1)+weekPct(id,2)+weekPct(id,3))/3);
+}
 function renderInstructor(){
- iStudents.textContent=db.students.length;iGroups.textContent=db.groups.length;
- const vals=db.students.map(s=>Math.round((weekPct(s.id,1)+weekPct(s.id,2)+weekPct(s.id,3))/3));const avg=vals.length?Math.round(vals.reduce((a,b)=>a+b,0)/vals.length):0;
- iCompletion.textContent=avg+"%";iRisk.textContent=vals.filter(x=>x<50).length;
- rosterRows.innerHTML=db.students.map(s=>{const a=Math.round((weekPct(s.id,1)+weekPct(s.id,2)+weekPct(s.id,3))/3);return `<tr><td>${s.name}</td><td>${s.id}</td><td>${s.group||"—"}</td><td>${weekPct(s.id,1)}%</td><td>${weekPct(s.id,2)}%</td><td>${weekPct(s.id,3)}%</td><td>${a}%</td><td><button class="btn alt" onclick="db.activeStudentId='${s.id}';save();renderAll();showPage('student')">View</button></td></tr>`}).join("")
+ iStudents.textContent=db.students.length;
+ iGroups.textContent=[...new Set(db.students.map(s=>s.group).filter(Boolean))].length;
+
+ const vals=db.students.map(s=>studentFirst3Average(s.id));
+ const avg=vals.length?Math.round(vals.reduce((a,b)=>a+b,0)/vals.length):0;
+ iCompletion.textContent=avg+"%";
+ iRisk.textContent=vals.filter(x=>x<50).length;
+
+ const groups=[...new Set(db.students.map(s=>s.group).filter(Boolean))];
+ instructorGroupCards.innerHTML=groups.map(g=>{
+   const members=db.students.filter(s=>s.group===g);
+   const gav=members.length?Math.round(members.reduce((a,s)=>a+studentFirst3Average(s.id),0)/members.length):0;
+   const w3avg=members.length?Math.round(members.reduce((a,s)=>a+weekPct(s.id,3),0)/members.length):0;
+   const risk=members.filter(s=>studentFirst3Average(s.id)<50).length;
+   return `<div class="card stat">
+     <span class="muted">${g}</span>
+     <strong>${gav}%</strong>
+     <div class="progress" style="margin-top:8px"><div class="bar" style="width:${gav}%"></div></div>
+     <small class="muted">${members.length} students • W3 avg ${w3avg}% • At risk ${risk}</small>
+   </div>`;
+ }).join("");
+
+ rosterRows.innerHTML=db.students.map(s=>{
+   const w1=weekPct(s.id,1),w2=weekPct(s.id,2),w3=weekPct(s.id,3);
+   const avg3=studentFirst3Average(s.id);
+   const a3=week3ActivityCount(s.id);
+   const risk=avg3<50;
+   return `<tr>
+     <td>${s.name}</td>
+     <td>${s.id}</td>
+     <td>${s.group||"—"}</td>
+     <td>${w1}%</td>
+     <td>${w2}%</td>
+     <td>${w3}%</td>
+     <td>${a3}/8</td>
+     <td><b>${avg3}%</b></td>
+     <td>${risk?'<span style="color:#b42318;font-weight:bold">At Risk</span>':'<span style="color:var(--green);font-weight:bold">On Track</span>'}</td>
+     <td><button class="btn alt" onclick="db.activeStudentId='${s.id}';save();renderAll();showPage('student')">View</button></td>
+   </tr>`;
+ }).join("");
 }
 function initAccess(){const p=new URLSearchParams(location.search);if(p.get("admin")==="1"){adminNav.style.display="";adminNav.onclick=()=>unlockInstructor()}}
 
