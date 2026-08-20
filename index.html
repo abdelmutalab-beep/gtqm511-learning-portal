@@ -412,7 +412,7 @@ function renderWeekBody(){
  if(currentTab==="case")weekBody.innerHTML=`<div class="card"><h3>${d.caseTitle}</h3><p>${d.caseText}</p><ol>${d.caseQuestions.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol><p class="muted">Write your case analysis below. Your instructor can review it and return feedback.</p><textarea id="caseText" placeholder="Write your case analysis...">${p.caseText||""}</textarea><div class="file-actions"><button class="btn good" onclick="submitCase()">Submit Mini Case</button></div>${reviewPanelStudent(p.reviews.case)}</div>`;
  if(currentTab==="quiz")renderQuiz(d);
  if(currentTab==="assignment")weekBody.innerHTML=`<div class="card"><h3>Week ${currentWeek} Assignment</h3><p>${d.assignment}</p>
-<p class="muted">You may write your answer below, upload a PDF, or submit both. Maximum PDF size: 10 MB.</p>
+<p class="muted">You may write your answer below, upload a PDF, or submit both. Maximum PDF size: 5 MB.</p>
 <label><b>Written response</b></label>
 <textarea id="assignmentText" placeholder="Write or paste your assignment here...">${p.assignmentText||""}</textarea>
 <div style="margin-top:14px"><label><b>PDF file</b></label><input id="assignmentPdf" type="file" accept="application/pdf,.pdf"></div>
