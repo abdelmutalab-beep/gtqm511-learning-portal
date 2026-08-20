@@ -130,7 +130,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 </main>
 
-<footer>G TQM 511 Learning Portal • Progress Tracking v15 • Live Instructor Review • PDF + Text Submission Details</footer>
+<footer>G TQM 511 Learning Portal • Progress Tracking v16 • Revised Weekly Access Schedule • Makkah Time</footer>
 
 <script>
 const course=[
@@ -203,15 +203,48 @@ function addMinutes(date,mins){return new Date(date.getTime()+mins*60000)}
 function weekSchedule(w){
  if(w<4)return null;
  const lecture=addDays(new Date(WEEK4_LECTURE_ISO),(w-4)*7);
- const guidedOpen=addDays(lecture,-2); // Thursday 8:00 PM
- const preclassClose=lecture;         // Saturday 8:00 PM
- const quizOpen=addMinutes(lecture,125);  // 10:05 PM
- const quizClose=addMinutes(quizOpen,30); // 10:35 PM
- const assignmentOpen=addMinutes(lecture,150); // 10:30 PM
- const due=addDays(lecture,5); // Thursday of following week, 8:00 PM initially
- due.setUTCHours(20,59,0,0);   // = 11:59 PM Riyadh (UTC+3)
- const lateUntil=addDays(due,1); // Friday 11:59 PM
- return {lecture,guidedOpen,preclassClose,quizOpen,quizClose,assignmentOpen,due,lateUntil};
+
+ // Content opens Wednesday 8:00 PM Makkah = 72 hours before lecture.
+ const guidedOpen=addDays(lecture,-3);
+
+ // Pre-class reflection opens Friday 8:00 PM = 24 hours before lecture.
+ const preclassOpen=addDays(lecture,-1);
+
+ // Final reminder window begins Saturday 4:00 PM = 4 hours before lecture.
+ const preclassReminder=addMinutes(lecture,-240);
+
+ // Pre-class closes Saturday 7:45 PM = 15 minutes before lecture.
+ const preclassClose=addMinutes(lecture,-15);
+
+ // Lecture / Activity / Case open at lecture start.
+ const lectureOpen=lecture;
+
+ // Post-class reflection opens at lecture end, Saturday 10:00 PM.
+ const postclassOpen=addMinutes(lecture,120);
+
+ // Quiz opens 10:05 PM for 30 minutes.
+ const quizOpen=addMinutes(lecture,125);
+ const quizClose=addMinutes(quizOpen,30);
+
+ // Assignment opens 10:30 PM.
+ const assignmentOpen=addMinutes(lecture,150);
+
+ // Assignment due Thursday 11:59 PM Makkah.
+ const due=addDays(lecture,5);
+ due.setUTCHours(20,59,0,0);
+
+ // Late submission window closes Friday 11:59 PM Makkah.
+ const lateUntil=addDays(due,1);
+
+ // Post-class reflection closes Tuesday 11:59 PM Makkah.
+ const postclassClose=addDays(lecture,3);
+ postclassClose.setUTCHours(20,59,0,0);
+
+ return {
+   lecture,guidedOpen,preclassOpen,preclassReminder,preclassClose,
+   lectureOpen,postclassOpen,postclassClose,
+   quizOpen,quizClose,assignmentOpen,due,lateUntil
+ };
 }
 function fmtRiyadh(d){
  return new Intl.DateTimeFormat("en-GB",{timeZone:COURSE_TZ,weekday:"short",day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit",hour12:true}).format(d)+" (Makkah)";
@@ -220,30 +253,60 @@ function nowMs(){return Date.now()}
 function activityAvailability(w,tab){
  if(w<4)return {open:true,label:"Available"};
  const s=weekSchedule(w),now=nowMs();
+
  if(tab==="overview")return {open:true,label:"Schedule available"};
- if(tab==="content")return now>=s.guidedOpen.getTime()?{open:true,label:"Available"}:{open:false,label:`Opens ${fmtRiyadh(s.guidedOpen)}`};
+
+ if(tab==="content"){
+   return now>=s.guidedOpen.getTime()
+     ? {open:true,label:`Available since ${fmtRiyadh(s.guidedOpen)}`}
+     : {open:false,label:`Opens ${fmtRiyadh(s.guidedOpen)}`};
+ }
+
  if(tab==="preclass"){
-   if(now<s.guidedOpen.getTime())return {open:false,label:`Opens ${fmtRiyadh(s.guidedOpen)}`};
-   if(now>=s.preclassClose.getTime())return {open:false,label:`Closed at lecture start • ${fmtRiyadh(s.preclassClose)}`};
-   return {open:true,label:`Closes ${fmtRiyadh(s.preclassClose)}`};
+   if(now<s.preclassOpen.getTime())
+     return {open:false,label:`Opens ${fmtRiyadh(s.preclassOpen)}`};
+
+   if(now>=s.preclassClose.getTime())
+     return {open:false,label:`Closed ${fmtRiyadh(s.preclassClose)} • 15 minutes before lecture`};
+
+   if(now>=s.preclassReminder.getTime())
+     return {open:true,label:`Final pre-class window • due by ${fmtRiyadh(s.preclassClose)}`,urgent:true};
+
+   return {open:true,label:`Open • due by ${fmtRiyadh(s.preclassClose)}`};
  }
+
  if(["slides","activity","case"].includes(tab)){
-   return now>=s.lecture.getTime()?{open:true,label:"Available"}:{open:false,label:`Opens ${fmtRiyadh(s.lecture)}`};
+   return now>=s.lectureOpen.getTime()
+     ? {open:true,label:"Available"}
+     : {open:false,label:`Opens ${fmtRiyadh(s.lectureOpen)}`};
  }
+
  if(tab==="quiz"){
-   if(now<s.quizOpen.getTime())return {open:false,label:`Opens ${fmtRiyadh(s.quizOpen)}`};
-   if(now>=s.quizClose.getTime())return {open:false,label:`Closed ${fmtRiyadh(s.quizClose)}`};
+   if(now<s.quizOpen.getTime())
+     return {open:false,label:`Opens ${fmtRiyadh(s.quizOpen)}`};
+   if(now>=s.quizClose.getTime())
+     return {open:false,label:`Closed ${fmtRiyadh(s.quizClose)}`};
    return {open:true,label:`Open until ${fmtRiyadh(s.quizClose)}`};
  }
+
  if(tab==="assignment"){
-   if(now<s.assignmentOpen.getTime())return {open:false,label:`Opens ${fmtRiyadh(s.assignmentOpen)}`};
-   if(now<=s.due.getTime())return {open:true,label:`Due ${fmtRiyadh(s.due)}`,late:false};
-   if(now<=s.lateUntil.getTime())return {open:true,label:`Late submission • closes ${fmtRiyadh(s.lateUntil)}`,late:true};
+   if(now<s.assignmentOpen.getTime())
+     return {open:false,label:`Opens ${fmtRiyadh(s.assignmentOpen)}`};
+   if(now<=s.due.getTime())
+     return {open:true,label:`Due ${fmtRiyadh(s.due)}`,late:false};
+   if(now<=s.lateUntil.getTime())
+     return {open:true,label:`Late submission • closes ${fmtRiyadh(s.lateUntil)}`,late:true};
    return {open:false,label:`Submission closed ${fmtRiyadh(s.lateUntil)}`};
  }
+
  if(tab==="reflection"){
-   return now>=s.lecture.getTime()?{open:true,label:"Available"}:{open:false,label:`Opens ${fmtRiyadh(s.lecture)}`};
+   if(now<s.postclassOpen.getTime())
+     return {open:false,label:`Opens ${fmtRiyadh(s.postclassOpen)}`};
+   if(now>s.postclassClose.getTime())
+     return {open:false,label:`Closed ${fmtRiyadh(s.postclassClose)}`};
+   return {open:true,label:`Open until ${fmtRiyadh(s.postclassClose)}`};
  }
+
  return {open:true,label:"Available"};
 }
 function scheduleCard(w){
@@ -251,8 +314,10 @@ function scheduleCard(w){
  const s=weekSchedule(w);
  return `<div class="card" style="margin-bottom:14px"><h3>Week ${w} Schedule • Makkah Time</h3>
  <div class="two">
-  <div><b>Guided Reading / Pre-Class</b><p class="muted">Open: ${fmtRiyadh(s.guidedOpen)}<br>Pre-Class closes: ${fmtRiyadh(s.preclassClose)}</p></div>
-  <div><b>Lecture</b><p class="muted">${fmtRiyadh(s.lecture)} • 8:00–10:00 PM</p></div>
+  <div><b>Guided Reading / Core Content</b><p class="muted">Opens: ${fmtRiyadh(s.guidedOpen)}<br>Remains available after opening.</p></div>
+  <div><b>Pre-Class Reflection</b><p class="muted">Opens: ${fmtRiyadh(s.preclassOpen)}<br>Final reminder window: ${fmtRiyadh(s.preclassReminder)}<br>Closes: ${fmtRiyadh(s.preclassClose)}</p></div>
+  <div><b>Lecture / Activity / Case</b><p class="muted">Lecture: ${fmtRiyadh(s.lecture)} • 8:00–10:00 PM<br>Activity and Case open at 8:00 PM.</p></div>
+  <div><b>Post-Class Reflection</b><p class="muted">Opens: ${fmtRiyadh(s.postclassOpen)}<br>Closes: ${fmtRiyadh(s.postclassClose)}</p></div>
   <div><b>Quiz</b><p class="muted">${fmtRiyadh(s.quizOpen)} → ${fmtRiyadh(s.quizClose)} • 30 minutes • one attempt</p></div>
   <div><b>Assignment</b><p class="muted">Opens: ${fmtRiyadh(s.assignmentOpen)}<br>Due: ${fmtRiyadh(s.due)}<br>Late until: ${fmtRiyadh(s.lateUntil)}</p></div>
  </div></div>`;
