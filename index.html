@@ -130,7 +130,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 </main>
 
-<footer>G TQM 511 Learning Portal • Progress Tracking v14 • Scheduled Access from Week 4 • Makkah Time</footer>
+<footer>G TQM 511 Learning Portal • Progress Tracking v15 • Live Instructor Review • PDF + Text Submission Details</footer>
 
 <script>
 const course=[
@@ -281,7 +281,7 @@ function decodeReflectionPayload(raw){
  try{const x=JSON.parse(s.slice(META_PREFIX.length));return{post:x.post||"",pre:x.pre||"",preDone:Boolean(x.preDone),mini:Boolean(x.mini),activityText:x.activityText||"",caseText:x.caseText||"",assignmentText:x.assignmentText||"",assignmentPdfUrl:x.assignmentPdfUrl||"",assignmentPdfName:x.assignmentPdfName||"",reviews:x.reviews||{}}}catch(e){return{post:"",pre:"",preDone:false,mini:false,activityText:"",caseText:"",assignmentText:"",assignmentPdfUrl:"",assignmentPdfName:"",reviews:{}}}
 }
 function ensureReviews(p){
- const base={preclass:{status:"Submitted",feedback:""},activity:{status:"Submitted",feedback:""},case:{status:"Submitted",feedback:""},assignment:{status:"Submitted",feedback:""},reflection:{status:"Submitted",feedback:""}};
+ const base={preclass:{status:"Not Submitted",feedback:""},activity:{status:"Not Submitted",feedback:""},case:{status:"Not Submitted",feedback:""},assignment:{status:"Not Submitted",feedback:""},reflection:{status:"Not Submitted",feedback:""}};
  p.reviews=Object.assign({},base,p.reviews||{});Object.keys(base).forEach(k=>p.reviews[k]=Object.assign({},base[k],p.reviews[k]||{}));return p
 }
 function getProg(id,w){return ensureReviews(Object.assign(blankProg(),db.progress[pkey(id,w)]||{}))}
@@ -451,10 +451,117 @@ function renderInstructor(){
 <button class="btn danger" onclick="resetStudentProgress('${s.id}')">Reset</button>
 </div></td></tr>`}).join("")
 }
+
+function mergeStudentProgressRows(studentId,rows){
+ Object.keys(db.progress||{}).forEach(k=>{
+   if(k.startsWith(String(studentId)+"_"))delete db.progress[k];
+ });
+ (rows||[]).forEach(x=>{
+   const st=Array.isArray(x.taskStates)?x.taskStates.map(Boolean):[false,false,false,false];
+   const meta=decodeReflectionPayload(x.reflectionText||"");
+   db.progress[pkey(String(x.studentId),Number(x.week))]=ensureReviews({
+     tasks:st.filter(Boolean).length,
+     taskStates:st,
+     quiz:x.quiz===null||x.quiz===undefined||x.quiz===""?null:Number(x.quiz),
+     reflection:Boolean(x.reflection),
+     reflectionText:meta.post,
+     preClassReflection:meta.preDone,
+     preClassText:meta.pre,
+     miniCase:meta.mini,
+     activityText:meta.activityText||"",
+     caseText:meta.caseText||"",
+     assignmentText:meta.assignmentText||"",
+     assignmentPdfUrl:meta.assignmentPdfUrl||"",
+     assignmentPdfName:meta.assignmentPdfName||"",
+     reviews:meta.reviews||{}
+   });
+ });
+ save();
+}
+
 function workTextFor(p,key){if(key==="preclass")return p.preClassText||"";if(key==="activity")return p.activityText||"";if(key==="case")return p.caseText||"";if(key==="assignment")return p.assignmentText||"";if(key==="reflection")return p.reflectionText||"";return""}
-function workSubmitted(p,key){if(key==="preclass")return!!p.preClassReflection;if(key==="activity")return!!getTaskStates(p)[2];if(key==="case")return!!p.miniCase;if(key==="assignment")return!!getTaskStates(p)[3];if(key==="reflection")return!!p.reflection;return false}
+function workSubmitted(p,key){
+ if(key==="preclass")return !!p.preClassReflection || !!String(p.preClassText||"").trim();
+ if(key==="activity")return !!getTaskStates(p)[2] || !!String(p.activityText||"").trim();
+ if(key==="case")return !!p.miniCase || !!String(p.caseText||"").trim();
+ if(key==="assignment")return !!getTaskStates(p)[3] || !!String(p.assignmentText||"").trim() || !!p.assignmentPdfUrl;
+ if(key==="reflection")return !!p.reflection || !!String(p.reflectionText||"").trim();
+ return false
+}
 function escapeHtml(str){return String(str||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]))}
-function openStudentReview(id){if(!adminUnlocked)return;const s=db.students.find(x=>String(x.id)===String(id));if(!s)return;const labels={preclass:"Pre-Class Reflection",activity:"In-Class Activity",case:"Mini Case",assignment:"Assignment",reflection:"Post-Class Reflection"};let cards="";for(let w=1;w<=4;w++){const p=getProg(id,w);let inner="";Object.keys(labels).forEach(key=>{const submitted=workSubmitted(p,key),txt=workTextFor(p,key),r=p.reviews[key]||{status:"Submitted",feedback:""};inner+=`<div class="review-card"><b>Week ${w} • ${labels[key]}</b><div class="muted">${submitted?"Submitted":"Not submitted"} • Review status: ${r.status||"Submitted"}</div>${submitted?`${txt?`<div class="review-text">${escapeHtml(txt)}</div>`:""}${key==="assignment"&&p.assignmentPdfUrl?`<div class="success"><b>PDF:</b> <a href="${p.assignmentPdfUrl}" target="_blank" rel="noopener">${escapeHtml(p.assignmentPdfName||"Open submitted PDF")}</a></div>`:""}${!txt && !(key==="assignment"&&p.assignmentPdfUrl)?"<div class=\"review-text\"><i>No text stored</i></div>":""}<label>Feedback</label><textarea id="fb_${id}_${w}_${key}" placeholder="Instructor feedback...">${escapeHtml(r.feedback||"")}</textarea><div class="file-actions"><button class="btn good" onclick="saveReview('${id}',${w},'${key}','Reviewed')">Mark Reviewed</button><button class="btn alt" onclick="saveReview('${id}',${w},'${key}','Needs Revision')">Needs Revision</button></div>`:""}</div>`});cards+=`<div class="student-week"><h3>Week ${w}: ${course[w-1][0]}</h3>${inner}</div>`}reviewWorkspace.innerHTML=`<div class="section-head"><div><b>${s.name}</b><div class="muted">${s.id} • ${s.group||"—"}</div></div><button class="btn alt" onclick="reviewWorkspace.innerHTML='Choose Review beside a student.'">Close Review</button></div>${cards}`;reviewWorkspace.scrollIntoView({behavior:"smooth",block:"start"})}
+async function openStudentReview(id){
+ if(!adminUnlocked)return;
+ const s=db.students.find(x=>String(x.id)===String(id));if(!s)return;
+
+ reviewWorkspace.innerHTML=`<div class="muted">Loading latest submissions for ${escapeHtml(s.name)}...</div>`;
+ reviewWorkspace.scrollIntoView({behavior:"smooth",block:"start"});
+
+ try{
+   const fresh=await apiGet({action:"progress",studentId:String(id)});
+   mergeStudentProgressRows(id,fresh.progress||[]);
+ }catch(e){
+   reviewWorkspace.innerHTML=`<div class="notice">Could not refresh the latest central record. Showing the last loaded data.</div>`;
+ }
+
+ const labels={
+   preclass:"Pre-Class Reflection",
+   activity:"In-Class Activity",
+   case:"Mini Case",
+   assignment:"Assignment",
+   reflection:"Post-Class Reflection"
+ };
+ let cards="";
+
+ for(let w=1;w<=4;w++){
+   const p=getProg(id,w);
+   let inner="";
+
+   Object.keys(labels).forEach(key=>{
+     const submitted=workSubmitted(p,key);
+     const txt=workTextFor(p,key);
+     const r=p.reviews[key]||{status:"Not Submitted",feedback:""};
+     const status=submitted ? (r.status && r.status!=="Not Submitted" ? r.status : "Submitted") : "Not Submitted";
+     const hasPdf=key==="assignment" && !!p.assignmentPdfUrl;
+
+     inner+=`<div class="review-card">
+       <b>Week ${w} • ${labels[key]}</b>
+       <div class="muted">${submitted?"Submitted":"Not submitted"} • Review status: ${status}</div>
+
+       ${submitted?`
+         ${txt?`<div class="review-text">${escapeHtml(txt)}</div>`:""}
+         ${hasPdf?`<div class="success" style="margin-top:8px">
+           <b>Submitted PDF:</b>
+           <a href="${p.assignmentPdfUrl}" target="_blank" rel="noopener">${escapeHtml(p.assignmentPdfName||"Open submitted PDF")}</a>
+         </div>`:""}
+         ${!txt&&!hasPdf?`<div class="review-text"><i>Submission recorded, but no text or PDF link is stored.</i></div>`:""}
+
+         <label style="display:block;margin-top:10px"><b>Instructor Feedback</b></label>
+         <textarea id="fb_${id}_${w}_${key}" placeholder="Write feedback for the student...">${escapeHtml(r.feedback||"")}</textarea>
+
+         <div class="file-actions">
+           <button class="btn good" onclick="saveReview('${id}',${w},'${key}','Reviewed')">Mark Reviewed</button>
+           <button class="btn alt" onclick="saveReview('${id}',${w},'${key}','Needs Revision')">Needs Revision</button>
+         </div>
+       `:`<div class="muted" style="margin-top:8px">No student submission is currently stored for this item.</div>`}
+     </div>`;
+   });
+
+   cards+=`<div class="student-week">
+     <h3>Week ${w}: ${course[w-1][0]}</h3>
+     ${inner}
+   </div>`;
+ }
+
+ reviewWorkspace.innerHTML=`<div class="section-head">
+   <div><b>${escapeHtml(s.name)}</b><div class="muted">${escapeHtml(s.id)} • ${escapeHtml(s.group||"—")}</div></div>
+   <div class="file-actions" style="margin:0">
+     <button class="btn" onclick="openStudentReview('${id}')">Refresh Submissions</button>
+     <button class="btn alt" onclick="reviewWorkspace.innerHTML='Choose Review beside a student.'">Close Review</button>
+   </div>
+ </div>${cards}`;
+
+ reviewWorkspace.scrollIntoView({behavior:"smooth",block:"start"});
+}
 async function saveReview(id,w,key,status){if(!adminUnlocked)return;const p=getProg(id,w),el=document.getElementById(`fb_${id}_${w}_${key}`);ensureReviews(p);p.reviews[key]={status,feedback:el?(el.value||"").trim():""};db.progress[pkey(id,w)]=p;save();const ok=await pushProgress(id,w);if(ok){setSaveStatus("Review saved ✓",true);openStudentReview(id)}else alert("Review could not be saved centrally.")}
 function initAccess(){const p=new URLSearchParams(location.search);if(p.get("admin")==="1"){adminNav.style.display="";adminNav.onclick=()=>unlockInstructor()}}
 function renderAll(){renderWeeks();renderStudent();renderGroups();if(adminUnlocked)renderInstructor()}
