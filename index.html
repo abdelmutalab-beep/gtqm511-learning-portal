@@ -5,68 +5,30 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>G TQM 511 Learning Portal</title>
 <style>
-:root{--navy:#10233f;--blue:#2457c5;--green:#14805e;--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#667085;--line:#e5e7eb;--soft:#eef4ff}
+:root{--navy:#10233f;--blue:#2457c5;--green:#14805e;--amber:#b7791f;--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#667085;--line:#e5e7eb;--soft:#eef4ff}
 *{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
-header{background:var(--navy);color:#fff;position:sticky;top:0;z-index:10}.top{max-width:1250px;margin:auto;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px}
-.brand b{font-size:20px}.brand small{display:block;opacity:.75;margin-top:3px}nav{display:flex;gap:7px;flex-wrap:wrap}
+header{background:var(--navy);color:#fff;position:sticky;top:0;z-index:10}.top{max-width:1250px;margin:auto;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand b{font-size:20px}.brand small{display:block;opacity:.8;margin-top:3px}nav{display:flex;gap:7px;flex-wrap:wrap}
 button{font:inherit}.nav,.btn{border:0;border-radius:9px;padding:9px 12px;cursor:pointer}.nav{background:#203b65;color:#fff}.nav.active{background:#fff;color:#13233d;font-weight:bold}
-.btn{background:var(--blue);color:#fff}.btn.alt{background:#eef2f7;color:#172033}.btn.good{background:var(--green)}main{max-width:1250px;margin:22px auto;padding:0 16px}.hidden{display:none!important}
+.btn{background:var(--blue);color:#fff;text-decoration:none;display:inline-block}.btn.alt{background:#eef2f7;color:#172033}.btn.good{background:var(--green)}
+main{max-width:1250px;margin:22px auto;padding:0 16px}.hidden{display:none!important}
 .hero{background:linear-gradient(135deg,#173566,#285dc9);color:#fff;padding:28px;border-radius:18px;display:grid;grid-template-columns:1.5fr 1fr;gap:20px}.hero h1{font-size:34px;margin:6px 0 10px}
 .glass{background:#ffffff18;border:1px solid #ffffff2b;border-radius:14px;padding:17px}.pill{display:inline-block;padding:5px 9px;border-radius:99px;background:var(--soft);color:var(--blue);font-size:12px;margin:2px}
 .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.weeks{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}.card h3{margin-top:0}
 .week{cursor:pointer;transition:.15s}.week:hover{transform:translateY(-2px);box-shadow:0 8px 24px #17203312}.muted{color:var(--muted)}.section{margin-top:24px}
-.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}.stat strong{display:block;font-size:28px;margin-top:5px}.progress{height:8px;background:#edf0f5;border-radius:10px;overflow:hidden}.bar{height:100%;background:var(--green)}
-.layout{display:grid;grid-template-columns:2fr 1fr;gap:14px}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}table{width:100%;border-collapse:collapse}th,td{padding:9px;border-bottom:1px solid var(--line);text-align:left;font-size:13px}th{background:#f2f4f7}
-input,select,textarea{width:100%;padding:10px;border:1px solid #cfd5df;border-radius:8px;background:#fff}textarea{min-height:100px;resize:vertical}.formrow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.student-week{
-border:1px solid var(--line);
-border-radius:12px;
-padding:15px;
-margin:14px 0;
-background:#fff
-}
-
-.student-week-head{
-display:flex;
-justify-content:space-between;
-align-items:center;
-gap:12px;
-flex-wrap:wrap
-}
-
-.student-activities{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:8px;
-margin-top:12px
-}
-
-.student-activity{
-border:1px solid var(--line);
-border-radius:9px;
-padding:10px;
-background:#fafbfc
-}
-
-.activity-done{
-color:var(--green);
-font-weight:bold
-}
-
-.activity-pending{
-color:var(--muted);
-font-weight:bold
-}
-
-@media(max-width:750px){
-.student-activities{grid-template-columns:1fr}
-}.task{display:flex;align-items:flex-start;gap:8px;padding:10px 0}.task input{width:auto;margin-top:3px}.topic{padding:12px 0;border-bottom:1px solid var(--line)}.topic:last-child{border-bottom:0}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap}.stat strong{display:block;font-size:28px;margin-top:5px}.progress{height:8px;background:#edf0f5;border-radius:10px;overflow:hidden}.bar{height:100%;background:var(--green)}
+.layout{display:grid;grid-template-columns:2fr 1fr;gap:14px}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}table{width:100%;border-collapse:collapse}th,td{padding:9px;border-bottom:1px solid var(--line);text-align:left;font-size:13px;vertical-align:top}th{background:#f2f4f7}
+input,select,textarea{width:100%;padding:10px;border:1px solid #cfd5df;border-radius:8px;background:#fff}textarea{min-height:110px;resize:vertical}.formrow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.task{display:flex;align-items:flex-start;gap:8px;padding:10px 0}.task input{width:auto;margin-top:3px}.topic{padding:12px 0;border-bottom:1px solid var(--line)}.topic:last-child{border-bottom:0}
 .notice{padding:12px;border-radius:10px;background:#fff8e7;border:1px solid #f4d18d;color:#704300}.success{padding:12px;border-radius:10px;background:#ecfdf3;border:1px solid #abefc6;color:#067647}
 .quiz label{display:block;padding:9px;border:1px solid var(--line);border-radius:8px;margin:7px 0;cursor:pointer}.weeknav{display:flex;gap:8px;flex-wrap:wrap}.tab{padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;cursor:pointer}.tab.active{background:var(--soft);color:var(--blue);border-color:#b9cdfb}
-.rtl{direction:rtl;text-align:right}.rtl th,.rtl td{text-align:right}.slide-frame{width:100%;height:72vh;min-height:520px;border:1px solid var(--line);border-radius:12px;background:#fff}.file-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.slide-frame{width:100%;height:68vh;min-height:480px;border:1px solid var(--line);border-radius:12px;background:#fff}.file-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.student-week{border:1px solid var(--line);border-radius:12px;padding:15px;margin:14px 0;background:#fff}.student-week-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.student-activities{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.student-activity{border:1px solid var(--line);border-radius:9px;padding:10px;background:#fafbfc}.activity-done{color:var(--green);font-weight:bold}.activity-pending{color:var(--muted);font-weight:bold}
+.rtl{direction:rtl;text-align:right}.rtl th,.rtl td{text-align:right}
 footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);font-size:12px}
-@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.weeks{grid-template-columns:1fr 1fr}.layout,.hero,.two,.formrow{grid-template-columns:1fr}}
-@media(max-width:600px){.grid,.weeks{grid-template-columns:1fr}.hero h1{font-size:27px}}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.weeks{grid-template-columns:1fr 1fr}.layout,.hero,.two,.formrow{grid-template-columns:1fr}.student-activities{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.grid,.weeks,.student-activities{grid-template-columns:1fr}.hero h1{font-size:27px}}
 </style>
 </head>
 <body>
@@ -89,156 +51,62 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 <p id="heroText">A practical learning portal linking individual, group and organizational behavior to quality performance, service, engagement, leadership and continuous improvement.</p>
 <button class="btn" onclick="showPage('register')">Student Access</button></div>
 <div class="glass"><h3>Learning Journey</h3><p>Prepare → Learn → Apply → Discuss → Assess → Reflect</p>
-<div class="progress"><div id="overallBar" class="bar" style="width:0%"></div></div><p><b id="overallPct">0%</b> local progress</p>
-<p style="font-size:12px;opacity:.8">Week 1 tracking: Checklist 40% • Quiz 40% • Reflection 20%</p></div>
+<div class="progress"><div id="overallBar" class="bar" style="width:0%"></div></div><p><b id="overallPct">0%</b> overall course progress</p>
+<p style="font-size:12px;opacity:.85">Weeks 1–3 are fully tracked. Week 3 uses 8 distinct learning activities.</p></div>
 </div>
-<div class="section"><div class="section-head"><h2>15-Week Learning Path</h2><span class="muted">Weeks 1–3 fully expanded • Week 3 full learning package</span></div><div id="weeks" class="weeks"></div></div>
+<div class="section"><div class="section-head"><h2>15-Week Learning Path</h2><span class="muted">Weeks 1–3 expanded</span></div><div id="weeks" class="weeks"></div></div>
 </section>
 
 <section id="register" class="page hidden">
 <div class="section-head"><h2>Student Access</h2><span class="muted">Only pre-registered Student IDs are accepted</span></div>
-<div class="card">
-<div class="formrow" style="grid-template-columns:2fr 1fr">
+<div class="card"><div class="formrow" style="grid-template-columns:2fr 1fr">
 <div><label>Student ID</label><input id="regId" placeholder="Enter your Student ID"></div>
 <div style="display:flex;align-items:end"><button class="btn good" style="width:100%" onclick="registerStudent()">Enter Course</button></div>
-</div>
-<p id="regMsg"></p>
-</div>
+</div><p id="regMsg"></p></div>
 </section>
 
 <section id="student" class="page hidden">
-
-<div class="section-head">
-<div>
-<h2 style="margin-bottom:4px">Student Progress</h2>
-<span id="studentName" class="muted">No student registered</span>
-</div>
-<span class="muted">Individual and group learning progress</span>
-</div>
-
+<div class="section-head"><div><h2 style="margin-bottom:4px">Student Progress</h2><span id="studentName" class="muted">No student registered</span></div><span class="muted">Individual and group learning progress</span></div>
 <div class="grid">
-
-<div class="card stat">
-<span class="muted">Overall Course Progress</span>
-<strong id="sProgress">0%</strong>
-<div class="progress">
-<div id="studentOverallBar" class="bar" style="width:0%"></div>
+<div class="card stat"><span class="muted">Overall Course Progress</span><strong id="sProgress">0%</strong><div class="progress"><div id="studentOverallBar" class="bar" style="width:0%"></div></div></div>
+<div class="card stat"><span class="muted">Weeks 1–3 Progress</span><strong id="sFirst3">0%</strong></div>
+<div class="card stat"><span class="muted">Quiz Average</span><strong id="sQuiz">0%</strong></div>
+<div class="card stat"><span class="muted">Group</span><strong id="sGroup">—</strong></div>
 </div>
+<div class="card section"><div class="section-head"><h3 style="margin:0">Weeks 1–3 Detailed Progress</h3><span class="muted">Tracked learning activities</span></div><div id="studentWeekDetails"></div></div>
+<div class="card section"><div class="section-head"><h3 style="margin:0">Group Progress</h3><span id="studentGroupLabel" class="muted">—</span></div>
+<div class="two"><div><p class="muted">Your Progress</p><div class="progress"><div id="studentGroupBar" class="bar" style="width:0%"></div></div><p><b id="studentGroupPct">0%</b></p></div>
+<div><p class="muted">Group Average</p><div class="progress"><div id="groupAverageBar" class="bar" style="width:0%"></div></div><p><b id="groupAveragePct">—</b></p></div></div>
+<p id="groupNote" class="muted" style="font-size:12px">Group average is shown when group member data are available to the current session.</p>
 </div>
-
-<div class="card stat">
-<span class="muted">Weeks 1–3 Progress</span>
-<strong id="sFirst3">0%</strong>
-</div>
-
-<div class="card stat">
-<span class="muted">Quiz Average</span>
-<strong id="sQuiz">0%</strong>
-</div>
-
-<div class="card stat">
-<span class="muted">Group</span>
-<strong id="sGroup">—</strong>
-</div>
-
-</div>
-
-<div class="card section">
-
-<div class="section-head">
-<h3 style="margin:0">Weeks 1–3 Detailed Progress</h3>
-<span class="muted">Tracked learning activities</span>
-</div>
-
-<div id="studentWeekDetails"></div>
-
-</div>
-
-<div class="card section">
-
-<div class="section-head">
-<h3 style="margin:0">Group Progress</h3>
-<span id="studentGroupLabel" class="muted">—</span>
-</div>
-
-<div class="two">
-
-<div>
-<p class="muted">Your Progress</p>
-<div class="progress">
-<div id="studentGroupBar" class="bar" style="width:0%"></div>
-</div>
-<p><b id="studentGroupPct">0%</b></p>
-</div>
-
-<div>
-<p class="muted">Group Average</p>
-<div class="progress">
-<div id="groupAverageBar" class="bar" style="width:0%"></div>
-</div>
-<p><b id="groupAveragePct">0%</b></p>
-</div>
-
-</div>
-
-</div>
-
-<div class="card section">
-<h3>15-Week Course Progress</h3>
-
-<table>
-<thead>
-<tr>
-<th>Week</th>
-<th>Topic</th>
-<th>Status</th>
-<th>Progress</th>
-<th>Quiz</th>
-<th>Reflection</th>
-</tr>
-</thead>
-
-<tbody id="studentRows"></tbody>
-</table>
-
-</div>
-
+<div class="card section" style="overflow:auto"><h3>15-Week Course Progress</h3><table><thead><tr><th>Week</th><th>Topic</th><th>Status</th><th>Progress</th><th>Quiz</th><th>Reflection</th></tr></thead><tbody id="studentRows"></tbody></table></div>
 </section>
 
 <section id="groups" class="page hidden">
-<div class="section-head"><h2>Group Dashboard</h2><span class="muted">Based on registered students</span></div>
+<div class="section-head"><h2>Group Dashboard</h2><span class="muted">Based on data available in the current session</span></div>
 <div id="groupCards" class="grid"></div>
-<div class="card section"><h3>Group Membership</h3><table><thead><tr><th>Group</th><th>Students</th><th>Average Progress</th><th>Quiz Average</th></tr></thead><tbody id="groupRows"></tbody></table></div>
+<div class="card section" style="overflow:auto"><h3>Group Membership</h3><table><thead><tr><th>Group</th><th>Students</th><th>Average Progress</th><th>Quiz Average</th></tr></thead><tbody id="groupRows"></tbody></table></div>
 </section>
 
 <section id="instructor" class="page hidden">
-<div class="section-head"><h2>Instructor Dashboard</h2><button class="btn alt" onclick="refreshInstructor()">Refresh Data</button><span class="muted">Week 1 tracking</span></div>
+<div class="section-head"><h2>Instructor Dashboard</h2><button class="btn alt" onclick="refreshInstructor()">Refresh Data</button><span class="muted">Central snapshot</span></div>
 <div class="grid">
 <div class="card stat"><span class="muted">Registered Students</span><strong id="iStudents">0</strong></div>
-<div class="card stat"><span class="muted">Groups</span><strong id="iGroups">4</strong></div>
-<div class="card stat"><span class="muted">Week 1 Avg.</span><strong id="iCompletion">0%</strong></div>
-<div class="card stat"><span class="muted">Week 1 At-Risk</span><strong id="iRisk">0</strong></div>
+<div class="card stat"><span class="muted">Groups</span><strong id="iGroups">0</strong></div>
+<div class="card stat"><span class="muted">Weeks 1–3 Avg.</span><strong id="iCompletion">0%</strong></div>
+<div class="card stat"><span class="muted">At-Risk (&lt;50%)</span><strong id="iRisk">0</strong></div>
 </div>
-<div class="section card" style="overflow:auto"><h3>Week 1 Student Tracking</h3>
-<table><thead><tr><th>Name</th><th>ID</th><th>Group</th><th>Checklist</th><th>Quiz</th><th>Reflection</th><th>Week 1 Total</th><th>Status</th><th>Action</th></tr></thead><tbody id="rosterRows"></tbody></table>
-</div>
-<div class="card section"><h3>Bulk Import</h3>
-<p class="muted">Paste one student per line using: Name | ID | Email | Group</p>
-<textarea id="bulkStudents" placeholder="Ahmed Ali | PGD-001 | ahmed@example.com | Group A"></textarea>
-<button class="btn" onclick="bulkImport()">Import Students</button>
-<hr style="border:0;border-top:1px solid var(--line);margin:18px 0">
-<h3>Groups</h3><div class="two"><input id="newGroup" placeholder="New group name"><button class="btn alt" onclick="addGroup()">Add Group</button></div>
-<p id="adminMsg"></p></div>
+<div class="section card" style="overflow:auto"><h3>Student Tracking</h3>
+<table><thead><tr><th>Name</th><th>ID</th><th>Group</th><th>W1</th><th>W2</th><th>W3</th><th>W1–3 Avg.</th><th>Action</th></tr></thead><tbody id="rosterRows"></tbody></table></div>
 </section>
 
 <section id="week" class="page hidden">
 <div class="section-head"><div><span class="muted" id="wkNum"></span><h2 id="wkTitle" style="margin:3px 0"></h2></div><button class="btn alt" onclick="showPage('home')">← Course</button></div>
-<div id="weekTabs" class="weeknav"></div>
-<div id="weekBody" class="section"></div>
+<div id="weekTabs" class="weeknav"></div><div id="weekBody" class="section"></div>
 </section>
 </main>
 
-<footer>G TQM 511 Learning Portal • Central tracking enabled • Week 3 full learning package integrated</footer>
+<footer>G TQM 511 Learning Portal • Central tracking enabled • Student Progress v2</footer>
 
 <script>
 const course=[
@@ -259,727 +127,206 @@ const course=[
 ["Organizational Change, Resistance, Stress and Continuous Quality Improvement","Change, resistance, stress and continuous improvement."]
 ];
 
-const week1={
-objectives:[
-"Define organizational behavior and explain why interpersonal skills matter for managerial effectiveness.",
-"Differentiate management functions, managerial roles, and technical, human, and conceptual skills.",
-"Contrast intuition with systematic study and evidence-based management.",
-"Use individual, group, and organizational levels and the Inputs–Processes–Outcomes model to diagnose a quality problem.",
-"Connect organizational behavior processes to quality, service, productivity, and institutional effectiveness."
-],
-topics:[
-["Why interpersonal skills matter","Managers achieve results through other people. Workplace relationships influence satisfaction, stress, commitment and turnover. Quality is delivered through handoffs, teamwork, communication, judgement and customer interaction."],
-["Managers and organizations","A manager achieves goals through other people. An organization is a consciously coordinated social unit. Quality is produced by people coordinated toward shared standards and improvement goals."],
-["Four management functions","Planning: set quality objectives. Organizing: assign responsibilities and process ownership. Leading: motivate, communicate and resolve conflict. Controlling: monitor results and correct deviations."],
-["Mintzberg’s managerial roles","Interpersonal roles build trust; informational roles move reliable information; decisional roles allocate resources and respond to problems. Quality managers connect people, evidence and action."],
-["Three managerial skills","Technical: specialized knowledge. Human: understanding and motivating people. Conceptual: analyzing complex situations and choosing among alternatives."],
-["What is Organizational Behavior?","OB studies the impact of individuals, groups and structure on behavior within organizations and applies that knowledge to improve organizational effectiveness."],
-["From intuition to evidence","Intuition can be useful but biased. Systematic study examines relationships and causes. Evidence-based management combines scientific evidence, context and professional judgement."],
-["Contributing disciplines","Psychology, social psychology, sociology and anthropology contribute different lenses. Quality problems are rarely one-dimensional."],
-["Contingency perspective","Human behavior is context dependent. The same intervention can produce different outcomes under different conditions."],
-["Basic OB model","Inputs shape processes, which shape outcomes. Analysis occurs at individual, group and organizational levels, with feedback from outcomes to future inputs."],
-["Applying OB to quality","Individual behavior affects task quality, safety and customer experience; group behavior affects coordination and problem solving; organizational systems affect reliability, improvement and sustainability."]
-],
-activity:{
-title:"In-Class Activity: Three-Level Diagnosis",
-scenario:"A university receives repeated complaints about slow student services. Staff say procedures are unclear; supervisors blame employee attitude; employees blame workload and poor systems; departments do not share information.",
-tasks:["List at least six possible causes.","Classify each cause as individual, group or organizational.","Identify the relevant behavioral processes.","State the quality outcome affected.","Select two priority interventions and justify their sequence.","Propose two indicators for monitoring improvement."],
-deliverable:"One-page diagnostic map: Inputs → Processes → Outcomes, plus a two-minute group explanation."
+const packs={
+1:{
+objectives:["Define organizational behavior and explain why interpersonal skills matter.","Differentiate planning, organizing, leading and controlling.","Use evidence-based management rather than intuition alone.","Apply individual, group and organizational levels of analysis.","Connect OB to quality, service and organizational effectiveness."],
+topics:[["What is Organizational Behavior?","OB studies the impact of individuals, groups and structure on behavior within organizations and applies that knowledge to improve organizational effectiveness."],["Management and quality","Managers achieve results through people. Planning, organizing, leading and controlling all shape process reliability and service quality."],["Evidence-based management","Systematic evidence helps managers reduce bias and choose actions based on data, context and professional judgement."],["OB levels","Quality problems may originate at individual, group or organizational level; effective diagnosis considers all three."]],
+activity:"Three-Level Diagnosis: classify causes of a service-quality problem as individual, group or organizational.",
+caseTitle:"Mini Case: Reporting Errors Without Fear",
+caseText:"A logistics company rewards teams reporting zero errors. Error reports fall, but complaints and rework rise. Employees learn that reporting problems attracts blame.",
+caseQuestions:["What attitudes or perceptions may explain the behavior?","What group norms reinforce under-reporting?","How should recognition be redesigned?"],
+quiz:[["Which statement best defines organizational behavior?",["Financial performance","Individuals, groups and structure in organizations","Production technology","Marketing behavior"],1],["Which management function includes motivating and resolving conflict?",["Planning","Organizing","Leading","Controlling"],2],["Evidence-based management relies mainly on:",["Habit","Scientific evidence and contextual judgement","Seniority","Informal opinion"],1]],
+assignment:"Select a real quality-related problem and prepare a short OB–Quality diagnostic note."
 },
-case:{
-title:"Mini Case: Reporting Errors Without Fear",
-text:"A logistics company introduced a zero-defect target. Managers praised teams with no reported errors. Formal error reports fell sharply, but customer complaints and rework increased. Employees learned that reporting errors damaged team reputation and triggered blame.",
-questions:["What individual attitudes or perceptions may explain the behavior?","What group norms and leadership signals reinforced under-reporting?","How should the performance and recognition system be redesigned?"],
-lesson:"A metric can change behavior in ways that damage the real quality objective. A system that hides errors cannot learn from them."
+2:{
+objectives:["Define workplace diversity and distinguish surface-level from deep-level diversity.","Explain stereotypes, bias, discrimination and exclusion.","Relate ability and person–job fit to performance without stereotyping.","Explain how inclusion improves participation and decision quality.","Apply diversity principles to quality teams and customer service."],
+topics:[["Diversity","Diversity includes visible and less visible differences that may influence identities, experience and interaction."],["Inclusion","Representation alone is not enough; inclusion determines whether people are respected, heard and able to contribute."],["Bias and quality","Bias can create defects in human decisions just as process variation creates defects in operations."],["Diversity and teams","Diverse teams can improve problem solving when supported by psychological safety, clear goals and inclusive communication."]],
+activity:"Bias-Proofing a Quality Decision: design transparent criteria for selecting an improvement team.",
+caseTitle:"Mini Case: The Improvement Meeting Where Only Some Voices Count",
+caseText:"A cross-functional team looks diverse on paper, but junior staff rarely speak and decisions are made before frontline evidence is discussed.",
+caseQuestions:["Is the problem diversity, inclusion, or both?","What processes suppress useful information?","How can meetings increase employee voice?"],
+quiz:[["Surface-level diversity refers to:",["Values and personality","Readily observable demographic differences","Motivation only","Knowledge only"],1],["A generalized belief about a group is a:",["Stereotype","Job involvement","Role clarity","Control"],0],["Inclusive teams may improve quality because:",["They eliminate disagreement","They allow more relevant information to enter decisions","They make data unnecessary","They guarantee consensus"],1]],
+assignment:"Review one workplace process and analyze how diversity and inclusion affect decision quality."
 },
-quiz:[
-["Which statement best defines organizational behavior?",["The study of financial performance","The study of individuals, groups and structure in organizations","The study of production technology","The study of marketing behavior"],1],
-["Which management function includes motivating and resolving conflict?",["Planning","Organizing","Leading","Controlling"],2],
-["Which skill is most directly concerned with understanding and motivating people?",["Technical","Human","Financial","Administrative"],1],
-["Evidence-based management relies primarily on:",["Habit","Seniority","Scientific evidence and contextual judgement","Informal opinion"],2],
-["Organizational culture is mainly an input at which level?",["Individual","Group","Organizational","Customer"],2]
-],
-assignment:{
-title:"Week 1 Assignment – OB–Quality Diagnostic Note",
-text:"Select one real or familiar quality-related problem and write a 600–800 word diagnostic note.",
-requirements:["Describe the problem and affected stakeholders.","Classify causes at individual, group and organizational levels.","Apply the Inputs–Processes–Outcomes model.","Identify evidence needed before action.","Recommend two feasible interventions.","Propose two monitoring indicators."],
-rubric:"Conceptual accuracy 30% • Quality of diagnosis 30% • Application to quality 20% • Evidence and feasibility 10% • Clarity and professionalism 10%"
-}
-};
-
-
-const week2={
-objectives:[
-"Define workplace diversity and distinguish surface-level from deep-level diversity.",
-"Explain how stereotypes, bias, discrimination and exclusion can influence employee behavior and organizational decisions.",
-"Describe how biographical characteristics and individual abilities may relate to work outcomes without relying on stereotypes.",
-"Explain why inclusive practices improve participation, communication, problem solving and decision quality.",
-"Apply diversity-management principles to quality teams, customer service and continuous improvement."
-],
-topics:[
-["What is diversity?","Workplace diversity refers to differences among people that may shape identities, experiences, perspectives and interactions. Diversity is broader than demographic categories and includes both visible and less visible differences."],
-["Surface-level and deep-level diversity","Surface-level diversity includes readily observable characteristics. Deep-level diversity includes values, personality, attitudes, knowledge and experience. As people work together, deep-level characteristics often become increasingly important for collaboration."],
-["Stereotypes, bias and discrimination","A stereotype is a generalized belief about a group. Bias can influence perception and judgement, while discrimination occurs when people are treated differently because of group membership rather than relevant job-related evidence. These processes can distort selection, appraisal, communication and quality decisions."],
-["Biographical characteristics","Age, gender, race and ethnicity, disability, religion, tenure and other characteristics may be relevant to organizational experiences, but managers should avoid assuming that group averages determine individual capability or performance."],
-["Ability and person–job fit","Ability refers to an individual's capacity to perform job tasks. Intellectual and physical abilities differ across tasks. Quality improves when job requirements, employee capabilities, training and support are aligned rather than when decisions are based on demographic assumptions."],
-["Diversity and teams","Diverse teams can provide broader information, perspectives and problem-solving approaches. Benefits are more likely when teams have inclusive norms, psychological safety, clear goals and effective communication."],
-["Inclusion","Diversity describes differences; inclusion concerns whether people are respected, heard, able to contribute and treated fairly. Representation without meaningful participation may not improve team decisions or quality outcomes."],
-["Managing diversity effectively","Effective practices include objective selection criteria, structured decision processes, accessibility, fair development opportunities, bias-aware evaluation, inclusive leadership and mechanisms for employee voice."],
-["Diversity and customer quality","A workforce that understands different customer needs can improve service design, accessibility and responsiveness. Managers should use customer evidence and inclusive consultation rather than assumptions about groups."],
-["Quality connection","Bias can create defects in human decisions just as process variation creates defects in operations. Inclusive quality systems improve access to information, employee voice, root-cause analysis and the reliability of decisions."]
-],
-activity:{
-title:"In-Class Activity: Bias-Proofing a Quality Decision",
-scenario:"A service organization must select four employees for a process-improvement team. Managers informally propose the people they 'trust most.' The proposed team has similar backgrounds and seniority, while several employees with relevant customer, data and frontline experience are excluded.",
-tasks:[
-"Identify where bias or similarity preference may enter the decision.",
-"Define job-related criteria for selecting the improvement team.",
-"Distinguish surface-level and deep-level diversity relevant to the task.",
-"Recommend a transparent selection process.",
-"Explain how broader perspectives could improve root-cause analysis.",
-"Propose two indicators for monitoring inclusion and team effectiveness."
-],
-deliverable:"A one-page team-selection matrix plus a two-minute justification linking Diversity → Inclusion → Decision Quality."
-},
-case:{
-title:"Mini Case: The Improvement Meeting Where Only Some Voices Count",
-text:"A hospital support unit formed a cross-functional quality team to reduce delays. Meetings included staff from several departments, but junior employees rarely spoke because senior members interrupted them and decisions were usually made before frontline evidence was discussed. The team appeared diverse on paper, yet recurring causes of delay remained unidentified.",
-questions:[
-"Is the problem mainly diversity, inclusion, or both? Explain.",
-"What group processes are suppressing useful information?",
-"Which meeting practices could increase psychological safety and employee voice?",
-"How could the team test whether inclusion is improving decision quality?"
-],
-lesson:"Diversity creates access to different perspectives; inclusion determines whether those perspectives actually enter the decision process."
-},
-quiz:[
-["Which statement best describes surface-level diversity?",["Differences in values and personality","Readily observable demographic differences","Differences in professional knowledge only","Differences in motivation only"],1],
-["Which concept refers to generalized beliefs about members of a group?",["Stereotype","Job involvement","Role clarity","Procedural control"],0],
-["Why can inclusive teams improve quality decisions?",["They eliminate disagreement","They allow more relevant information and perspectives to be considered","They make data unnecessary","They guarantee consensus"],1],
-["Which is the strongest basis for assigning an employee to a quality-improvement task?",["Demographic similarity to the manager","Job-related competence and relevant experience","Age alone","Personal familiarity"],1],
-["What is a quality risk of employee exclusion?",["More reliable upward information","Hidden problems and weaker root-cause analysis","Automatic process standardization","Guaranteed higher engagement"],1]
-],
-assignment:{
-title:"Week 2 Assignment – Diversity, Inclusion and Quality Decision Review",
-text:"Select a real or familiar workplace process involving selection, teamwork, customer service, appraisal or improvement. Analyze how diversity and inclusion may affect the quality of decisions and outcomes.",
-requirements:[
-"Describe the workplace process and decision involved.",
-"Identify relevant surface-level and deep-level diversity considerations.",
-"Identify at least two possible sources of bias, stereotyping or exclusion.",
-"Explain the potential effect on quality, service, safety or improvement.",
-"Recommend two evidence-based inclusive practices.",
-"Propose at least two indicators for monitoring both inclusion and quality outcomes."
-],
-rubric:"Conceptual accuracy 25% • Quality of analysis 25% • Application to quality 25% • Feasibility of recommendations 15% • Clarity and professionalism 10%"
-}
-};
-
-
-const week3={
-objectives:[
-"Explain the components of attitudes and their relevance to work behavior.",
-"Differentiate job satisfaction, organizational commitment, perceived organizational support and employee engagement.",
-"Analyze how job satisfaction influences quality performance, service behavior and withdrawal.",
-"Interpret practical indicators of employee dissatisfaction.",
-"Recommend management actions that strengthen attitudes supportive of quality."
-],
-topics:[
-["What Are Attitudes?","Attitudes are evaluative statements or judgments about objects, people or events. In organizations, attitudes influence how people interpret situations and choose behaviors. The three components are cognitive (belief or opinion), affective (feeling or emotion) and behavioral (intention to act)."],
-["Attitudes and Behavior: Cognitive Dissonance","Cognitive dissonance occurs when a person experiences inconsistency between attitudes and behavior, or between two attitudes. In quality work, an employee may believe safety and quality matter but skip a verification step to save time. Managers should reduce pressures that push employees to act against quality values."],
-["Major Job Attitudes in Organizations","Key job attitudes include job satisfaction, job involvement, organizational commitment, perceived organizational support and employee engagement. Quality managers should monitor these because they can act as early signals of future quality behavior."],
-["Measuring Job Satisfaction","Job satisfaction can be measured globally or through multiple job facets. A global rating gives an overall view, while facet-based measures examine pay, supervision, work conditions, colleagues, workload, growth and recognition. For quality improvement, facet measures are often more diagnostic."],
-["What Drives Job Satisfaction?","Important drivers include the work itself, supervision, coworkers, rewards, growth opportunities and the quality climate. Satisfaction is influenced by system design, not only individual personality."],
-["Consequences of Job Satisfaction","Satisfied employees are more likely to contribute positively to performance, organizational citizenship, customer satisfaction and quality learning, and are less likely to withdraw through absenteeism, turnover intentions or counterproductive behavior."],
-["Employee Responses to Dissatisfaction","The exit–voice–loyalty–neglect model helps managers interpret dissatisfaction. Exit means leaving or seeking transfer; voice is a constructive attempt to improve conditions; loyalty means waiting optimistically; neglect includes reduced effort, lateness, absenteeism or errors."],
-["The Attitude–Quality Performance Chain","A useful applied logic is: fairness and support → satisfaction and engagement → quality behavior → customer and process outcomes. The chain is a simplified diagnostic logic, not a mechanical formula."],
-["Managerial Actions to Strengthen Quality-Supportive Attitudes","Listen and respond; recognize quality behavior; reduce unfairness; build psychological safety; connect work to purpose; and use evidence such as satisfaction, engagement, complaints, errors, absenteeism and improvement participation."],
-["Quality Connection","Employee attitudes are not peripheral issues. They influence whether employees follow procedures, cooperate, report problems, help customers and participate in continuous improvement."]
-],
-activity:{
-title:"In-Class Activity: Diagnose Attitudes Behind Quality Problems",
-scenario:"Small groups select one quality problem: complaints, rework, waiting time, nonconformities, absenteeism or poor cooperation.",
-tasks:[
-"Identify the visible employee attitudes and dissatisfaction responses.",
-"Classify causes using job satisfaction, commitment, perceived support, engagement, fairness or workload.",
-"Explain how attitudes affect quality behavior and outcomes.",
-"Recommend two management actions.",
-"Select one measurable indicator to monitor improvement."
-],
-deliverable:"A one-page diagnostic map: Attitude issue → Behavior → Quality outcome → Intervention → Indicator."
-},
-case:{
-title:"Mini Case: The Silent Quality Team",
-text:"A quality improvement team meets weekly, but few members speak openly. Several employees believe management already made the decision. They attend meetings but rarely contribute. Complaints continue, and the team reports “no major barriers.” Informally, staff say they are tired of improvement initiatives that create more work but no recognition.",
-questions:[
-"Which job attitudes are likely present?",
-"Which response to dissatisfaction is most visible: exit, voice, loyalty or neglect?",
-"What is the quality risk of silence?",
-"What should the team leader change immediately?",
-"What evidence would confirm your diagnosis?"
-],
-lesson:"Quality problems can remain hidden when employees are dissatisfied, disengaged or unwilling to speak up."
-},
-quiz:[
-["Attitudes include cognitive, affective and ______ components.",["technical","behavioral","financial","structural"],1],
-["Which job attitude reflects enthusiasm and involvement in work?",["Employee engagement","Absenteeism","Surface-level diversity","Formalization"],0],
-["An employee is dissatisfied and starts doing only the minimum required. This response is best described as:",["Voice","Loyalty","Neglect","Job involvement"],2],
-["Which managerial action is most likely to strengthen quality-supportive attitudes?",["Punish every reported error","Ignore workload issues","Encourage constructive voice and recognize improvement behavior","Reward only speed"],2],
-["Why is employee voice important for quality improvement?",["It replaces data analysis","It surfaces problems and improvement ideas","It eliminates all conflict","It prevents all errors"],1]
-],
-assignment:{
-title:"Week 3 Assignment – Attitude–Quality Diagnostic Note",
-text:"Write 500–700 words analyzing a real or familiar workplace quality problem.",
-requirements:[
-"Identify the employee attitude issue most relevant to the problem.",
-"Explain the behavior and quality outcome it may produce.",
-"Use at least two Chapter 3 concepts.",
-"Recommend two management actions.",
-"Suggest one measurable indicator."
-],
-rubric:"Accurate use of Chapter 3 concepts 20% • Clear description of quality problem 15% • Analysis of attitude, behavior and quality outcome 25% • Practical recommendations 20% • Measurable indicator 10% • Clarity and academic writing 10%"
+3:{
+objectives:["Explain cognitive, affective and behavioral components of attitudes.","Differentiate job satisfaction, commitment, support and engagement.","Analyze how satisfaction affects quality performance and withdrawal.","Interpret practical indicators of dissatisfaction.","Recommend actions that strengthen quality-supportive attitudes."],
+topics:[["What Are Attitudes?","Attitudes are evaluative statements or judgments about objects, people or events. The three components are cognitive, affective and behavioral."],["Cognitive Dissonance","Dissonance occurs when attitudes and behavior conflict, such as valuing quality while skipping verification to save time."],["Major Job Attitudes","Job satisfaction, job involvement, organizational commitment, perceived organizational support and employee engagement can act as early signals of quality behavior."],["Measuring Job Satisfaction","Global and facet-based measures are useful; facet measures are more diagnostic for supervision, workload, recognition and work conditions."],["Exit–Voice–Loyalty–Neglect","Dissatisfied employees may leave, speak constructively, wait loyally, or reduce effort and attention."],["Attitude–Quality Chain","Fairness and support → satisfaction and engagement → quality behavior → customer and process outcomes."]],
+activity:"Diagnose Attitudes Behind Quality Problems: link attitude issue → behavior → quality outcome → intervention → indicator.",
+caseTitle:"Mini Case: The Silent Quality Team",
+caseText:"A quality team meets weekly, but few members speak. Employees believe management has already decided and are tired of initiatives that create work without recognition.",
+caseQuestions:["Which job attitudes are likely present?","Which dissatisfaction response is most visible?","What is the quality risk of silence?","What should the team leader change immediately?"],
+quiz:[["Attitudes include cognitive, affective and ______ components.",["technical","behavioral","financial","structural"],1],["Which job attitude reflects enthusiasm and involvement in work?",["Employee engagement","Absenteeism","Formalization","Surface-level diversity"],0],["Doing only the minimum because of dissatisfaction is:",["Voice","Loyalty","Neglect","Job involvement"],2],["Why is employee voice important for quality improvement?",["It replaces data","It surfaces problems and improvement ideas","It eliminates conflict","It prevents all errors"],1]],
+assignment:"Write 500–700 words analyzing a workplace quality problem through the lens of employee attitudes and job satisfaction."
 }
 };
 
 const API_URL="https://script.google.com/macros/s/AKfycbxnbCjhDwhYbhQ9WT3yeVqHqzxE3T39f129hGCfA0jbUrwlLihRUr9zxt3NBcBgZVKl/exec";
 let centralOnline=false;
-let db=JSON.parse(localStorage.getItem("gtqm511_v2")||"null")||{students:[],groups:["Group A","Group B","Group C","Group D"],activeStudentId:"",progress:{}};
+let db=JSON.parse(localStorage.getItem("gtqm511_v3")||"null")||{students:[],groups:["Group A","Group B","Group C","Group D"],activeStudentId:"",progress:{}};
 if(!db.progress)db.progress={}; if(!db.students)db.students=[]; if(!db.groups)db.groups=["Group A","Group B","Group C","Group D"];
-let currentWeek=1,currentTab="overview";
+let currentWeek=1,currentTab="overview",adminUnlocked=false,adminPin="";
 
-function save(){localStorage.setItem("gtqm511_v2",JSON.stringify(db))}
+function save(){localStorage.setItem("gtqm511_v3",JSON.stringify(db))}
 function student(){return db.students.find(s=>s.id===db.activeStudentId)||null}
 function pkey(id,w){return id+"_"+w}
-function getProg(id,w){return db.progress[pkey(id,w)]||{tasks:0,taskStates:[false,false,false,false],quiz:null,reflection:false,reflectionText:""}}
-function getTaskStates(p){
- if(Array.isArray(p.taskStates)) return [0,1,2,3].map(i=>!!p.taskStates[i]);
- const n=Math.max(0,Math.min(4,Number(p.tasks)||0));
- return [0,1,2,3].map(i=>i<n);
-}
+function blankProg(){return{tasks:0,taskStates:[false,false,false,false],quiz:null,reflection:false,reflectionText:"",preClassReflection:false,preClassText:"",miniCase:false}}
+function getProg(id,w){return Object.assign(blankProg(),db.progress[pkey(id,w)]||{})}
+function getTaskStates(p){if(Array.isArray(p.taskStates))return[0,1,2,3].map(i=>!!p.taskStates[i]);const n=Math.max(0,Math.min(4,Number(p.tasks)||0));return[0,1,2,3].map(i=>i<n)}
 function completedTaskCount(p){return getTaskStates(p).filter(Boolean).length}
 function weekPct(id,w){
  const p=getProg(id,w);
- if(w!==1&&w!==2&&w!==3){return Math.min(100,(p.tasks||0)*20+(p.quiz!==null?20:0))}
- const checklist=completedTaskCount(p)*10;
- const quizPart=p.quiz!==null?Math.round(p.quiz*0.4):0;
- const reflectionPart=p.reflection?20:0;
- return Math.min(100,checklist+quizPart+reflectionPart)
+ if(w===1||w===2){const checklist=completedTaskCount(p)*10;const quizPart=p.quiz!==null?Math.round(p.quiz*.4):0;const reflectionPart=p.reflection?20:0;return Math.min(100,checklist+quizPart+reflectionPart)}
+ if(w===3){let score=completedTaskCount(p)*10;if(p.preClassReflection)score+=10;if(p.miniCase)score+=10;if(p.quiz!==null)score+=Math.round(p.quiz*.2);if(p.reflection)score+=20;return Math.min(100,score)}
+ return 0
 }
-
 function weekStatus(id,w){const pct=weekPct(id,w);return pct===100?"Completed":pct>0?"In Progress":"Not Started"}
 
-async function apiGet(params={}){
- const u=new URL(API_URL);
- Object.entries(params).forEach(([k,v])=>u.searchParams.set(k,v));
- const r=await fetch(u,{cache:"no-store"});
- if(!r.ok)throw new Error("GET failed");
- const d=await r.json();
- if(d&&d.ok===false)throw new Error(d.error||"API error");
- return d;
-}
-async function apiPost(payload){
- const r=await fetch(API_URL,{method:"POST",body:JSON.stringify(payload)});
- if(!r.ok)throw new Error("POST failed");
- const d=await r.json();
- if(d&&d.ok===false)throw new Error(d.error||"API error");
- return d;
-}
-let adminUnlocked=false;
-let adminPin="";
-function updateSyncStatus(){
- const e=document.getElementById("syncStatus"); if(!e)return;
- e.textContent=centralOnline?"Central database connected ✓":"Connecting...";
- e.style.color=centralOnline?"#abefc6":"#f4d18d";
-}
-function setSaveStatus(msg,ok=true){
- const e=document.getElementById("saveStatus"); if(!e)return;
- e.textContent=msg||"";
- e.style.color=ok?"#abefc6":"#ffb4b4";
- if(msg) setTimeout(()=>{if(e.textContent===msg)e.textContent=""},3500);
-}
+async function apiGet(params={}){const u=new URL(API_URL);Object.entries(params).forEach(([k,v])=>u.searchParams.set(k,v));const r=await fetch(u,{cache:"no-store"});if(!r.ok)throw new Error("GET failed");const d=await r.json();if(d&&d.ok===false)throw new Error(d.error||"API error");return d}
+async function apiPost(payload){const r=await fetch(API_URL,{method:"POST",body:JSON.stringify(payload)});if(!r.ok)throw new Error("POST failed");const d=await r.json();if(d&&d.ok===false)throw new Error(d.error||"API error");return d}
+function updateSyncStatus(){syncStatus.textContent=centralOnline?"Central database connected ✓":"Connecting...";syncStatus.style.color=centralOnline?"#abefc6":"#f4d18d"}
+function setSaveStatus(msg,ok=true){saveStatus.textContent=msg||"";saveStatus.style.color=ok?"#abefc6":"#ffb4b4";if(msg)setTimeout(()=>{if(saveStatus.textContent===msg)saveStatus.textContent=""},3000)}
+async function checkCentral(){try{await apiGet({});centralOnline=true}catch(e){centralOnline=false}updateSyncStatus()}
 
-async function checkCentral(){
- try{
-   await apiGet({});
-   centralOnline=true;
- }catch(e){
-   centralOnline=false;
-   console.warn(e);
- }
- updateSyncStatus();
-}
 function applyProgressRows(rows){
- db.progress={};
+ const keep={...db.progress}; db.progress={};
  (rows||[]).forEach(x=>{
    const st=Array.isArray(x.taskStates)?x.taskStates.map(Boolean):[false,false,false,false];
+   const old=keep[pkey(String(x.studentId),Number(x.week))]||{};
    db.progress[pkey(String(x.studentId),Number(x.week))]={
-     tasks:st.filter(Boolean).length,
-     taskStates:st,
+     tasks:st.filter(Boolean).length,taskStates:st,
      quiz:x.quiz===null||x.quiz===undefined?null:Number(x.quiz),
-     reflection:Boolean(x.reflection),
-     reflectionText:x.reflectionText||""
+     reflection:Boolean(x.reflection),reflectionText:x.reflectionText||"",
+     preClassReflection:x.preClassReflection!==undefined?Boolean(x.preClassReflection):Boolean(old.preClassReflection),
+     preClassText:x.preClassText||old.preClassText||"",
+     miniCase:x.miniCase!==undefined?Boolean(x.miniCase):Boolean(old.miniCase)
    };
  });
 }
+
 async function loadStudentById(id){
- const sResp=await apiGet({action:"student",studentId:id});
- if(!sResp.student)return null;
- const pResp=await apiGet({action:"progress",studentId:id});
- const s=sResp.student;
- db.students=[{name:s.name,id:String(s.id),email:s.email||"",group:s.group||""}];
- db.activeStudentId=String(s.id);
+ const sResp=await apiGet({action:"student",studentId:id});if(!sResp.student)return null;
+ const pResp=await apiGet({action:"progress",studentId:id});const s=sResp.student;
+ db.students=[{name:s.name,id:String(s.id),email:s.email||"",group:s.group||""}];db.activeStudentId=String(s.id);
  if(s.group&&!db.groups.includes(s.group))db.groups.push(s.group);
- applyProgressRows(pResp.progress||[]);
- save();renderAll();
- return s;
+ applyProgressRows(pResp.progress||[]);save();renderAll();return s
 }
 async function pushProgress(id,w){
- const q=getProg(id,w),st=getTaskStates(q);
- setSaveStatus("Saving...",true);
+ const q=getProg(id,w),st=getTaskStates(q);setSaveStatus("Saving...",true);
  try{
-   await apiPost({action:"saveProgress",progress:{
-     studentId:String(id),week:Number(w),taskStates:st,
-     quiz:q.quiz,reflection:Boolean(q.reflection),
-     reflectionText:q.reflectionText||"",total:weekPct(id,w)
-   }});
-   centralOnline=true;
-   updateSyncStatus();
-   setSaveStatus("Saved ✓",true);
-   save();
-   renderStudent();
-   if(adminUnlocked)renderInstructor();
-   return true;
- }catch(e){
-   setSaveStatus("Save failed ✕",false);
-   alert("Your work was not saved. Please check your internet connection and try again.");
-   console.warn(e);
-   return false;
- }
-}
-async function unlockInstructor(){
- if(adminUnlocked){showPage("instructor");return}
- const pin=prompt("Instructor PIN:");
- if(!pin)return;
- try{
-   const snap=await apiPost({action:"adminSnapshot",pin});
-   adminPin=pin;adminUnlocked=true;
-   db.students=(snap.students||[]).map(s=>({name:s.name,id:String(s.id),email:s.email||"",group:s.group||""}));
-   const gs=[...new Set(db.students.map(s=>s.group).filter(Boolean))];
-   if(gs.length)db.groups=gs;
-   applyProgressRows(snap.progress||[]);
-   save();renderAll();
-   document.getElementById("adminNav").style.display="";
-   showPage("instructor");
- }catch(e){
-   alert("Incorrect instructor PIN.");
- }
-}
-function initAccess(){
- const params=new URLSearchParams(location.search);
- if(params.get("admin")==="1"){
-   document.getElementById("adminNav").style.display="";
-   document.getElementById("adminNav").onclick=()=>unlockInstructor();
- }
+   await apiPost({action:"saveProgress",progress:{studentId:String(id),week:Number(w),taskStates:st,quiz:q.quiz,reflection:Boolean(q.reflection),reflectionText:q.reflectionText||"",preClassReflection:Boolean(q.preClassReflection),preClassText:q.preClassText||"",miniCase:Boolean(q.miniCase),total:weekPct(id,w)}});
+   centralOnline=true;updateSyncStatus();setSaveStatus("Saved ✓",true);save();renderStudent();if(adminUnlocked)renderInstructor();return true
+ }catch(e){setSaveStatus("Save failed ✕",false);alert("Your work was not saved centrally. Local progress remains on this device.");return false}
 }
 
 function renderWeeks(){
- let box=document.getElementById("weeks");box.innerHTML="";
- course.forEach((w,i)=>{let n=i+1,s=student(),pct=s?weekPct(s.id,n):0,e=document.createElement("div");e.className="card week";
- e.innerHTML=`<small style="color:var(--blue);font-weight:bold">WEEK ${n}</small><h3>${w[0]}</h3><p class="muted">${w[1]}</p><div class="progress"><div class="bar" style="width:${pct}%"></div></div><small>${pct}% complete</small>${(n===1||n===2||n===3)?'<p><span class="pill">Full content</span></p>':''}`;
- e.onclick=()=>openWeek(n);box.appendChild(e)});overall()
+ weeks.innerHTML="";course.forEach((w,i)=>{const n=i+1,s=student(),pct=s?weekPct(s.id,n):0,e=document.createElement("div");e.className="card week";
+ e.innerHTML=`<small style="color:var(--blue);font-weight:bold">WEEK ${n}</small><h3>${w[0]}</h3><p class="muted">${w[1]}</p><div class="progress"><div class="bar" style="width:${pct}%"></div></div><small>${pct}% complete</small>${n<=3?'<p><span class="pill">Full content</span></p>':''}`;
+ e.onclick=()=>openWeek(n);weeks.appendChild(e)});overall()
 }
-function overall(){let s=student(),sum=0;if(s){for(let i=1;i<=15;i++)sum+=weekPct(s.id,i)}let pct=s?Math.round(sum/15):0;overallPct.textContent=pct+"%";overallBar.style.width=pct+"%"}
-async function showPage(id){
- if(id==="instructor"&&!adminUnlocked){await unlockInstructor();return}
- document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));
- document.getElementById(id).classList.remove("hidden");
- document.querySelectorAll(".nav[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===id));
- if(id==="student")renderStudent();
- if(id==="groups")renderGroups();
- if(id==="instructor")renderInstructor();
- window.scrollTo({top:0,behavior:"smooth"})
-}
-document.querySelectorAll(".nav[data-page]").forEach(b=>{
- if(b.id!=="adminNav")b.onclick=()=>showPage(b.dataset.page)
-});
+function overall(){const s=student();let sum=0;if(s)for(let i=1;i<=15;i++)sum+=weekPct(s.id,i);const pct=s?Math.round(sum/15):0;overallPct.textContent=pct+"%";overallBar.style.width=pct+"%"}
+async function showPage(id){if(id==="instructor"&&!adminUnlocked){await unlockInstructor();return}document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));document.getElementById(id).classList.remove("hidden");document.querySelectorAll(".nav[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===id));if(id==="student")renderStudent();if(id==="groups")renderGroups();if(id==="instructor")renderInstructor();window.scrollTo({top:0,behavior:"smooth"})}
+document.querySelectorAll(".nav[data-page]").forEach(b=>{if(b.id!=="adminNav")b.onclick=()=>showPage(b.dataset.page)});
 
-function renderGroupOptions(){}
 async function registerStudent(){
- const id=(document.getElementById("regId").value||"").trim();
- if(!id){
-   regMsg.className="notice";
-   regMsg.textContent="Student ID is required.";
-   return;
- }
- regMsg.className="muted";
- regMsg.textContent="Checking Student ID...";
- try{
-   const s=await loadStudentById(id);
-   if(!s){
-     regMsg.className="notice";
-     regMsg.textContent="This Student ID is not registered. Please contact the instructor.";
-     return;
-   }
-   regMsg.className="success";
-   regMsg.textContent=`Welcome ${s.name}. Your course record is ready.`;
-   setTimeout(()=>showPage("student"),400);
- }catch(e){
-   regMsg.className="notice";
-   regMsg.textContent="This Student ID is not registered, or the central service is unavailable.";
- }
+ const id=(regId.value||"").trim();if(!id){regMsg.className="notice";regMsg.textContent="Student ID is required.";return}
+ regMsg.className="muted";regMsg.textContent="Checking Student ID...";
+ try{const s=await loadStudentById(id);if(!s){regMsg.className="notice";regMsg.textContent="This Student ID is not registered.";return}regMsg.className="success";regMsg.textContent=`Welcome ${s.name}. Your course record is ready.`;setTimeout(()=>showPage("student"),300)}
+ catch(e){regMsg.className="notice";regMsg.textContent="This Student ID is not registered, or the central service is unavailable."}
 }
-async function bulkImport(){
- let lines=bulkStudents.value.split(/\n+/).map(x=>x.trim()).filter(Boolean),added=0;
- lines.forEach(line=>{let [name,id,email,group]=line.split("|").map(x=>(x||"").trim());if(!name||!id)return;if(group&&!db.groups.includes(group))db.groups.push(group);let ex=db.students.find(s=>s.id===id);if(ex)Object.assign(ex,{name,email,group:group||ex.group||db.groups[0]});else db.students.push({name,id,email,group:group||db.groups[0]});added++});
- save();renderAll();adminMsg.textContent=`Saving ${added} students centrally...`;for(const s of db.students)await apiPost({action:"upsertStudent",pin:adminPin,student:s});adminMsg.textContent=centralOnline?`Imported / updated ${added} students centrally ✓`:`Imported ${added} locally; central sync unavailable.`;bulkStudents.value=""
-}
-function addGroup(){let g=newGroup.value.trim();if(g&&!db.groups.includes(g)){db.groups.push(g);save();newGroup.value="";renderAll()}}
-function deleteStudent(id){db.students=db.students.filter(s=>s.id!==id);if(db.activeStudentId===id)db.activeStudentId="";save();renderAll()}
 
 function renderStudent(){
-
- let s=student();
-
- studentName.textContent=s
-   ? `${s.name} • ${s.id}`
-   : "No student registered";
-
- sGroup.textContent=s ? (s.group||"—") : "—";
- studentGroupLabel.textContent=s ? (s.group||"—") : "—";
-
- if(!s){
-   sProgress.textContent="0%";
-   sFirst3.textContent="0%";
-   sQuiz.textContent="0%";
-   studentOverallBar.style.width="0%";
-   studentGroupBar.style.width="0%";
-   studentGroupPct.textContent="0%";
-   studentWeekDetails.innerHTML="";
-   studentRows.innerHTML="";
-   return;
+ const s=student();studentName.textContent=s?`${s.name} • ${s.id}`:"No student registered";sGroup.textContent=s?(s.group||"—"):"—";studentGroupLabel.textContent=s?(s.group||"—"):"—";
+ if(!s){sProgress.textContent=sFirst3.textContent=sQuiz.textContent="0%";studentOverallBar.style.width=studentGroupBar.style.width="0%";studentGroupPct.textContent="0%";studentWeekDetails.innerHTML=studentRows.innerHTML="";return}
+ let sum=0,first3=0,qsum=0,qn=0,rows="";
+ for(let i=1;i<=15;i++){const p=getProg(s.id,i),pct=weekPct(s.id,i);sum+=pct;if(i<=3)first3+=pct;if(p.quiz!==null){qsum+=p.quiz;qn++}
+ rows+=`<tr><td>Week ${i}</td><td>${course[i-1][0]}</td><td>${weekStatus(s.id,i)}</td><td><div class="progress" style="min-width:90px"><div class="bar" style="width:${pct}%"></div></div><small>${pct}%</small></td><td>${p.quiz!==null?p.quiz+"%":"—"}</td><td>${p.reflection?"✓":"—"}</td></tr>`}
+ const overall=Math.round(sum/15),first3avg=Math.round(first3/3),quizavg=qn?Math.round(qsum/qn):0;
+ sProgress.textContent=overall+"%";sFirst3.textContent=first3avg+"%";sQuiz.textContent=quizavg+"%";studentOverallBar.style.width=studentGroupBar.style.width=overall+"%";studentGroupPct.textContent=overall+"%";studentRows.innerHTML=rows;
+ studentWeekDetails.innerHTML=[1,2,3].map(w=>detailWeek(s.id,w)).join("");calculateStudentGroupAverage(s)
+}
+function activityBox(name,done,text){return `<div class="student-activity"><b>${name}</b><div class="${done?'activity-done':'activity-pending'}">${done?(text||"Completed ✓"):"Pending"}</div></div>`}
+function detailWeek(id,w){
+ const p=getProg(id,w),st=getTaskStates(p),pct=weekPct(id,w);
+ let a="";
+ if(w===3){
+   a+=activityBox("Guided Reading",st[0]);
+   a+=activityBox("Lecture Viewed",st[1]);
+   a+=activityBox("Pre-Class Reflection",p.preClassReflection);
+   a+=activityBox("In-Class Activity",st[2]);
+   a+=activityBox("Mini Case",p.miniCase);
+   a+=activityBox("Knowledge Check / Quiz",p.quiz!==null,p.quiz!==null?p.quiz+"%":"");
+   a+=activityBox("Assignment",st[3]);
+   a+=activityBox("Post-Class Reflection",p.reflection);
+ }else{
+   a+=activityBox("Preparation / Guided Reading",st[0]);
+   a+=activityBox("Lecture Content",st[1]);
+   a+=activityBox("Applied In-Class Activity",st[2]);
+   a+=activityBox("Case / Assignment",st[3]);
+   a+=activityBox("Knowledge Check / Quiz",p.quiz!==null,p.quiz!==null?p.quiz+"%":"");
+   a+=activityBox("Reflection",p.reflection);
  }
-
- let sum=0;
- let first3=0;
- let qsum=0;
- let qn=0;
- let rows="";
-
- for(let i=1;i<=15;i++){
-
-   let p=getProg(s.id,i);
-   let pct=weekPct(s.id,i);
-
-   sum+=pct;
-
-   if(i<=3) first3+=pct;
-
-   if(p.quiz!==null){
-     qsum+=p.quiz;
-     qn++;
-   }
-
-   rows+=`
-   <tr>
-     <td>Week ${i}</td>
-     <td>${course[i-1][0]}</td>
-     <td>${weekStatus(s.id,i)}</td>
-     <td>
-       <div class="progress" style="min-width:90px">
-         <div class="bar" style="width:${pct}%"></div>
-       </div>
-       <small>${pct}%</small>
-     </td>
-     <td>${p.quiz!==null?p.quiz+"%":"—"}</td>
-     <td>${p.reflection?"✓":"—"}</td>
-   </tr>`;
- }
-
- let overall=Math.round(sum/15);
- let first3Average=Math.round(first3/3);
- let quizAverage=qn?Math.round(qsum/qn):0;
-
- sProgress.textContent=overall+"%";
- sFirst3.textContent=first3Average+"%";
- sQuiz.textContent=quizAverage+"%";
-
- studentOverallBar.style.width=overall+"%";
- studentGroupBar.style.width=overall+"%";
- studentGroupPct.textContent=overall+"%";
-
- studentRows.innerHTML=rows;
-
- const activityNames={
-   1:[
-     "Preparation / Guided Reading",
-     "Lecture Content",
-     "Applied In-Class Activity",
-     "Case / Assignment"
-   ],
-   2:[
-     "Preparation / Guided Reading",
-     "Lecture Content",
-     "Applied In-Class Activity",
-     "Case / Assignment"
-   ],
-   3:[
-     "Guided Reading / Preparation",
-     "Lecture Content",
-     "In-Class Activity",
-     "Mini Case / Assignment"
-   ]
- };
-
- studentWeekDetails.innerHTML=[1,2,3].map(w=>{
-
-   let p=getProg(s.id,w);
-   let states=getTaskStates(p);
-   let pct=weekPct(s.id,w);
-
-   let activities=activityNames[w].map((name,i)=>`
-     <div class="student-activity">
-       <b>${name}</b>
-       <div class="${states[i]?'activity-done':'activity-pending'}">
-         ${states[i]?'Completed ✓':'Pending'}
-       </div>
-     </div>
-   `).join("");
-
-   activities+=`
-     <div class="student-activity">
-       <b>Knowledge Check / Quiz</b>
-       <div class="${p.quiz!==null?'activity-done':'activity-pending'}">
-         ${p.quiz!==null?p.quiz+"%":"Pending"}
-       </div>
-     </div>
-
-     <div class="student-activity">
-       <b>Reflection</b>
-       <div class="${p.reflection?'activity-done':'activity-pending'}">
-         ${p.reflection?'Completed ✓':'Pending'}
-       </div>
-     </div>
-   `;
-
-   return `
-   <div class="student-week">
-
-     <div class="student-week-head">
-       <div>
-         <b>Week ${w}: ${course[w-1][0]}</b>
-         <div class="muted">${weekStatus(s.id,w)}</div>
-       </div>
-
-       <strong>${pct}%</strong>
-     </div>
-
-     <div class="progress" style="margin-top:9px">
-       <div class="bar" style="width:${pct}%"></div>
-     </div>
-
-     <div class="student-activities">
-       ${activities}
-     </div>
-
-   </div>`;
- }).join("");
-
- calculateStudentGroupAverage(s);
-
-}function calculateStudentGroupAverage(s){
-
- if(!s || !s.group){
-   groupAveragePct.textContent="—";
-   groupAverageBar.style.width="0%";
-   return;
- }
-
- let members=db.students.filter(x=>x.group===s.group);
-
- if(!members.length){
-   groupAveragePct.textContent="—";
-   groupAverageBar.style.width="0%";
-   return;
- }
-
- let total=0;
-
- members.forEach(member=>{
-
-   let memberTotal=0;
-
-   for(let w=1;w<=15;w++){
-     memberTotal+=weekPct(member.id,w);
-   }
-
-   total+=memberTotal/15;
-
- });
-
- let avg=Math.round(total/members.length);
-
- groupAveragePct.textContent=avg+"%";
- groupAverageBar.style.width=avg+"%";
-
+ return `<div class="student-week"><div class="student-week-head"><div><b>Week ${w}: ${course[w-1][0]}</b><div class="muted">${weekStatus(id,w)}</div></div><strong>${pct}%</strong></div><div class="progress" style="margin-top:9px"><div class="bar" style="width:${pct}%"></div></div><div class="student-activities">${a}</div></div>`
+}
+function calculateStudentGroupAverage(s){
+ const members=db.students.filter(x=>x.group===s.group);
+ if(!s.group||members.length<2){groupAveragePct.textContent="—";groupAverageBar.style.width="0%";groupNote.textContent="Group average will appear when multiple group members are loaded in the instructor session.";return}
+ let total=0;members.forEach(m=>{let v=0;for(let w=1;w<=15;w++)v+=weekPct(m.id,w);total+=v/15});const avg=Math.round(total/members.length);
+ groupAveragePct.textContent=avg+"%";groupAverageBar.style.width=avg+"%";groupNote.textContent=`Based on ${members.length} group members available in this session.`
 }
 function renderGroups(){
-
- groupCards.innerHTML=db.groups.map(g=>{
-
-   let members=db.students.filter(s=>s.group===g);
-
-   let avg=0;
-
-   if(members.length){
-
-     let totals=members.map(s=>{
-
-       let sum=0;
-
-       for(let w=1;w<=15;w++){
-         sum+=weekPct(s.id,w);
-       }
-
-       return sum/15;
-
-     });
-
-     avg=Math.round(
-       totals.reduce((a,b)=>a+b,0)/totals.length
-     );
-   }
-
-   return `
-   <div class="card stat">
-     <span class="muted">${g}</span>
-     <strong>${members.length}</strong>
-     <span class="muted">${avg}% overall group progress</span>
-   </div>`;
-
- }).join("");
-
- groupRows.innerHTML=db.groups.map(g=>{
-
-   let members=db.students.filter(s=>s.group===g);
-
-   let avg=0;
-
-   if(members.length){
-
-     let totals=members.map(s=>{
-
-       let sum=0;
-
-       for(let w=1;w<=15;w++){
-         sum+=weekPct(s.id,w);
-       }
-
-       return sum/15;
-
-     });
-
-     avg=Math.round(
-       totals.reduce((a,b)=>a+b,0)/totals.length
-     );
-   }
-
-   let qs=[];
-
-   members.forEach(s=>{
-     for(let w=1;w<=3;w++){
-       let q=getProg(s.id,w).quiz;
-       if(q!==null)qs.push(q);
-     }
-   });
-
-   let qa=qs.length
-      ?Math.round(qs.reduce((a,b)=>a+b,0)/qs.length)
-      :0;
-
-   return `
-   <tr>
-     <td>${g}</td>
-     <td>${members.map(x=>x.name).join(", ")||"—"}</td>
-     <td>${avg}%</td>
-     <td>${qa}%</td>
-   </tr>`;
-
- }).join("");
-
+ groupCards.innerHTML=db.groups.map(g=>{const members=db.students.filter(s=>s.group===g);let avg=0;if(members.length){avg=Math.round(members.reduce((tot,m)=>{let s=0;for(let w=1;w<=15;w++)s+=weekPct(m.id,w);return tot+s/15},0)/members.length)}return `<div class="card stat"><span class="muted">${g}</span><strong>${members.length}</strong><span class="muted">${avg}% overall group progress</span></div>`}).join("");
+ groupRows.innerHTML=db.groups.map(g=>{const m=db.students.filter(s=>s.group===g);let avg=0;if(m.length)avg=Math.round(m.reduce((tot,x)=>{let s=0;for(let w=1;w<=15;w++)s+=weekPct(x.id,w);return tot+s/15},0)/m.length);let qs=[];m.forEach(x=>{for(let w=1;w<=3;w++){const q=getProg(x.id,w).quiz;if(q!==null)qs.push(q)}});const qa=qs.length?Math.round(qs.reduce((a,b)=>a+b,0)/qs.length):0;return `<tr><td>${g}</td><td>${m.map(x=>x.name).join(", ")||"—"}</td><td>${avg}%</td><td>${qa}%</td></tr>`}).join("")
 }
 
-async function refreshInstructor(){
- if(!adminUnlocked)return;
- setSaveStatus("Refreshing...",true);
- try{
-   const snap=await apiPost({action:"adminSnapshot",pin:adminPin});
-   db.students=(snap.students||[]).map(s=>({name:s.name,id:String(s.id),email:s.email||"",group:s.group||""}));
-   applyProgressRows(snap.progress||[]);
-   save();
-   renderInstructor();
-   setSaveStatus("Instructor data refreshed ✓",true);
- }catch(e){
-   setSaveStatus("Refresh failed ✕",false);
-   alert("Could not refresh instructor data.");
- }
+async function unlockInstructor(){
+ if(adminUnlocked){showPage("instructor");return}const pin=prompt("Instructor PIN:");if(!pin)return;
+ try{const snap=await apiPost({action:"adminSnapshot",pin});adminPin=pin;adminUnlocked=true;db.students=(snap.students||[]).map(s=>({name:s.name,id:String(s.id),email:s.email||"",group:s.group||""}));const gs=[...new Set(db.students.map(s=>s.group).filter(Boolean))];if(gs.length)db.groups=gs;applyProgressRows(snap.progress||[]);save();renderAll();adminNav.style.display="";showPage("instructor")}catch(e){alert("Incorrect instructor PIN.")}
 }
+async function refreshInstructor(){if(!adminUnlocked)return;try{const snap=await apiPost({action:"adminSnapshot",pin:adminPin});db.students=(snap.students||[]).map(s=>({name:s.name,id:String(s.id),email:s.email||"",group:s.group||""}));applyProgressRows(snap.progress||[]);save();renderAll();setSaveStatus("Instructor data refreshed ✓",true)}catch(e){alert("Could not refresh instructor data.")}}
 function renderInstructor(){
  iStudents.textContent=db.students.length;iGroups.textContent=db.groups.length;
- let vals=db.students.map(s=>weekPct(s.id,1)),avg=vals.length?Math.round(vals.reduce((a,b)=>a+b,0)/vals.length):0;iCompletion.textContent=avg+"%";iRisk.textContent=vals.filter(x=>x<50).length;
- rosterRows.innerHTML=db.students.map(s=>{let p=getProg(s.id,1),checklist=completedTaskCount(p)*10,quiz=p.quiz!==null?p.quiz+"%":"—",reflection=p.reflection?"✓":"—",total=weekPct(s.id,1),status=weekStatus(s.id,1);
- return `<tr><td>${s.name}</td><td>${s.id}</td><td>${s.group||"—"}</td><td>${checklist}/40</td><td>${quiz}</td><td>${reflection}</td><td>${total}%</td><td>${status}</td><td><button class="btn alt" onclick="db.activeStudentId='${s.id}';save();renderAll();showPage('student')">View</button></td></tr>`}).join("")
+ const vals=db.students.map(s=>Math.round((weekPct(s.id,1)+weekPct(s.id,2)+weekPct(s.id,3))/3));const avg=vals.length?Math.round(vals.reduce((a,b)=>a+b,0)/vals.length):0;
+ iCompletion.textContent=avg+"%";iRisk.textContent=vals.filter(x=>x<50).length;
+ rosterRows.innerHTML=db.students.map(s=>{const a=Math.round((weekPct(s.id,1)+weekPct(s.id,2)+weekPct(s.id,3))/3);return `<tr><td>${s.name}</td><td>${s.id}</td><td>${s.group||"—"}</td><td>${weekPct(s.id,1)}%</td><td>${weekPct(s.id,2)}%</td><td>${weekPct(s.id,3)}%</td><td>${a}%</td><td><button class="btn alt" onclick="db.activeStudentId='${s.id}';save();renderAll();showPage('student')">View</button></td></tr>`}).join("")
 }
-function renderAll(){renderGroupOptions();renderWeeks();renderStudent();renderGroups();renderInstructor()}
+function initAccess(){const p=new URLSearchParams(location.search);if(p.get("admin")==="1"){adminNav.style.display="";adminNav.onclick=()=>unlockInstructor()}}
 
+function renderAll(){renderWeeks();renderStudent();renderGroups();if(adminUnlocked)renderInstructor()}
 function openWeek(n){currentWeek=n;currentTab="overview";wkNum.textContent="Week "+n;wkTitle.textContent=course[n-1][0];renderWeekTabs();renderWeekBody();showPage("week")}
-function renderWeekTabs(){let tabs=currentWeek===1?["overview","slides","content","activity","case","quiz","assignment","reflection"]:currentWeek===2?["overview","slides","content","activity","case","quiz","assignment","reflection"]:currentWeek===3?["overview","slides","materials","content","activity","case","quiz","assignment","reflection"]:["overview","reflection"];weekTabs.innerHTML=tabs.map(t=>`<button class="tab ${t===currentTab?"active":""}" onclick="currentTab='${t}';renderWeekTabs();renderWeekBody()">${t[0].toUpperCase()+t.slice(1)}</button>`).join("")}
+function renderWeekTabs(){
+ let tabs=currentWeek===3?["overview","slides","materials","preclass","content","activity","case","quiz","assignment","reflection"]:currentWeek<=2?["overview","slides","content","activity","case","quiz","assignment","reflection"]:["overview"];
+ weekTabs.innerHTML=tabs.map(t=>`<button class="tab ${t===currentTab?"active":""}" onclick="currentTab='${t}';renderWeekTabs();renderWeekBody()">${t[0].toUpperCase()+t.slice(1)}</button>`).join("")
+}
 function renderWeekBody(){
- let d=currentWeek===1?week1:currentWeek===2?week2:currentWeek===3?week3:null,s=student(),p=s?getProg(s.id,currentWeek):{tasks:0,quiz:null,reflection:false,reflectionText:""};
+ const d=packs[currentWeek],s=student(),p=s?getProg(s.id,currentWeek):blankProg();
  if(!d){weekBody.innerHTML=`<div class="card"><h3>${course[currentWeek-1][0]}</h3><p>${course[currentWeek-1][1]}</p><div class="notice">Detailed learning materials will be added in the next build.</div></div>`;return}
- if(currentTab==="overview"){let states=getTaskStates(p);weekBody.innerHTML=`<div class="layout"><div class="card"><h3>Learning Outcomes</h3><ol>${d.objectives.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol></div><div class="card"><h3>Progress Checklist</h3>${["Preparation / Reading","Lecture content","Applied activity","Case discussion"].map((x,i)=>`<label class="task"><input type="checkbox" ${states[i]?"checked":""} onchange="setTask(${i},this.checked)"> ${x} <span class="muted">(10%)</span></label>`).join("")}<div class="success">Week 1 weighting: Checklist 40% • Quiz 40% • Reflection 20%. Each checklist item can be completed independently.</div></div></div>`;}
- if(currentTab==="slides")weekBody.innerHTML=`<div class="card"><h3>Week 1 Lecture Slides</h3><p class="muted">The complete 23-slide Week 1 presentation is embedded below.</p><div class="file-actions"><a class="btn" href="Week1_Lecture.pdf" target="_blank" style="text-decoration:none">Open PDF</a><a class="btn alt" href="Week1_Lecture.pptx" style="text-decoration:none">Open PowerPoint</a></div><iframe class="slide-frame" src="Week1_Lecture.pdf#view=FitH" title="Week 1 Lecture Slides"></iframe></div>`;
- if(currentTab==="slides" && currentWeek===2)weekBody.innerHTML=`<div class="card"><h3>Week 2 Lecture Slides – Diversity in Organizations</h3><p class="muted">The complete 23-slide Week 2 presentation is embedded below. It covers surface- and deep-level diversity, discrimination and stereotype threat, abilities and job fit, diversity management, and the connection to total quality management.</p><div class="file-actions"><a class="btn" href="Week2_Lecture.pdf" target="_blank" style="text-decoration:none">Open PDF</a><a class="btn alt" href="Week2_Lecture.pptx" style="text-decoration:none">Open PowerPoint</a></div><iframe class="slide-frame" src="Week2_Lecture.pdf#view=FitH" title="Week 2 Lecture Slides"></iframe><p class="muted" style="margin-top:10px">Based on Robbins & Judge, Organizational Behavior, 18th ed., Chapter 2.</p></div>`;
- if(currentTab==="slides" && currentWeek===3)weekBody.innerHTML=`<div class="card"><h3>Week 3 Lecture Slides – Attitudes, Job Satisfaction and Quality Performance</h3><p class="muted">The complete 18-slide Week 3 presentation is embedded below. It is based on Chapter 3 of Robbins & Judge and links employee attitudes, satisfaction and engagement to quality behavior, service reliability and continuous improvement.</p><div class="file-actions"><a class="btn" href="Week3_Lecture.pdf" target="_blank" style="text-decoration:none">Open PDF</a><a class="btn alt" href="Week3_Lecture.pptx" style="text-decoration:none">Open PowerPoint</a></div><iframe class="slide-frame" src="Week3_Lecture.pdf#view=FitH" title="Week 3 Lecture Slides"></iframe></div>`;
- if(currentTab==="materials" && currentWeek===3)weekBody.innerHTML=`<div class="card"><h3>Week 3 Learning Package</h3><p class="muted">Download the full Week 3 teaching and learning package.</p>
- <div class="topic"><h4>Student Learning Pack</h4><p>Required reading, guided notes, before-class reflection, core summary and self-check.</p><a class="btn alt" href="Week3_Student_Learning_Pack.docx" style="text-decoration:none">Open Student Pack</a></div>
- <div class="topic"><h4>Assessment Pack</h4><p>Pre-class reflection, in-class activity, mini case, knowledge check and individual assignment with marking criteria.</p><a class="btn alt" href="Week3_Assessment_Pack.docx" style="text-decoration:none">Open Assessment Pack</a></div>
- <div class="topic"><h4>Instructor Guide</h4><p>Two-hour teaching plan, slide-by-slide notes, facilitation questions and instructor cautions.</p><a class="btn alt" href="Week3_Instructor_Guide.docx" style="text-decoration:none">Open Instructor Guide</a></div>
- <div class="topic"><h4>Google Classroom Guide</h4><p>Recommended publishing sequence: Read → Reflect → Attend → Apply → Discuss → Check → Write.</p><a class="btn alt" href="Week3_Google_Classroom_Guide.docx" style="text-decoration:none">Open Classroom Guide</a></div>
- </div>`;
+ if(currentTab==="overview"){
+   const st=getTaskStates(p);const labels=currentWeek===3?["Guided Reading","Lecture Viewed","In-Class Activity","Assignment"]:["Preparation / Reading","Lecture Content","Applied Activity","Case / Assignment"];
+   weekBody.innerHTML=`<div class="layout"><div class="card"><h3>Learning Outcomes</h3><ol>${d.objectives.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol></div><div class="card"><h3>Progress Checklist</h3>${labels.map((x,i)=>`<label class="task"><input type="checkbox" ${st[i]?"checked":""} onchange="setTask(${i},this.checked)"> ${x}</label>`).join("")}<div class="success">${currentWeek===3?"Week 3 also tracks Pre-Class Reflection, Mini Case, Quiz and Post-Class Reflection separately.":"Checklist 40% • Quiz 40% • Reflection 20%."}</div></div></div>`
+ }
+ if(currentTab==="slides"){
+   const pdf=`Week${currentWeek}_Lecture.pdf`,ppt=`Week${currentWeek}_Lecture.pptx`;
+   weekBody.innerHTML=`<div class="card"><h3>Week ${currentWeek} Lecture Slides</h3><div class="file-actions"><a class="btn" href="${pdf}" target="_blank">Open PDF</a><a class="btn alt" href="${ppt}">Open PowerPoint</a></div><iframe class="slide-frame" src="${pdf}#view=FitH"></iframe></div>`
+ }
+ if(currentTab==="materials"&&currentWeek===3)weekBody.innerHTML=`<div class="card"><h3>Week 3 Learning Package</h3><div class="topic"><h4>Student Learning Pack</h4><a class="btn alt" href="Week3_Student_Learning_Pack.docx">Open Student Pack</a></div><div class="topic"><h4>Assessment Pack</h4><a class="btn alt" href="Week3_Assessment_Pack.docx">Open Assessment Pack</a></div><div class="topic"><h4>Instructor Guide</h4><a class="btn alt" href="Week3_Instructor_Guide.docx">Open Instructor Guide</a></div><div class="topic"><h4>Google Classroom Guide</h4><a class="btn alt" href="Week3_Google_Classroom_Guide.docx">Open Classroom Guide</a></div></div>`;
+ if(currentTab==="preclass"&&currentWeek===3)weekBody.innerHTML=`<div class="card"><h3>Pre-Class Reflection</h3><p>Before class, write one short observation or question about employee attitudes, job satisfaction, or quality behavior.</p><textarea id="preClassText" placeholder="Your pre-class reflection...">${p.preClassText||""}</textarea><button class="btn good" style="margin-top:10px" onclick="savePreClassReflection()">Save Pre-Class Reflection</button><p class="muted">${p.preClassReflection?"Completed ✓":"Not yet completed"}</p></div>`;
  if(currentTab==="content")weekBody.innerHTML=`<div class="card"><h3>Core Learning Content</h3>${d.topics.map(t=>`<div class="topic"><h4>${t[0]}</h4><p>${t[1]}</p></div>`).join("")}</div>`;
- if(currentTab==="activity")weekBody.innerHTML=`<div class="card"><h3>${d.activity.title}</h3><p><b>Scenario:</b> ${d.activity.scenario}</p><ol>${d.activity.tasks.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol><p><b>Deliverable:</b> ${d.activity.deliverable}</p></div>`;
- if(currentTab==="case")weekBody.innerHTML=`<div class="card"><h3>${d.case.title}</h3><p>${d.case.text}</p><ol>${d.case.questions.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol><div class="success"><b>Core lesson:</b> ${d.case.lesson}</div></div>`;
+ if(currentTab==="activity")weekBody.innerHTML=`<div class="card"><h3>In-Class Activity</h3><p>${d.activity}</p><button class="btn good" onclick="markActivityCompleted()">Mark In-Class Activity Completed</button></div>`;
+ if(currentTab==="case")weekBody.innerHTML=`<div class="card"><h3>${d.caseTitle}</h3><p>${d.caseText}</p><ol>${d.caseQuestions.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol>${currentWeek===3?'<button class="btn good" onclick="markMiniCaseCompleted()">Mark Mini Case Completed</button>':""}</div>`;
  if(currentTab==="quiz")renderQuiz(d);
- if(currentTab==="assignment")weekBody.innerHTML=`<div class="card"><h3>${d.assignment.title}</h3><p>${d.assignment.text}</p><h4>Requirements</h4><ol>${d.assignment.requirements.map(x=>`<li style="margin:7px 0">${x}</li>`).join("")}</ol><div class="notice"><b>Assessment:</b> ${d.assignment.rubric}</div><div class="file-actions" style="margin-top:16px"><button class="btn good" onclick="markAssignmentCompleted()">Mark Assignment Completed</button></div></div>`;
- if(currentTab==="reflection")weekBody.innerHTML=`<div class="card"><h3>Reflection</h3><p>Write one concept you will apply in your work or quality practice, and explain how.</p><textarea id="reflectionText" placeholder="Your reflection...">${p.reflectionText||""}</textarea><button class="btn good" style="margin-top:10px" onclick="saveReflection()">Save Reflection</button><p class="muted">${p.reflection?"Reflection completed ✓":"Not yet completed"}</p></div>`
+ if(currentTab==="assignment")weekBody.innerHTML=`<div class="card"><h3>Week ${currentWeek} Assignment</h3><p>${d.assignment}</p><button class="btn good" onclick="markAssignmentCompleted()">Mark Assignment Completed</button></div>`;
+ if(currentTab==="reflection")weekBody.innerHTML=`<div class="card"><h3>${currentWeek===3?"Post-Class Reflection":"Reflection"}</h3><p>Write one concept you will apply in your work or quality practice, and explain how.</p><textarea id="reflectionText" placeholder="Your reflection...">${p.reflectionText||""}</textarea><button class="btn good" style="margin-top:10px" onclick="saveReflection()">Save Reflection</button><p class="muted">${p.reflection?"Completed ✓":"Not yet completed"}</p></div>`
 }
-async function setTask(i,checked){
- let s=student();if(!s){alert("Register/select a student first.");renderWeekBody();return}
- let p=getProg(s.id,currentWeek),states=getTaskStates(p);
- states[i]=checked;
- p.taskStates=states;
- p.tasks=states.filter(Boolean).length;
- db.progress[pkey(s.id,currentWeek)]=p;
- save();renderAll();renderWeekBody();await pushProgress(s.id,currentWeek)
-}
-function renderQuiz(d){let p=student()?getProg(student().id,currentWeek):{quiz:null};weekBody.innerHTML=`<div class="card quiz"><h3>Knowledge Check</h3>${d.quiz.map((q,qi)=>`<div class="topic"><p><b>${qi+1}. ${q[0]}</b></p>${q[1].map((a,ai)=>`<label><input style="width:auto" type="radio" name="q${qi}" value="${ai}"> ${a}</label>`).join("")}</div>`).join("")}<button class="btn" onclick="gradeCurrentQuiz()">Submit Quiz</button><p id="quizMsg">${p.quiz!==null?`Previous score: ${p.quiz}%`:""}</p></div>`}
+async function setTask(i,checked){const s=student();if(!s){alert("Register/select a student first.");renderWeekBody();return}const p=getProg(s.id,currentWeek),st=getTaskStates(p);st[i]=checked;p.taskStates=st;p.tasks=st.filter(Boolean).length;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();await pushProgress(s.id,currentWeek)}
+async function markActivityCompleted(){await setTask(2,true)}
+async function markAssignmentCompleted(){await setTask(3,true)}
+async function markMiniCaseCompleted(){const s=student();if(!s){alert("Register first.");return}const p=getProg(s.id,currentWeek);p.miniCase=true;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();await pushProgress(s.id,currentWeek)}
+async function savePreClassReflection(){const s=student();if(!s){alert("Register first.");return}const text=(preClassText.value||"").trim();if(!text){alert("Please write your pre-class reflection.");return}const p=getProg(s.id,3);p.preClassReflection=true;p.preClassText=text;db.progress[pkey(s.id,3)]=p;save();renderAll();renderWeekBody();await pushProgress(s.id,3)}
+function renderQuiz(d){const p=student()?getProg(student().id,currentWeek):blankProg();weekBody.innerHTML=`<div class="card quiz"><h3>Knowledge Check</h3>${d.quiz.map((q,qi)=>`<div class="topic"><p><b>${qi+1}. ${q[0]}</b></p>${q[1].map((a,ai)=>`<label><input style="width:auto" type="radio" name="q${qi}" value="${ai}"> ${a}</label>`).join("")}</div>`).join("")}<button class="btn" onclick="gradeCurrentQuiz()">Submit Quiz</button><p id="quizMsg">${p.quiz!==null?`Previous score: ${p.quiz}%`:""}</p></div>`}
+async function gradeCurrentQuiz(){const s=student();if(!s){alert("Register first.");return}const d=packs[currentWeek];let correct=0;d.quiz.forEach((q,qi)=>{const x=document.querySelector(`input[name=q${qi}]:checked`);if(x&&+x.value===q[2])correct++});const score=Math.round(correct/d.quiz.length*100),p=getProg(s.id,currentWeek);p.quiz=score;db.progress[pkey(s.id,currentWeek)]=p;save();quizMsg.textContent=`Score: ${score}% (${correct}/${d.quiz.length})`;renderAll();await pushProgress(s.id,currentWeek)}
+async function saveReflection(){const s=student();if(!s){alert("Register first.");return}const text=(reflectionText.value||"").trim();if(!text){alert("Please write your reflection.");return}const p=getProg(s.id,currentWeek);p.reflection=true;p.reflectionText=text;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();await pushProgress(s.id,currentWeek)}
 
-async function markAssignmentCompleted(){
- const id=db.activeStudentId;
- if(!id){alert("Please enter the course using your Student ID first.");return}
- const p=getProg(id,currentWeek);
- const states=getTaskStates(p);
- states[3]=true;
- p.taskStates=states;
- p.tasks=states.filter(Boolean).length;
- save();
- renderWeekBody();
- renderStudent();
- const ok=await await pushProgress(id,currentWeek);
- if(ok) setSaveStatus("Assignment saved ✓",true);
-}
-async function gradeCurrentQuiz(){let s=student();if(!s){alert("Register/select a student first.");return}let d=currentWeek===1?week1:currentWeek===2?week2:currentWeek===3?week3:null;if(!d)return;let correct=0;d.quiz.forEach((q,qi)=>{let x=document.querySelector(`input[name=q${qi}]:checked`);if(x&&+x.value===q[2])correct++});let score=Math.round(correct/d.quiz.length*100),p=getProg(s.id,currentWeek);p.quiz=score;db.progress[pkey(s.id,currentWeek)]=p;save();quizMsg.textContent=`Score: ${score}% (${correct}/${d.quiz.length})`;renderAll();pushProgress(s.id,currentWeek)}
-async function saveReflection(){let s=student();if(!s){alert("Register/select a student first.");return}let text=(reflectionText.value||"").trim();if(!text){alert("Please write your reflection before saving.");return}let p=getProg(s.id,currentWeek);p.reflection=true;p.reflectionText=text;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();await pushProgress(s.id,currentWeek)}
-lang.onclick=()=>{let ar=document.body.classList.toggle("rtl");document.documentElement.dir=ar?"rtl":"ltr";lang.textContent=ar?"English":"العربية";heroText.textContent=ar?"بوابة تعلم تطبيقية تربط السلوك على مستوى الفرد والمجموعة والمنظمة بأداء الجودة والخدمة والمشاركة والقيادة والتحسين المستمر.":"A practical learning portal linking individual, group and organizational behavior to quality performance, service, engagement, leadership and continuous improvement."}
+lang.onclick=()=>{const ar=document.body.classList.toggle("rtl");document.documentElement.dir=ar?"rtl":"ltr";lang.textContent=ar?"English":"العربية";heroText.textContent=ar?"بوابة تعلم تطبيقية تربط السلوك التنظيمي بأداء الجودة والخدمة والمشاركة والتحسين المستمر.":"A practical learning portal linking individual, group and organizational behavior to quality performance, service, engagement, leadership and continuous improvement."}
 db.activeStudentId="";db.students=[];db.progress={};save();renderAll();updateSyncStatus();checkCentral();initAccess();
 </script>
 </body>
