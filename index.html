@@ -124,7 +124,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 </main>
 
-<footer>G TQM 511 Learning Portal • Central tracking enabled • Student Progress v7 • Central Reset + Undo</footer>
+<footer>G TQM 511 Learning Portal • Central tracking enabled • Student Progress v8 • Fixed Reset + Undo</footer>
 
 <script>
 const course=[
@@ -366,8 +366,10 @@ function studentRiskStatus(id){
  if(!studentStarted(id)) return "Not Started";
  return studentFirst3Average(id)<50 ? "At Risk" : "On Track";
 }
-async function resetStudentProgress(id,name){
+async function resetStudentProgress(id){
  if(!adminUnlocked){alert("Instructor access is required.");return}
+ const target=db.students.find(s=>String(s.id)===String(id));
+ const name=target?target.name:String(id);
  const ok=confirm(`Reset Weeks 1–3 for ${name} to zero? This clears checklist items, quiz scores, pre/post reflections, mini case, and assignment status.`);
  if(!ok)return;
 
@@ -399,6 +401,11 @@ async function resetStudentProgress(id,name){
      return;
    }
  }
+
+ // Clear local state immediately before verifying from the central snapshot.
+ for(let w=1;w<=3;w++) db.progress[pkey(id,w)]=blankProg();
+ save();
+ renderAll();
 
  try{
    const snap=await apiPost({action:"adminSnapshot",pin:adminPin});
@@ -463,7 +470,7 @@ function renderInstructor(){
      <td>${statusHtml}</td>
      <td><div class="file-actions" style="margin:0">
        <button class="btn alt" onclick="db.activeStudentId='${s.id}';save();renderAll();showPage('student')">View</button>
-       <button class="btn danger" onclick="resetStudentProgress('${s.id}',${JSON.stringify(s.name)})">Reset</button>
+       <button class="btn danger" onclick="resetStudentProgress('${s.id}')">Reset</button>
      </div></td>
    </tr>`;
  }).join("");
@@ -510,8 +517,9 @@ async function markMiniCaseCompleted(){const s=student();if(!s){alert("Register 
 async function undoMiniCaseCompleted(){const s=student();if(!s)return;const p=getProg(s.id,currentWeek);p.miniCase=false;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();await pushProgress(s.id,currentWeek)}
 async function savePreClassReflection(){const s=student();if(!s){alert("Register first.");return}const text=(preClassText.value||"").trim();if(!text){alert("Please write your pre-class reflection.");return}const p=getProg(s.id,currentWeek);p.preClassReflection=true;p.preClassText=text;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();await pushProgress(s.id,currentWeek)}
 async function undoPreClassReflection(){const s=student();if(!s)return;const p=getProg(s.id,currentWeek);p.preClassReflection=false;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();await pushProgress(s.id,currentWeek)}
-function renderQuiz(d){const p=student()?getProg(student().id,currentWeek):blankProg();weekBody.innerHTML=`<div class="card quiz"><h3>Knowledge Check</h3>${d.quiz.map((q,qi)=>`<div class="topic"><p><b>${qi+1}. ${q[0]}</b></p>${q[1].map((a,ai)=>`<label><input style="width:auto" type="radio" name="q${qi}" value="${ai}"> ${a}</label>`).join("")}</div>`).join("")}<button class="btn" onclick="gradeCurrentQuiz()">Submit Quiz</button><p id="quizMsg">${p.quiz!==null?`Previous score: ${p.quiz}%`:""}</p></div>`}
+function renderQuiz(d){const p=student()?getProg(student().id,currentWeek):blankProg();weekBody.innerHTML=`<div class="card quiz"><h3>Knowledge Check</h3>${d.quiz.map((q,qi)=>`<div class="topic"><p><b>${qi+1}. ${q[0]}</b></p>${q[1].map((a,ai)=>`<label><input style="width:auto" type="radio" name="q${qi}" value="${ai}"> ${a}</label>`).join("")}</div>`).join("")}<div class="file-actions"><button class="btn" onclick="gradeCurrentQuiz()">Submit Quiz</button>${p.quiz!==null?'<button class="btn alt" onclick="undoQuiz()">Clear Quiz Score</button>':""}</div><p id="quizMsg">${p.quiz!==null?`Previous score: ${p.quiz}%`:""}</p></div>`}
 async function gradeCurrentQuiz(){const s=student();if(!s){alert("Register first.");return}const d=packs[currentWeek];let correct=0;d.quiz.forEach((q,qi)=>{const x=document.querySelector(`input[name=q${qi}]:checked`);if(x&&+x.value===q[2])correct++});const score=Math.round(correct/d.quiz.length*100),p=getProg(s.id,currentWeek);p.quiz=score;db.progress[pkey(s.id,currentWeek)]=p;save();quizMsg.textContent=`Score: ${score}% (${correct}/${d.quiz.length})`;renderAll();await pushProgress(s.id,currentWeek)}
+async function undoQuiz(){const s=student();if(!s)return;const p=getProg(s.id,currentWeek);p.quiz=null;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();await pushProgress(s.id,currentWeek)}
 async function saveReflection(){const s=student();if(!s){alert("Register first.");return}const text=(reflectionText.value||"").trim();if(!text){alert("Please write your reflection.");return}const p=getProg(s.id,currentWeek);p.reflection=true;p.reflectionText=text;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();await pushProgress(s.id,currentWeek)}
 async function undoReflection(){const s=student();if(!s)return;const p=getProg(s.id,currentWeek);p.reflection=false;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();await pushProgress(s.id,currentWeek)}
 
