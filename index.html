@@ -10,7 +10,7 @@
 header{background:var(--navy);color:#fff;position:sticky;top:0;z-index:10}.top{max-width:1250px;margin:auto;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .brand b{font-size:20px}.brand small{display:block;opacity:.8;margin-top:3px}nav{display:flex;gap:7px;flex-wrap:wrap}
 button{font:inherit}.nav,.btn{border:0;border-radius:9px;padding:9px 12px;cursor:pointer}.nav{background:#203b65;color:#fff}.nav.active{background:#fff;color:#13233d;font-weight:bold}
-.btn{background:var(--blue);color:#fff;text-decoration:none;display:inline-block}.btn.alt{background:#eef2f7;color:#172033}.btn.good{background:var(--green)}
+.btn{background:var(--blue);color:#fff;text-decoration:none;display:inline-block}.btn.alt{background:#eef2f7;color:#172033}.btn.good{background:var(--green)}.btn.danger{background:#b42318;color:#fff}
 main{max-width:1250px;margin:22px auto;padding:0 16px}.hidden{display:none!important}
 .hero{background:linear-gradient(135deg,#173566,#285dc9);color:#fff;padding:28px;border-radius:18px;display:grid;grid-template-columns:1.5fr 1fr;gap:20px}.hero h1{font-size:34px;margin:6px 0 10px}
 .glass{background:#ffffff18;border:1px solid #ffffff2b;border-radius:14px;padding:17px}.pill{display:inline-block;padding:5px 9px;border-radius:99px;background:var(--soft);color:var(--blue);font-size:12px;margin:2px}
@@ -107,7 +107,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </div>
 
 <div class="section card" style="overflow:auto">
-<h3>Student Tracking</h3>
+<div class="section-head"><h3 style="margin:0">Student Tracking</h3><span class="muted">Reset clears Weeks 1–3 through the same central API used by the portal</span></div>
 <table>
 <thead><tr>
 <th>Name</th><th>ID</th><th>Group</th><th>W1</th><th>W2</th><th>W3</th>
@@ -124,7 +124,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 </main>
 
-<footer>G TQM 511 Learning Portal • Central tracking enabled • Student Progress v6 • Central Authority + Undo</footer>
+<footer>G TQM 511 Learning Portal • Central tracking enabled • Student Progress v7 • Central Reset + Undo</footer>
 
 <script>
 const course=[
@@ -366,6 +366,52 @@ function studentRiskStatus(id){
  if(!studentStarted(id)) return "Not Started";
  return studentFirst3Average(id)<50 ? "At Risk" : "On Track";
 }
+async function resetStudentProgress(id,name){
+ if(!adminUnlocked){alert("Instructor access is required.");return}
+ const ok=confirm(`Reset Weeks 1–3 for ${name} to zero? This clears checklist items, quiz scores, pre/post reflections, mini case, and assignment status.`);
+ if(!ok)return;
+
+ setSaveStatus("Resetting...",true);
+
+ for(let w=1;w<=3;w++){
+   const blank=blankProg();
+   db.progress[pkey(id,w)]=blank;
+   save();
+   try{
+     await apiPost({
+       action:"saveProgress",
+       progress:{
+         studentId:String(id),
+         week:Number(w),
+         taskStates:[false,false,false,false],
+         quiz:null,
+         reflection:false,
+         reflectionText:encodeReflectionPayload(blank),
+         preClassReflection:false,
+         preClassText:"",
+         miniCase:false,
+         total:0
+       }
+     });
+   }catch(e){
+     setSaveStatus("Reset failed ✕",false);
+     alert(`Could not reset Week ${w}. Please check the connection and try again.`);
+     return;
+   }
+ }
+
+ try{
+   const snap=await apiPost({action:"adminSnapshot",pin:adminPin});
+   db.students=(snap.students||[]).map(s=>({name:s.name,id:String(s.id),email:s.email||"",group:s.group||""}));
+   applyProgressRows(snap.progress||[]);
+   save();
+   renderAll();
+   setSaveStatus("Student reset to zero ✓",true);
+ }catch(e){
+   renderAll();
+   setSaveStatus("Reset saved; refresh data",true);
+ }
+}
 function renderInstructor(){
  iStudents.textContent=db.students.length;
  const groups=[...new Set(db.students.map(s=>s.group).filter(Boolean))];
@@ -415,7 +461,10 @@ function renderInstructor(){
      <td>${a3}/8</td>
      <td>${studentStarted(s.id)?'<b>'+avg3+'%</b>':'—'}</td>
      <td>${statusHtml}</td>
-     <td><button class="btn alt" onclick="db.activeStudentId='${s.id}';save();renderAll();showPage('student')">View</button></td>
+     <td><div class="file-actions" style="margin:0">
+       <button class="btn alt" onclick="db.activeStudentId='${s.id}';save();renderAll();showPage('student')">View</button>
+       <button class="btn danger" onclick="resetStudentProgress('${s.id}',${JSON.stringify(s.name)})">Reset</button>
+     </div></td>
    </tr>`;
  }).join("");
 }
