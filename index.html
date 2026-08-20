@@ -97,8 +97,8 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 <div class="grid">
 <div class="card stat"><span class="muted">Registered Students</span><strong id="iStudents">0</strong></div>
 <div class="card stat"><span class="muted">Groups</span><strong id="iGroups">0</strong></div>
-<div class="card stat"><span class="muted">Weeks 1–3 Average</span><strong id="iCompletion">0%</strong></div>
-<div class="card stat"><span class="muted">At-Risk Students</span><strong id="iRisk">0</strong><small class="muted">Average below 50%</small></div>
+<div class="card stat"><span class="muted">Active Students Avg.</span><strong id="iCompletion">0%</strong><small class="muted">Weeks 1–3</small></div>
+<div class="card stat"><span class="muted">At-Risk Students</span><strong id="iRisk">0</strong><small class="muted">Started + average below 50%</small></div>
 </div>
 
 <div class="section card">
@@ -124,7 +124,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 </main>
 
-<footer>G TQM 511 Learning Portal • Central tracking enabled • Student Progress v3 • Instructor Analytics</footer>
+<footer>G TQM 511 Learning Portal • Central tracking enabled • Student Progress v4 • Fair Risk Logic</footer>
 
 <script>
 const course=[
@@ -339,26 +339,39 @@ function week3ActivityCount(id){
 function studentFirst3Average(id){
  return Math.round((weekPct(id,1)+weekPct(id,2)+weekPct(id,3))/3);
 }
+function studentStarted(id){
+ return weekPct(id,1)>0 || weekPct(id,2)>0 || weekPct(id,3)>0 || week3ActivityCount(id)>0;
+}
+function studentRiskStatus(id){
+ if(!studentStarted(id)) return "Not Started";
+ return studentFirst3Average(id)<50 ? "At Risk" : "On Track";
+}
 function renderInstructor(){
  iStudents.textContent=db.students.length;
- iGroups.textContent=[...new Set(db.students.map(s=>s.group).filter(Boolean))].length;
-
- const vals=db.students.map(s=>studentFirst3Average(s.id));
- const avg=vals.length?Math.round(vals.reduce((a,b)=>a+b,0)/vals.length):0;
- iCompletion.textContent=avg+"%";
- iRisk.textContent=vals.filter(x=>x<50).length;
-
  const groups=[...new Set(db.students.map(s=>s.group).filter(Boolean))];
+ iGroups.textContent=groups.length;
+
+ const active=db.students.filter(s=>studentStarted(s.id));
+ const activeVals=active.map(s=>studentFirst3Average(s.id));
+ const avg=activeVals.length?Math.round(activeVals.reduce((a,b)=>a+b,0)/activeVals.length):0;
+ iCompletion.textContent=avg+"%";
+
+ const riskCount=db.students.filter(s=>studentRiskStatus(s.id)==="At Risk").length;
+ iRisk.textContent=riskCount;
+
  instructorGroupCards.innerHTML=groups.map(g=>{
    const members=db.students.filter(s=>s.group===g);
-   const gav=members.length?Math.round(members.reduce((a,s)=>a+studentFirst3Average(s.id),0)/members.length):0;
-   const w3avg=members.length?Math.round(members.reduce((a,s)=>a+weekPct(s.id,3),0)/members.length):0;
-   const risk=members.filter(s=>studentFirst3Average(s.id)<50).length;
+   const activeMembers=members.filter(s=>studentStarted(s.id));
+   const gav=activeMembers.length?Math.round(activeMembers.reduce((a,s)=>a+studentFirst3Average(s.id),0)/activeMembers.length):0;
+   const w3active=activeMembers.filter(s=>weekPct(s.id,3)>0 || week3ActivityCount(s.id)>0);
+   const w3avg=w3active.length?Math.round(w3active.reduce((a,s)=>a+weekPct(s.id,3),0)/w3active.length):0;
+   const risk=members.filter(s=>studentRiskStatus(s.id)==="At Risk").length;
+   const notStarted=members.filter(s=>studentRiskStatus(s.id)==="Not Started").length;
    return `<div class="card stat">
      <span class="muted">${g}</span>
-     <strong>${gav}%</strong>
-     <div class="progress" style="margin-top:8px"><div class="bar" style="width:${gav}%"></div></div>
-     <small class="muted">${members.length} students • W3 avg ${w3avg}% • At risk ${risk}</small>
+     <strong>${activeMembers.length?gav+"%":"—"}</strong>
+     <div class="progress" style="margin-top:8px"><div class="bar" style="width:${activeMembers.length?gav:0}%"></div></div>
+     <small class="muted">${members.length} students • Active ${activeMembers.length} • Not started ${notStarted} • At risk ${risk} • W3 avg ${w3active.length?w3avg+"%":"—"}</small>
    </div>`;
  }).join("");
 
@@ -366,7 +379,12 @@ function renderInstructor(){
    const w1=weekPct(s.id,1),w2=weekPct(s.id,2),w3=weekPct(s.id,3);
    const avg3=studentFirst3Average(s.id);
    const a3=week3ActivityCount(s.id);
-   const risk=avg3<50;
+   const status=studentRiskStatus(s.id);
+   let statusHtml="";
+   if(status==="At Risk") statusHtml='<span style="color:#b42318;font-weight:bold">At Risk</span>';
+   else if(status==="On Track") statusHtml='<span style="color:var(--green);font-weight:bold">On Track</span>';
+   else statusHtml='<span style="color:var(--muted);font-weight:bold">Not Started</span>';
+
    return `<tr>
      <td>${s.name}</td>
      <td>${s.id}</td>
@@ -375,8 +393,8 @@ function renderInstructor(){
      <td>${w2}%</td>
      <td>${w3}%</td>
      <td>${a3}/8</td>
-     <td><b>${avg3}%</b></td>
-     <td>${risk?'<span style="color:#b42318;font-weight:bold">At Risk</span>':'<span style="color:var(--green);font-weight:bold">On Track</span>'}</td>
+     <td>${studentStarted(s.id)?'<b>'+avg3+'%</b>':'—'}</td>
+     <td>${statusHtml}</td>
      <td><button class="btn alt" onclick="db.activeStudentId='${s.id}';save();renderAll();showPage('student')">View</button></td>
    </tr>`;
  }).join("");
