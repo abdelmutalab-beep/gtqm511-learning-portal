@@ -52,7 +52,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 <button class="btn" onclick="showPage('register')">Student Access</button></div>
 <div class="glass"><h3>Learning Journey</h3><p>Prepare → Learn → Apply → Discuss → Assess → Reflect</p>
 <div class="progress"><div id="overallBar" class="bar" style="width:0%"></div></div><p><b id="overallPct">0%</b> overall course progress</p>
-<p style="font-size:12px;opacity:.85">Weeks 1–3 are fully tracked. Week 3 uses 8 distinct learning activities.</p></div>
+<p style="font-size:12px;opacity:.85">Weeks 1–3 are fully tracked using the same 8-activity learning cycle.</p></div>
 </div>
 <div class="section"><div class="section-head"><h2>15-Week Learning Path</h2><span class="muted">Weeks 1–3 expanded</span></div><div id="weeks" class="weeks"></div></div>
 </section>
@@ -124,7 +124,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 </main>
 
-<footer>G TQM 511 Learning Portal • Central tracking enabled • Student Progress v4 • Fair Risk Logic</footer>
+<footer>G TQM 511 Learning Portal • Central tracking enabled • Student Progress v5 • Unified 8-Activity Tracking</footer>
 
 <script>
 const course=[
@@ -193,8 +193,14 @@ function getTaskStates(p){if(Array.isArray(p.taskStates))return[0,1,2,3].map(i=>
 function completedTaskCount(p){return getTaskStates(p).filter(Boolean).length}
 function weekPct(id,w){
  const p=getProg(id,w);
- if(w===1||w===2){const checklist=completedTaskCount(p)*10;const quizPart=p.quiz!==null?Math.round(p.quiz*.4):0;const reflectionPart=p.reflection?20:0;return Math.min(100,checklist+quizPart+reflectionPart)}
- if(w===3){let score=completedTaskCount(p)*10;if(p.preClassReflection)score+=10;if(p.miniCase)score+=10;if(p.quiz!==null)score+=Math.round(p.quiz*.2);if(p.reflection)score+=20;return Math.min(100,score)}
+ if(w>=1 && w<=3){
+   let score=completedTaskCount(p)*10;   // Guided Reading, Lecture, In-Class Activity, Assignment = 40%
+   if(p.preClassReflection)score+=10;   // Pre-Class Reflection = 10%
+   if(p.miniCase)score+=10;             // Mini Case = 10%
+   if(p.quiz!==null)score+=Math.round(p.quiz*.2); // Quiz = 20%
+   if(p.reflection)score+=20;           // Post-Class Reflection = 20%
+   return Math.min(100,score);
+ }
  return 0
 }
 function weekStatus(id,w){const pct=weekPct(id,w);return pct===100?"Completed":pct>0?"In Progress":"Not Started"}
@@ -266,23 +272,14 @@ function activityBox(name,done,text){return `<div class="student-activity"><b>${
 function detailWeek(id,w){
  const p=getProg(id,w),st=getTaskStates(p),pct=weekPct(id,w);
  let a="";
- if(w===3){
-   a+=activityBox("Guided Reading",st[0]);
-   a+=activityBox("Lecture Viewed",st[1]);
-   a+=activityBox("Pre-Class Reflection",p.preClassReflection);
-   a+=activityBox("In-Class Activity",st[2]);
-   a+=activityBox("Mini Case",p.miniCase);
-   a+=activityBox("Knowledge Check / Quiz",p.quiz!==null,p.quiz!==null?p.quiz+"%":"");
-   a+=activityBox("Assignment",st[3]);
-   a+=activityBox("Post-Class Reflection",p.reflection);
- }else{
-   a+=activityBox("Preparation / Guided Reading",st[0]);
-   a+=activityBox("Lecture Content",st[1]);
-   a+=activityBox("Applied In-Class Activity",st[2]);
-   a+=activityBox("Case / Assignment",st[3]);
-   a+=activityBox("Knowledge Check / Quiz",p.quiz!==null,p.quiz!==null?p.quiz+"%":"");
-   a+=activityBox("Reflection",p.reflection);
- }
+ a+=activityBox("Guided Reading",st[0]);
+ a+=activityBox("Lecture Viewed",st[1]);
+ a+=activityBox("Pre-Class Reflection",p.preClassReflection);
+ a+=activityBox("In-Class Activity",st[2]);
+ a+=activityBox("Mini Case",p.miniCase);
+ a+=activityBox("Knowledge Check / Quiz",p.quiz!==null,p.quiz!==null?p.quiz+"%":"");
+ a+=activityBox("Assignment",st[3]);
+ a+=activityBox("Post-Class Reflection",p.reflection);
  return `<div class="student-week"><div class="student-week-head"><div><b>Week ${w}: ${course[w-1][0]}</b><div class="muted">${weekStatus(id,w)}</div></div><strong>${pct}%</strong></div><div class="progress" style="margin-top:9px"><div class="bar" style="width:${pct}%"></div></div><div class="student-activities">${a}</div></div>`
 }
 function calculateStudentGroupAverage(s){
@@ -404,34 +401,39 @@ function initAccess(){const p=new URLSearchParams(location.search);if(p.get("adm
 function renderAll(){renderWeeks();renderStudent();renderGroups();if(adminUnlocked)renderInstructor()}
 function openWeek(n){currentWeek=n;currentTab="overview";wkNum.textContent="Week "+n;wkTitle.textContent=course[n-1][0];renderWeekTabs();renderWeekBody();showPage("week")}
 function renderWeekTabs(){
- let tabs=currentWeek===3?["overview","slides","materials","preclass","content","activity","case","quiz","assignment","reflection"]:currentWeek<=2?["overview","slides","content","activity","case","quiz","assignment","reflection"]:["overview"];
+ let tabs=currentWeek===3
+   ?["overview","slides","materials","preclass","content","activity","case","quiz","assignment","reflection"]
+   :currentWeek<=2
+     ?["overview","slides","preclass","content","activity","case","quiz","assignment","reflection"]
+     :["overview"];
  weekTabs.innerHTML=tabs.map(t=>`<button class="tab ${t===currentTab?"active":""}" onclick="currentTab='${t}';renderWeekTabs();renderWeekBody()">${t[0].toUpperCase()+t.slice(1)}</button>`).join("")
 }
 function renderWeekBody(){
  const d=packs[currentWeek],s=student(),p=s?getProg(s.id,currentWeek):blankProg();
  if(!d){weekBody.innerHTML=`<div class="card"><h3>${course[currentWeek-1][0]}</h3><p>${course[currentWeek-1][1]}</p><div class="notice">Detailed learning materials will be added in the next build.</div></div>`;return}
  if(currentTab==="overview"){
-   const st=getTaskStates(p);const labels=currentWeek===3?["Guided Reading","Lecture Viewed","In-Class Activity","Assignment"]:["Preparation / Reading","Lecture Content","Applied Activity","Case / Assignment"];
-   weekBody.innerHTML=`<div class="layout"><div class="card"><h3>Learning Outcomes</h3><ol>${d.objectives.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol></div><div class="card"><h3>Progress Checklist</h3>${labels.map((x,i)=>`<label class="task"><input type="checkbox" ${st[i]?"checked":""} onchange="setTask(${i},this.checked)"> ${x}</label>`).join("")}<div class="success">${currentWeek===3?"Week 3 also tracks Pre-Class Reflection, Mini Case, Quiz and Post-Class Reflection separately.":"Checklist 40% • Quiz 40% • Reflection 20%."}</div></div></div>`
+   const st=getTaskStates(p);
+   const labels=["Guided Reading","Lecture Viewed","In-Class Activity","Assignment"];
+   weekBody.innerHTML=`<div class="layout"><div class="card"><h3>Learning Outcomes</h3><ol>${d.objectives.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol></div><div class="card"><h3>Progress Checklist</h3>${labels.map((x,i)=>`<label class="task"><input type="checkbox" ${st[i]?"checked":""} onchange="setTask(${i},this.checked)"> ${x}</label>`).join("")}<div class="success">Each week tracks 8 items: Guided Reading, Lecture Viewed, Pre-Class Reflection, In-Class Activity, Mini Case, Quiz, Assignment, and Post-Class Reflection.</div></div></div>`
  }
  if(currentTab==="slides"){
    const pdf=`Week${currentWeek}_Lecture.pdf`,ppt=`Week${currentWeek}_Lecture.pptx`;
    weekBody.innerHTML=`<div class="card"><h3>Week ${currentWeek} Lecture Slides</h3><div class="file-actions"><a class="btn" href="${pdf}" target="_blank">Open PDF</a><a class="btn alt" href="${ppt}">Open PowerPoint</a></div><iframe class="slide-frame" src="${pdf}#view=FitH"></iframe></div>`
  }
  if(currentTab==="materials"&&currentWeek===3)weekBody.innerHTML=`<div class="card"><h3>Week 3 Learning Package</h3><div class="topic"><h4>Student Learning Pack</h4><a class="btn alt" href="Week3_Student_Learning_Pack.docx">Open Student Pack</a></div><div class="topic"><h4>Assessment Pack</h4><a class="btn alt" href="Week3_Assessment_Pack.docx">Open Assessment Pack</a></div><div class="topic"><h4>Instructor Guide</h4><a class="btn alt" href="Week3_Instructor_Guide.docx">Open Instructor Guide</a></div><div class="topic"><h4>Google Classroom Guide</h4><a class="btn alt" href="Week3_Google_Classroom_Guide.docx">Open Classroom Guide</a></div></div>`;
- if(currentTab==="preclass"&&currentWeek===3)weekBody.innerHTML=`<div class="card"><h3>Pre-Class Reflection</h3><p>Before class, write one short observation or question about employee attitudes, job satisfaction, or quality behavior.</p><textarea id="preClassText" placeholder="Your pre-class reflection...">${p.preClassText||""}</textarea><button class="btn good" style="margin-top:10px" onclick="savePreClassReflection()">Save Pre-Class Reflection</button><p class="muted">${p.preClassReflection?"Completed ✓":"Not yet completed"}</p></div>`;
+ if(currentTab==="preclass"&&currentWeek<=3)weekBody.innerHTML=`<div class="card"><h3>Pre-Class Reflection</h3><p>Before class, write one short observation, question, or workplace example related to this week’s topic.</p><textarea id="preClassText" placeholder="Your pre-class reflection...">${p.preClassText||""}</textarea><button class="btn good" style="margin-top:10px" onclick="savePreClassReflection()">Save Pre-Class Reflection</button><p class="muted">${p.preClassReflection?"Completed ✓":"Not yet completed"}</p></div>`;
  if(currentTab==="content")weekBody.innerHTML=`<div class="card"><h3>Core Learning Content</h3>${d.topics.map(t=>`<div class="topic"><h4>${t[0]}</h4><p>${t[1]}</p></div>`).join("")}</div>`;
  if(currentTab==="activity")weekBody.innerHTML=`<div class="card"><h3>In-Class Activity</h3><p>${d.activity}</p><button class="btn good" onclick="markActivityCompleted()">Mark In-Class Activity Completed</button></div>`;
- if(currentTab==="case")weekBody.innerHTML=`<div class="card"><h3>${d.caseTitle}</h3><p>${d.caseText}</p><ol>${d.caseQuestions.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol>${currentWeek===3?'<button class="btn good" onclick="markMiniCaseCompleted()">Mark Mini Case Completed</button>':""}</div>`;
+ if(currentTab==="case")weekBody.innerHTML=`<div class="card"><h3>${d.caseTitle}</h3><p>${d.caseText}</p><ol>${d.caseQuestions.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol>${currentWeek<=3?'<button class="btn good" onclick="markMiniCaseCompleted()">Mark Mini Case Completed</button>':""}</div>`;
  if(currentTab==="quiz")renderQuiz(d);
  if(currentTab==="assignment")weekBody.innerHTML=`<div class="card"><h3>Week ${currentWeek} Assignment</h3><p>${d.assignment}</p><button class="btn good" onclick="markAssignmentCompleted()">Mark Assignment Completed</button></div>`;
- if(currentTab==="reflection")weekBody.innerHTML=`<div class="card"><h3>${currentWeek===3?"Post-Class Reflection":"Reflection"}</h3><p>Write one concept you will apply in your work or quality practice, and explain how.</p><textarea id="reflectionText" placeholder="Your reflection...">${p.reflectionText||""}</textarea><button class="btn good" style="margin-top:10px" onclick="saveReflection()">Save Reflection</button><p class="muted">${p.reflection?"Completed ✓":"Not yet completed"}</p></div>`
+ if(currentTab==="reflection")weekBody.innerHTML=`<div class="card"><h3>${currentWeek<=3?"Post-Class Reflection":"Reflection"}</h3><p>Write one concept you will apply in your work or quality practice, and explain how.</p><textarea id="reflectionText" placeholder="Your reflection...">${p.reflectionText||""}</textarea><button class="btn good" style="margin-top:10px" onclick="saveReflection()">Save Reflection</button><p class="muted">${p.reflection?"Completed ✓":"Not yet completed"}</p></div>`
 }
 async function setTask(i,checked){const s=student();if(!s){alert("Register/select a student first.");renderWeekBody();return}const p=getProg(s.id,currentWeek),st=getTaskStates(p);st[i]=checked;p.taskStates=st;p.tasks=st.filter(Boolean).length;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();await pushProgress(s.id,currentWeek)}
 async function markActivityCompleted(){await setTask(2,true)}
 async function markAssignmentCompleted(){await setTask(3,true)}
 async function markMiniCaseCompleted(){const s=student();if(!s){alert("Register first.");return}const p=getProg(s.id,currentWeek);p.miniCase=true;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();await pushProgress(s.id,currentWeek)}
-async function savePreClassReflection(){const s=student();if(!s){alert("Register first.");return}const text=(preClassText.value||"").trim();if(!text){alert("Please write your pre-class reflection.");return}const p=getProg(s.id,3);p.preClassReflection=true;p.preClassText=text;db.progress[pkey(s.id,3)]=p;save();renderAll();renderWeekBody();await pushProgress(s.id,3)}
+async function savePreClassReflection(){const s=student();if(!s){alert("Register first.");return}const text=(preClassText.value||"").trim();if(!text){alert("Please write your pre-class reflection.");return}const p=getProg(s.id,currentWeek);p.preClassReflection=true;p.preClassText=text;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();await pushProgress(s.id,currentWeek)}
 function renderQuiz(d){const p=student()?getProg(student().id,currentWeek):blankProg();weekBody.innerHTML=`<div class="card quiz"><h3>Knowledge Check</h3>${d.quiz.map((q,qi)=>`<div class="topic"><p><b>${qi+1}. ${q[0]}</b></p>${q[1].map((a,ai)=>`<label><input style="width:auto" type="radio" name="q${qi}" value="${ai}"> ${a}</label>`).join("")}</div>`).join("")}<button class="btn" onclick="gradeCurrentQuiz()">Submit Quiz</button><p id="quizMsg">${p.quiz!==null?`Previous score: ${p.quiz}%`:""}</p></div>`}
 async function gradeCurrentQuiz(){const s=student();if(!s){alert("Register first.");return}const d=packs[currentWeek];let correct=0;d.quiz.forEach((q,qi)=>{const x=document.querySelector(`input[name=q${qi}]:checked`);if(x&&+x.value===q[2])correct++});const score=Math.round(correct/d.quiz.length*100),p=getProg(s.id,currentWeek);p.quiz=score;db.progress[pkey(s.id,currentWeek)]=p;save();quizMsg.textContent=`Score: ${score}% (${correct}/${d.quiz.length})`;renderAll();await pushProgress(s.id,currentWeek)}
 async function saveReflection(){const s=student();if(!s){alert("Register first.");return}const text=(reflectionText.value||"").trim();if(!text){alert("Please write your reflection.");return}const p=getProg(s.id,currentWeek);p.reflection=true;p.reflectionText=text;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();await pushProgress(s.id,currentWeek)}
