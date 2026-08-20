@@ -52,9 +52,9 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 <button class="btn" onclick="showPage('register')">Student Access</button></div>
 <div class="glass"><h3>Learning Journey</h3><p>Prepare → Learn → Apply → Discuss → Assess → Reflect</p>
 <div class="progress"><div id="overallBar" class="bar" style="width:0%"></div></div><p><b id="overallPct">0%</b> overall course progress</p>
-<p style="font-size:12px;opacity:.85">Weeks 1–3 are fully tracked using the same 8-activity learning cycle.</p></div>
+<p style="font-size:12px;opacity:.85">Weeks 1–4 are fully tracked using the same 8-activity learning cycle.</p></div>
 </div>
-<div class="section"><div class="section-head"><h2>15-Week Learning Path</h2><span class="muted">Weeks 1–3 expanded</span></div><div id="weeks" class="weeks"></div></div>
+<div class="section"><div class="section-head"><h2>15-Week Learning Path</h2><span class="muted">Weeks 1–4 expanded</span></div><div id="weeks" class="weeks"></div></div>
 </section>
 
 <section id="register" class="page hidden">
@@ -69,11 +69,11 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 <div class="section-head"><div><h2 style="margin-bottom:4px">Student Progress</h2><span id="studentName" class="muted">No student registered</span></div><span class="muted">Individual and group learning progress</span></div>
 <div class="grid">
 <div class="card stat"><span class="muted">Overall Course Progress</span><strong id="sProgress">0%</strong><div class="progress"><div id="studentOverallBar" class="bar" style="width:0%"></div></div></div>
-<div class="card stat"><span class="muted">Weeks 1–3 Progress</span><strong id="sFirst3">0%</strong></div>
+<div class="card stat"><span class="muted">Weeks 1–4 Progress</span><strong id="sFirst3">0%</strong></div>
 <div class="card stat"><span class="muted">Quiz Average</span><strong id="sQuiz">0%</strong></div>
 <div class="card stat"><span class="muted">Group</span><strong id="sGroup">—</strong></div>
 </div>
-<div class="card section"><div class="section-head"><h3 style="margin:0">Weeks 1–3 Detailed Progress</h3><span class="muted">Tracked learning activities</span></div><div id="studentWeekDetails"></div></div>
+<div class="card section"><div class="section-head"><h3 style="margin:0">Weeks 1–4 Detailed Progress</h3><span class="muted">Tracked learning activities</span></div><div id="studentWeekDetails"></div></div>
 <div class="card section"><div class="section-head"><h3 style="margin:0">Group Progress</h3><span id="studentGroupLabel" class="muted">—</span></div>
 <div class="two"><div><p class="muted">Your Progress</p><div class="progress"><div id="studentGroupBar" class="bar" style="width:0%"></div></div><p><b id="studentGroupPct">0%</b></p></div>
 <div><p class="muted">Group Average</p><div class="progress"><div id="groupAverageBar" class="bar" style="width:0%"></div></div><p><b id="groupAveragePct">—</b></p></div></div>
@@ -90,15 +90,15 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 
 <section id="instructor" class="page hidden">
 <div class="section-head">
-  <div><h2 style="margin-bottom:4px">Instructor Dashboard</h2><span class="muted">Central cohort overview for Weeks 1–3</span></div>
+  <div><h2 style="margin-bottom:4px">Instructor Dashboard</h2><span class="muted">Central cohort overview for Weeks 1–4</span></div>
   <button class="btn alt" onclick="refreshInstructor()">Refresh Data</button>
 </div>
 
 <div class="grid">
 <div class="card stat"><span class="muted">Registered Students</span><strong id="iStudents">0</strong></div>
 <div class="card stat"><span class="muted">Groups</span><strong id="iGroups">0</strong></div>
-<div class="card stat"><span class="muted">Active Students Avg.</span><strong id="iCompletion">0%</strong><small class="muted">Weeks 1–3</small></div>
-<div class="card stat"><span class="muted">At-Risk Students</span><strong id="iRisk">0</strong><small class="muted">Started + average below 50%</small></div>
+<div class="card stat"><span class="muted">Active Students Avg.</span><strong id="iCompletion">0%</strong><small class="muted">Weeks 1–4</small></div>
+<div class="card stat"><span class="muted">At-Risk Students</span><strong id="iRisk">0</strong><small class="muted">Started + W1–4 average below 50%</small></div>
 </div>
 
 <div class="section card">
@@ -110,8 +110,8 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 <div class="section-head"><h3 style="margin:0">Student Tracking</h3><span class="muted">Reset clears Weeks 1–3 through the same central API used by the portal</span></div>
 <table>
 <thead><tr>
-<th>Name</th><th>ID</th><th>Group</th><th>W1</th><th>W2</th><th>W3</th>
-<th>W3 Activities</th><th>W1–3 Avg.</th><th>Risk</th><th>Action</th>
+<th>Name</th><th>ID</th><th>Group</th><th>W1</th><th>W2</th><th>W3</th><th>W4</th>
+<th>W4 Activities</th><th>W1–4 Avg.</th><th>Risk</th><th>Action</th>
 </tr></thead>
 <tbody id="rosterRows"></tbody>
 </table>
@@ -124,7 +124,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 </main>
 
-<footer>G TQM 511 Learning Portal • Central tracking enabled • Student Progress v8 • Fixed Reset + Undo</footer>
+<footer>G TQM 511 Learning Portal • Central tracking enabled • Student Progress v9 • Week 4 Full Package</footer>
 
 <script>
 const course=[
@@ -175,6 +175,40 @@ caseText:"A quality team meets weekly, but few members speak. Employees believe 
 caseQuestions:["Which job attitudes are likely present?","Which dissatisfaction response is most visible?","What is the quality risk of silence?","What should the team leader change immediately?"],
 quiz:[["Attitudes include cognitive, affective and ______ components.",["technical","behavioral","financial","structural"],1],["Which job attitude reflects enthusiasm and involvement in work?",["Employee engagement","Absenteeism","Formalization","Surface-level diversity"],0],["Doing only the minimum because of dissatisfaction is:",["Voice","Loyalty","Neglect","Job involvement"],2],["Why is employee voice important for quality improvement?",["It replaces data","It surfaces problems and improvement ideas","It eliminates conflict","It prevents all errors"],1]],
 assignment:"Write 500–700 words analyzing a workplace quality problem through the lens of employee attitudes and job satisfaction."
+},
+4:{
+objectives:[
+"Differentiate emotions from moods and explain their workplace relevance.",
+"Explain the functions of emotions and the role of emotional labor.",
+"Analyze how affect influences judgment, service quality and safety behavior.",
+"Identify sources of workplace emotions and mood contagion.",
+"Apply emotional intelligence and regulation strategies to quality-sensitive situations."
+],
+topics:[
+["Emotions and Moods","Emotions are intense, short-lived responses to specific events, while moods are usually less intense, more diffuse and longer-lasting. Both influence attention, judgment and behavior at work."],
+["Why Emotions Matter for Quality","Affective states can shape vigilance, communication, patience and decision quality. In customer-facing and safety-critical work, unmanaged emotion can become a process risk."],
+["Emotional Labor","Employees may be required to display emotions that differ from what they actually feel. Surface acting changes the display; deep acting attempts to change the underlying feeling."],
+["Affective Events Theory","Workplace events generate emotional reactions that influence job attitudes and behavior. Small recurring events can accumulate into meaningful effects on service quality and engagement."],
+["Emotional Intelligence","Emotional intelligence involves recognizing and managing one's own emotions and responding effectively to others. It supports conflict handling, teamwork and service recovery."],
+["Emotion Regulation and Mood Contagion","People regulate emotions through reappraisal, suppression and other strategies. Emotions can also spread through teams, affecting climate, cooperation and error reporting."]
+],
+activity:"Emotion-to-Quality Mapping: choose a real work event, identify the emotion or mood it triggers, the likely behavior, the quality risk, and one regulation or leadership response.",
+caseTitle:"Mini Case: The Frustrated Service Desk",
+caseText:"A customer service unit faces repeated system delays. Employees are frustrated and begin speaking sharply to customers. Team members copy each other's tone, complaints increase, and staff start skipping verification steps to clear the queue faster.",
+caseQuestions:[
+"Which emotions and moods are visible in the case?",
+"How is mood contagion affecting the team?",
+"What quality risks arise from emotional spillover?",
+"What should the supervisor do immediately and what should be changed in the process?"
+],
+quiz:[
+["Which statement best distinguishes emotions from moods?",["Emotions are always positive","Emotions are usually more intense and linked to a specific event","Moods are always short-lived","Moods never affect behavior"],1],
+["Changing only the outward emotional display is called:",["Deep acting","Surface acting","Reappraisal","Cognitive dissonance"],1],
+["Affective Events Theory suggests that:",["Work events can trigger emotions that influence attitudes and behavior","Emotions have no role in performance","Only personality affects mood","Quality is unrelated to affect"],0],
+["One quality benefit of emotional intelligence is:",["Eliminating all conflict","Improving regulation, communication and service recovery","Replacing procedures","Avoiding customer feedback"],1],
+["Mood contagion means:",["A mood spreads through interaction among people","Employees stop communicating","Only managers influence emotion","Moods are fixed traits"],0]
+],
+assignment:"Write 500–700 words analyzing one work situation where emotions or moods affected service quality, safety, teamwork or decision quality. Recommend individual and managerial controls."
 }
 };
 
@@ -214,7 +248,7 @@ function getTaskStates(p){if(Array.isArray(p.taskStates))return[0,1,2,3].map(i=>
 function completedTaskCount(p){return getTaskStates(p).filter(Boolean).length}
 function weekPct(id,w){
  const p=getProg(id,w);
- if(w>=1 && w<=3){
+ if(w>=1 && w<=4){
    let score=completedTaskCount(p)*10;   // Guided Reading, Lecture, In-Class Activity, Assignment = 40%
    if(p.preClassReflection)score+=10;   // Pre-Class Reflection = 10%
    if(p.miniCase)score+=10;             // Mini Case = 10%
@@ -284,12 +318,12 @@ async function registerStudent(){
 function renderStudent(){
  const s=student();studentName.textContent=s?`${s.name} • ${s.id}`:"No student registered";sGroup.textContent=s?(s.group||"—"):"—";studentGroupLabel.textContent=s?(s.group||"—"):"—";
  if(!s){sProgress.textContent=sFirst3.textContent=sQuiz.textContent="0%";studentOverallBar.style.width=studentGroupBar.style.width="0%";studentGroupPct.textContent="0%";studentWeekDetails.innerHTML=studentRows.innerHTML="";return}
- let sum=0,first3=0,qsum=0,qn=0,rows="";
- for(let i=1;i<=15;i++){const p=getProg(s.id,i),pct=weekPct(s.id,i);sum+=pct;if(i<=3)first3+=pct;if(p.quiz!==null){qsum+=p.quiz;qn++}
+ let sum=0,first4=0,qsum=0,qn=0,rows="";
+ for(let i=1;i<=15;i++){const p=getProg(s.id,i),pct=weekPct(s.id,i);sum+=pct;if(i<=4)first4+=pct;if(p.quiz!==null){qsum+=p.quiz;qn++}
  rows+=`<tr><td>Week ${i}</td><td>${course[i-1][0]}</td><td>${weekStatus(s.id,i)}</td><td><div class="progress" style="min-width:90px"><div class="bar" style="width:${pct}%"></div></div><small>${pct}%</small></td><td>${p.quiz!==null?p.quiz+"%":"—"}</td><td>${p.reflection?"✓":"—"}</td></tr>`}
- const overall=Math.round(sum/15),first3avg=Math.round(first3/3),quizavg=qn?Math.round(qsum/qn):0;
- sProgress.textContent=overall+"%";sFirst3.textContent=first3avg+"%";sQuiz.textContent=quizavg+"%";studentOverallBar.style.width=studentGroupBar.style.width=overall+"%";studentGroupPct.textContent=overall+"%";studentRows.innerHTML=rows;
- studentWeekDetails.innerHTML=[1,2,3].map(w=>detailWeek(s.id,w)).join("");calculateStudentGroupAverage(s)
+ const overall=Math.round(sum/15),first4avg=Math.round(first4/4),quizavg=qn?Math.round(qsum/qn):0;
+ sProgress.textContent=overall+"%";sFirst3.textContent=first4avg+"%";sQuiz.textContent=quizavg+"%";studentOverallBar.style.width=studentGroupBar.style.width=overall+"%";studentGroupPct.textContent=overall+"%";studentRows.innerHTML=rows;
+ studentWeekDetails.innerHTML=[1,2,3,4].map(w=>detailWeek(s.id,w)).join("");calculateStudentGroupAverage(s)
 }
 function activityBox(name,done,text){return `<div class="student-activity"><b>${name}</b><div class="${done?'activity-done':'activity-pending'}">${done?(text||"Completed ✓"):"Pending"}</div></div>`}
 function detailWeek(id,w){
@@ -314,29 +348,29 @@ function calculateStudentGroupAverage(s){
    return;
  }
  let total=0;
- members.forEach(m=>{total+=studentFirst3Average(m.id)});
+ members.forEach(m=>{total+=studentFirst4Average(m.id)});
  const avg=Math.round(total/members.length);
  groupAveragePct.textContent=avg+"%";
  groupAverageBar.style.width=avg+"%";
- groupNote.textContent=`Group average for Weeks 1–3 based on ${members.length} centrally loaded students.`;
+ groupNote.textContent=`Group average for Weeks 1–4 based on ${members.length} centrally loaded students.`;
 }
 function renderGroups(){
  const groups=[...new Set(db.students.map(s=>s.group).filter(Boolean))];
  groupCards.innerHTML=groups.map(g=>{
    const members=db.students.filter(s=>s.group===g);
-   const avg=members.length?Math.round(members.reduce((a,s)=>a+studentFirst3Average(s.id),0)/members.length):0;
-   const w3avg=members.length?Math.round(members.reduce((a,s)=>a+weekPct(s.id,3),0)/members.length):0;
+   const avg=members.length?Math.round(members.reduce((a,s)=>a+studentFirst4Average(s.id),0)/members.length):0;
+   const w3avg=members.length?Math.round(members.reduce((a,s)=>a+weekPct(s.id,4),0)/members.length):0;
    return `<div class="card stat">
      <span class="muted">${g}</span>
      <strong>${avg}%</strong>
-     <span class="muted">${members.length} students • W3 avg ${w3avg}%</span>
+     <span class="muted">${members.length} students • W4 avg ${w3avg}%</span>
    </div>`;
  }).join("");
 
  groupRows.innerHTML=groups.map(g=>{
    const m=db.students.filter(s=>s.group===g);
-   const avg=m.length?Math.round(m.reduce((a,s)=>a+studentFirst3Average(s.id),0)/m.length):0;
-   let qs=[];m.forEach(x=>{for(let w=1;w<=3;w++){const q=getProg(x.id,w).quiz;if(q!==null)qs.push(q)}});
+   const avg=m.length?Math.round(m.reduce((a,s)=>a+studentFirst4Average(s.id),0)/m.length):0;
+   let qs=[];m.forEach(x=>{for(let w=1;w<=4;w++){const q=getProg(x.id,w).quiz;if(q!==null)qs.push(q)}});
    const qa=qs.length?Math.round(qs.reduce((a,b)=>a+b,0)/qs.length):0;
    return `<tr><td>${g}</td><td>${m.map(x=>x.name).join(", ")||"—"}</td><td>${avg}%</td><td>${qa}%</td></tr>`;
  }).join("");
@@ -347,8 +381,8 @@ async function unlockInstructor(){
  try{const snap=await apiPost({action:"adminSnapshot",pin});adminPin=pin;adminUnlocked=true;db.students=(snap.students||[]).map(s=>({name:s.name,id:String(s.id),email:s.email||"",group:s.group||""}));const gs=[...new Set(db.students.map(s=>s.group).filter(Boolean))];if(gs.length)db.groups=gs;applyProgressRows(snap.progress||[]);save();renderAll();adminNav.style.display="";showPage("instructor")}catch(e){alert("Incorrect instructor PIN.")}
 }
 async function refreshInstructor(){if(!adminUnlocked)return;try{const snap=await apiPost({action:"adminSnapshot",pin:adminPin});db.students=(snap.students||[]).map(s=>({name:s.name,id:String(s.id),email:s.email||"",group:s.group||""}));applyProgressRows(snap.progress||[]);save();renderAll();setSaveStatus("Instructor data refreshed ✓",true)}catch(e){alert("Could not refresh instructor data.")}}
-function week3ActivityCount(id){
- const p=getProg(id,3),st=getTaskStates(p);
+function trackedActivityCount(id,w){
+ const p=getProg(id,w),st=getTaskStates(p);
  let n=st.filter(Boolean).length;
  if(p.preClassReflection)n++;
  if(p.miniCase)n++;
@@ -356,26 +390,27 @@ function week3ActivityCount(id){
  if(p.reflection)n++;
  return Math.min(8,n);
 }
-function studentFirst3Average(id){
- return Math.round((weekPct(id,1)+weekPct(id,2)+weekPct(id,3))/3);
+function studentFirst4Average(id){
+ return Math.round((weekPct(id,1)+weekPct(id,2)+weekPct(id,3)+weekPct(id,4))/4);
 }
 function studentStarted(id){
- return weekPct(id,1)>0 || weekPct(id,2)>0 || weekPct(id,3)>0 || week3ActivityCount(id)>0;
+ return weekPct(id,1)>0 || weekPct(id,2)>0 || weekPct(id,3)>0 || weekPct(id,4)>0 ||
+        trackedActivityCount(id,1)>0 || trackedActivityCount(id,2)>0 || trackedActivityCount(id,3)>0 || trackedActivityCount(id,4)>0;
 }
 function studentRiskStatus(id){
  if(!studentStarted(id)) return "Not Started";
- return studentFirst3Average(id)<50 ? "At Risk" : "On Track";
+ return studentFirst4Average(id)<50 ? "At Risk" : "On Track";
 }
 async function resetStudentProgress(id){
  if(!adminUnlocked){alert("Instructor access is required.");return}
  const target=db.students.find(s=>String(s.id)===String(id));
  const name=target?target.name:String(id);
- const ok=confirm(`Reset Weeks 1–3 for ${name} to zero? This clears checklist items, quiz scores, pre/post reflections, mini case, and assignment status.`);
+ const ok=confirm(`Reset Weeks 1–4 for ${name} to zero? This clears checklist items, quiz scores, pre/post reflections, mini case, and assignment status.`);
  if(!ok)return;
 
  setSaveStatus("Resetting...",true);
 
- for(let w=1;w<=3;w++){
+ for(let w=1;w<=4;w++){
    const blank=blankProg();
    db.progress[pkey(id,w)]=blank;
    save();
@@ -403,7 +438,7 @@ async function resetStudentProgress(id){
  }
 
  // Clear local state immediately before verifying from the central snapshot.
- for(let w=1;w<=3;w++) db.progress[pkey(id,w)]=blankProg();
+ for(let w=1;w<=4;w++) db.progress[pkey(id,w)]=blankProg();
  save();
  renderAll();
 
@@ -425,7 +460,7 @@ function renderInstructor(){
  iGroups.textContent=groups.length;
 
  const active=db.students.filter(s=>studentStarted(s.id));
- const activeVals=active.map(s=>studentFirst3Average(s.id));
+ const activeVals=active.map(s=>studentFirst4Average(s.id));
  const avg=activeVals.length?Math.round(activeVals.reduce((a,b)=>a+b,0)/activeVals.length):0;
  iCompletion.textContent=avg+"%";
 
@@ -435,23 +470,23 @@ function renderInstructor(){
  instructorGroupCards.innerHTML=groups.map(g=>{
    const members=db.students.filter(s=>s.group===g);
    const activeMembers=members.filter(s=>studentStarted(s.id));
-   const gav=activeMembers.length?Math.round(activeMembers.reduce((a,s)=>a+studentFirst3Average(s.id),0)/activeMembers.length):0;
-   const w3active=activeMembers.filter(s=>weekPct(s.id,3)>0 || week3ActivityCount(s.id)>0);
-   const w3avg=w3active.length?Math.round(w3active.reduce((a,s)=>a+weekPct(s.id,3),0)/w3active.length):0;
+   const gav=activeMembers.length?Math.round(activeMembers.reduce((a,s)=>a+studentFirst4Average(s.id),0)/activeMembers.length):0;
+   const w3active=activeMembers.filter(s=>weekPct(s.id,4)>0 || trackedActivityCount(s.id,4)>0);
+   const w3avg=w3active.length?Math.round(w3active.reduce((a,s)=>a+weekPct(s.id,4),0)/w3active.length):0;
    const risk=members.filter(s=>studentRiskStatus(s.id)==="At Risk").length;
    const notStarted=members.filter(s=>studentRiskStatus(s.id)==="Not Started").length;
    return `<div class="card stat">
      <span class="muted">${g}</span>
      <strong>${activeMembers.length?gav+"%":"—"}</strong>
      <div class="progress" style="margin-top:8px"><div class="bar" style="width:${activeMembers.length?gav:0}%"></div></div>
-     <small class="muted">${members.length} students • Active ${activeMembers.length} • Not started ${notStarted} • At risk ${risk} • W3 avg ${w3active.length?w3avg+"%":"—"}</small>
+     <small class="muted">${members.length} students • Active ${activeMembers.length} • Not started ${notStarted} • At risk ${risk} • W4 avg ${w3active.length?w3avg+"%":"—"}</small>
    </div>`;
  }).join("");
 
  rosterRows.innerHTML=db.students.map(s=>{
-   const w1=weekPct(s.id,1),w2=weekPct(s.id,2),w3=weekPct(s.id,3);
-   const avg3=studentFirst3Average(s.id);
-   const a3=week3ActivityCount(s.id);
+   const w1=weekPct(s.id,1),w2=weekPct(s.id,2),w3=weekPct(s.id,3),w4=weekPct(s.id,4);
+   const avg3=studentFirst4Average(s.id);
+   const a3=trackedActivityCount(s.id,4);
    const status=studentRiskStatus(s.id);
    let statusHtml="";
    if(status==="At Risk") statusHtml='<span style="color:#b42318;font-weight:bold">At Risk</span>';
@@ -465,6 +500,7 @@ function renderInstructor(){
      <td>${w1}%</td>
      <td>${w2}%</td>
      <td>${w3}%</td>
+     <td>${w4}%</td>
      <td>${a3}/8</td>
      <td>${studentStarted(s.id)?'<b>'+avg3+'%</b>':'—'}</td>
      <td>${statusHtml}</td>
@@ -482,7 +518,7 @@ function openWeek(n){currentWeek=n;currentTab="overview";wkNum.textContent="Week
 function renderWeekTabs(){
  let tabs=currentWeek===3
    ?["overview","slides","materials","preclass","content","activity","case","quiz","assignment","reflection"]
-   :currentWeek<=2
+   :currentWeek<=4
      ?["overview","slides","preclass","content","activity","case","quiz","assignment","reflection"]
      :["overview"];
  weekTabs.innerHTML=tabs.map(t=>`<button class="tab ${t===currentTab?"active":""}" onclick="currentTab='${t}';renderWeekTabs();renderWeekBody()">${t[0].toUpperCase()+t.slice(1)}</button>`).join("")
@@ -500,13 +536,13 @@ function renderWeekBody(){
    weekBody.innerHTML=`<div class="card"><h3>Week ${currentWeek} Lecture Slides</h3><div class="file-actions"><a class="btn" href="${pdf}" target="_blank">Open PDF</a><a class="btn alt" href="${ppt}">Open PowerPoint</a></div><iframe class="slide-frame" src="${pdf}#view=FitH"></iframe></div>`
  }
  if(currentTab==="materials"&&currentWeek===3)weekBody.innerHTML=`<div class="card"><h3>Week 3 Learning Package</h3><div class="topic"><h4>Student Learning Pack</h4><a class="btn alt" href="Week3_Student_Learning_Pack.docx">Open Student Pack</a></div><div class="topic"><h4>Assessment Pack</h4><a class="btn alt" href="Week3_Assessment_Pack.docx">Open Assessment Pack</a></div><div class="topic"><h4>Instructor Guide</h4><a class="btn alt" href="Week3_Instructor_Guide.docx">Open Instructor Guide</a></div><div class="topic"><h4>Google Classroom Guide</h4><a class="btn alt" href="Week3_Google_Classroom_Guide.docx">Open Classroom Guide</a></div></div>`;
- if(currentTab==="preclass"&&currentWeek<=3)weekBody.innerHTML=`<div class="card"><h3>Pre-Class Reflection</h3><p>Before class, write one short observation, question, or workplace example related to this week’s topic.</p><textarea id="preClassText" placeholder="Your pre-class reflection...">${p.preClassText||""}</textarea><div class="file-actions"><button class="btn good" onclick="savePreClassReflection()">Save Pre-Class Reflection</button>${p.preClassReflection?'<button class="btn alt" onclick="undoPreClassReflection()">Mark as Not Completed</button>':""}</div><p class="muted">${p.preClassReflection?"Completed ✓":"Not yet completed"}</p></div>`;
+ if(currentTab==="preclass"&&currentWeek<=4)weekBody.innerHTML=`<div class="card"><h3>Pre-Class Reflection</h3><p>Before class, write one short observation, question, or workplace example related to this week’s topic.</p><textarea id="preClassText" placeholder="Your pre-class reflection...">${p.preClassText||""}</textarea><div class="file-actions"><button class="btn good" onclick="savePreClassReflection()">Save Pre-Class Reflection</button>${p.preClassReflection?'<button class="btn alt" onclick="undoPreClassReflection()">Mark as Not Completed</button>':""}</div><p class="muted">${p.preClassReflection?"Completed ✓":"Not yet completed"}</p></div>`;
  if(currentTab==="content")weekBody.innerHTML=`<div class="card"><h3>Core Learning Content</h3>${d.topics.map(t=>`<div class="topic"><h4>${t[0]}</h4><p>${t[1]}</p></div>`).join("")}</div>`;
  if(currentTab==="activity")weekBody.innerHTML=`<div class="card"><h3>In-Class Activity</h3><p>${d.activity}</p><div class="file-actions"><button class="btn good" onclick="markActivityCompleted()">Mark In-Class Activity Completed</button>${getTaskStates(p)[2]?'<button class="btn alt" onclick="undoActivityCompleted()">Undo Completion</button>':""}</div></div>`;
- if(currentTab==="case")weekBody.innerHTML=`<div class="card"><h3>${d.caseTitle}</h3><p>${d.caseText}</p><ol>${d.caseQuestions.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol>${currentWeek<=3?`<div class="file-actions"><button class="btn good" onclick="markMiniCaseCompleted()">Mark Mini Case Completed</button>${p.miniCase?'<button class="btn alt" onclick="undoMiniCaseCompleted()">Undo Completion</button>':""}</div>`:""}</div>`;
+ if(currentTab==="case")weekBody.innerHTML=`<div class="card"><h3>${d.caseTitle}</h3><p>${d.caseText}</p><ol>${d.caseQuestions.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol>${currentWeek<=4?`<div class="file-actions"><button class="btn good" onclick="markMiniCaseCompleted()">Mark Mini Case Completed</button>${p.miniCase?'<button class="btn alt" onclick="undoMiniCaseCompleted()">Undo Completion</button>':""}</div>`:""}</div>`;
  if(currentTab==="quiz")renderQuiz(d);
  if(currentTab==="assignment")weekBody.innerHTML=`<div class="card"><h3>Week ${currentWeek} Assignment</h3><p>${d.assignment}</p><div class="file-actions"><button class="btn good" onclick="markAssignmentCompleted()">Mark Assignment Completed</button>${getTaskStates(p)[3]?'<button class="btn alt" onclick="undoAssignmentCompleted()">Undo Completion</button>':""}</div></div>`;
- if(currentTab==="reflection")weekBody.innerHTML=`<div class="card"><h3>${currentWeek<=3?"Post-Class Reflection":"Reflection"}</h3><p>Write one concept you will apply in your work or quality practice, and explain how.</p><textarea id="reflectionText" placeholder="Your reflection...">${p.reflectionText||""}</textarea><div class="file-actions"><button class="btn good" onclick="saveReflection()">Save Reflection</button>${p.reflection?'<button class="btn alt" onclick="undoReflection()">Mark as Not Completed</button>':""}</div><p class="muted">${p.reflection?"Completed ✓":"Not yet completed"}</p></div>`
+ if(currentTab==="reflection")weekBody.innerHTML=`<div class="card"><h3>${currentWeek<=4?"Post-Class Reflection":"Reflection"}</h3><p>Write one concept you will apply in your work or quality practice, and explain how.</p><textarea id="reflectionText" placeholder="Your reflection...">${p.reflectionText||""}</textarea><div class="file-actions"><button class="btn good" onclick="saveReflection()">Save Reflection</button>${p.reflection?'<button class="btn alt" onclick="undoReflection()">Mark as Not Completed</button>':""}</div><p class="muted">${p.reflection?"Completed ✓":"Not yet completed"}</p></div>`
 }
 async function setTask(i,checked){const s=student();if(!s){alert("Register/select a student first.");renderWeekBody();return}const p=getProg(s.id,currentWeek),st=getTaskStates(p);st[i]=checked;p.taskStates=st;p.tasks=st.filter(Boolean).length;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();await pushProgress(s.id,currentWeek)}
 async function markActivityCompleted(){await setTask(2,true)}
