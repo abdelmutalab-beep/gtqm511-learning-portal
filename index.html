@@ -132,7 +132,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
   <div class="section-head">
     <div>
       <h3 style="margin:0">Live Students</h3>
-      <span class="muted">Online = seen within 3 minutes • Recently Active = within 10 minutes</span>
+      <span class="muted">Online = seen within 1 minute • Recently Active = within 3 minutes</span>
     </div>
     <span class="pill"><b id="onlineNowCount">0</b> online now</span>
   </div>
@@ -163,7 +163,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 </main>
 
-<footer>G TQM 511 Learning Portal • v21 • Review Restored + Live Students</footer>
+<footer>G TQM 511 Learning Portal • v23 • Near Real-Time Live Tracking + Review</footer>
 
 <script>
 const course=[
@@ -431,7 +431,7 @@ async function sendHeartbeat(){
 function startHeartbeat(){
  if(heartbeatTimer) clearInterval(heartbeatTimer);
  sendHeartbeat();
- heartbeatTimer=setInterval(sendHeartbeat,60000);
+ heartbeatTimer=setInterval(sendHeartbeat,20000);
 }
 function formatLastSeen(x){
  if(!x) return "—";
@@ -822,7 +822,7 @@ async function saveReview(id,w,key,status){if(!adminUnlocked)return;const p=getP
 function initAccess(){const p=new URLSearchParams(location.search);if(p.get("admin")==="1"){adminNav.style.display="";adminNav.onclick=()=>unlockInstructor()}}
 function renderAll(){renderWeeks();renderStudent();renderGroups();if(adminUnlocked)renderInstructor()}
 
-function openWeek(n){currentWeek=n;currentTab="overview";wkNum.textContent="Week "+n;wkTitle.textContent=course[n-1][0];renderWeekTabs();renderWeekBody();showPage("week")}
+function openWeek(n){currentPageId="week";currentWeek=n;currentTab="overview";wkNum.textContent="Week "+n;wkTitle.textContent=course[n-1][0];renderWeekTabs();renderWeekBody();showPage("week");sendHeartbeat()}
 function renderWeekTabs(){
  let tabs=currentWeek<=4?["overview","slides","preclass","content","activity","case","quiz","assignment","reflection"]:["overview"];
  if(currentWeek>=4 && currentWeek<=15)tabs=["overview","slides","preclass","content","activity","case","quiz","assignment","reflection"];
@@ -990,9 +990,24 @@ lang.onclick=()=>{const ar=document.body.classList.toggle("rtl");document.docume
 
 db.activeStudentId="";db.students=[];db.progress={};save();renderAll();updateSyncStatus();checkCentral();initAccess();
 
+if(student() && student().id && !adminUnlocked){
+  startHeartbeat();
+}
+document.addEventListener("visibilitychange",()=>{
+  if(!document.hidden && student() && student().id && !adminUnlocked){
+    sendHeartbeat();
+  }
+});
+window.addEventListener("focus",()=>{
+  if(student() && student().id && !adminUnlocked){
+    sendHeartbeat();
+  }
+});
+
+
 setInterval(()=>{
  if(adminUnlocked && currentPageId==="instructor") refreshInstructor();
-},60000);
+},20000);
 
 </script>
 </body>
