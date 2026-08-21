@@ -90,7 +90,13 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 
 <section id="student" class="page hidden">
-<div class="section-head"><div><h2 style="margin-bottom:4px">Student Progress</h2><span id="studentName" class="muted">No student registered</span></div><span class="muted">Individual and group learning progress</span></div>
+<div class="section-head">
+<div><h2 style="margin-bottom:4px">Student Progress</h2><span id="studentName" class="muted">No student registered</span></div>
+<div class="file-actions" style="margin:0">
+  <button id="refreshProgressBtn" class="btn alt" onclick="refreshStudentProgress()">Refresh Progress</button>
+</div>
+</div>
+<p id="studentRefreshMsg" class="muted" style="margin-top:-4px"></p>
 <div class="grid">
 <div class="card stat"><span class="muted">Overall Course Progress</span><strong id="sProgress">0%</strong><div class="progress"><div id="studentOverallBar" class="bar" style="width:0%"></div></div></div>
 <div class="card stat"><span class="muted">Weeks 1–4 Progress</span><strong id="sFirst4">0%</strong></div>
@@ -134,7 +140,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 </main>
 
-<footer>G TQM 511 Learning Portal • Progress Tracking v19 • Student Time Locks • Instructor Bypass</footer>
+<footer>G TQM 511 Learning Portal • Progress Tracking v20 • Student Refresh Progress • Instructor Bypass</footer>
 
 <script>
 const course=[
@@ -425,6 +431,45 @@ async function registerStudent(){
  regMsg.className="success";regMsg.textContent=`Welcome ${s.name}. Your course record is ready.`;setTimeout(()=>showPage("student"),300)}
  catch(e){regMsg.className="notice";regMsg.textContent="This email or Student ID is not registered, or the central service is unavailable."}
 }
+
+async function refreshStudentProgress(){
+ const s=student();
+ const btn=document.getElementById("refreshProgressBtn");
+ const msg=document.getElementById("studentRefreshMsg");
+
+ if(!s){
+   if(msg){msg.className="notice";msg.textContent="Please register first."}
+   return;
+ }
+
+ if(btn){btn.disabled=true;btn.textContent="Refreshing..."}
+ if(msg){msg.className="muted";msg.textContent="Loading your latest progress..."}
+
+ try{
+   const pResp=await apiGet({action:"progress",studentId:String(s.id)});
+   mergeStudentProgressRows(s.id,pResp.progress||[]);
+   renderAll();
+
+   const msg2=document.getElementById("studentRefreshMsg");
+   if(msg2){
+     msg2.className="success";
+     msg2.textContent="Progress updated ✓";
+   }
+ }catch(e){
+   const msg2=document.getElementById("studentRefreshMsg");
+   if(msg2){
+     msg2.className="error";
+     msg2.textContent="Could not refresh progress. Please check the connection and try again.";
+   }
+ }finally{
+   const btn2=document.getElementById("refreshProgressBtn");
+   if(btn2){
+     btn2.disabled=false;
+     btn2.textContent="Refresh Progress";
+   }
+ }
+}
+
 function renderStudent(){
  const s=student();studentName.textContent=s?`${s.name} • ${s.id}`:"No student registered";sGroup.textContent=s?(s.group||"—"):"—";studentGroupLabel.textContent=s?(s.group||"—"):"—";
  if(!s){sProgress.textContent=sFirst4.textContent=sQuiz.textContent="0%";studentOverallBar.style.width=studentGroupBar.style.width="0%";studentGroupPct.textContent="0%";studentWeekDetails.innerHTML=studentRows.innerHTML="";return}
