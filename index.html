@@ -53,6 +53,15 @@ textarea{min-height:110px;resize:vertical}
 footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);font-size:12px}.review-card{border:1px solid var(--line);border-radius:10px;padding:12px;margin:10px 0;background:#fafbfc}.review-text{white-space:pre-wrap;background:#fff;border:1px solid var(--line);padding:10px;border-radius:8px;margin:8px 0;max-height:220px;overflow:auto}
 @media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.weeks{grid-template-columns:1fr 1fr}.layout,.hero,.two,.formrow{grid-template-columns:1fr}.student-activities{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.grid,.weeks,.student-activities{grid-template-columns:1fr}.hero h1{font-size:27px}}
+
+.review-guide{margin-top:10px;border:1px solid var(--line);border-radius:10px;background:#f8fafc;padding:10px}
+.review-guide summary{cursor:pointer;font-weight:bold;color:var(--blue)}
+.review-guide h4{margin:10px 0 5px}
+.review-guide ul{margin:6px 0 8px 20px;padding:0}
+.rubric-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.rubric-cell{border:1px solid var(--line);border-radius:8px;padding:9px;background:#fff;font-size:12px}
+@media(max-width:700px){.rubric-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -163,7 +172,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 </main>
 
-<footer>G TQM 511 Learning Portal • v23 • Near Real-Time Live Tracking + Review</footer>
+<footer>G TQM 511 Learning Portal • v24 • Model Answers + Rubric + Suggested Feedback + Live Tracking</footer>
 
 <script>
 const course=[
@@ -745,6 +754,175 @@ function workSubmitted(p,key){
  return false
 }
 function escapeHtml(str){return String(str||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]))}
+
+const reviewGuides={
+  1:{
+    preclass:{
+      expected:["Identify an Organizational Behavior issue or observation.","Connect the issue to quality, service, errors, teamwork or performance.","Use a real workplace example or a clear question."],
+      model:"A strong response identifies one behavior-related workplace issue, explains why it matters, and links it to a quality outcome such as errors, delays, customer satisfaction, safety or improvement.",
+      keywords:["behavior","quality","employee","team","communication","performance","error","service"]
+    },
+    activity:{
+      expected:["State one real service/quality problem.","Separate causes into individual, group and organizational levels.","Show how the causes influence the quality outcome.","Suggest at least one practical control or improvement."],
+      model:"Example structure: Quality problem → individual causes (skills, motivation, perception) → group causes (communication, teamwork, norms) → organizational causes (systems, structure, leadership) → quality impact → targeted improvement actions.",
+      keywords:["individual","group","organizational","quality","training","communication","team","system"]
+    },
+    case:{
+      expected:["Recognize the effect of fear or psychological safety on reporting.","Explain how silence can hide defects or process risks.","Recommend leader and system actions that encourage reporting and learning."],
+      model:"A strong diagnosis explains that fear reduces employee voice and error reporting. The quality response should include a non-punitive reporting climate, clear escalation routes, leader support and use of reports for corrective action and learning.",
+      keywords:["fear","report","voice","error","quality","leader","support","corrective"]
+    },
+    assignment:{
+      expected:["Select a real quality-related problem.","Diagnose behavioral causes at individual, group and/or organizational level.","Explain the effect on quality performance.","Recommend specific, feasible actions.","Use clear evidence or workplace observations."],
+      model:"Model structure: define the quality problem; identify behavioral causes; explain the mechanism linking behavior to the quality result; propose targeted interventions; specify how improvement would be monitored.",
+      keywords:["quality","problem","individual","group","organizational","behavior","recommend","improve"]
+    },
+    reflection:{
+      expected:["Name one concept learned this week.","Explain specifically how it will be applied at work.","State the expected quality benefit."],
+      model:"Example: I will use clearer communication and active listening when coordinating work. I will confirm important messages and responsibilities to reduce misunderstandings, rework and service errors.",
+      keywords:["apply","communication","quality","work","improve","error","team","behavior"]
+    }
+  },
+  2:{
+    preclass:{
+      expected:["Identify a diversity, inclusion or bias issue in the workplace.","Explain how it may influence decisions, participation or quality.","Use a relevant workplace example or question."],
+      model:"A strong response identifies a diversity or inclusion issue and explains its possible effect on decision quality, employee voice, teamwork, fairness or customer outcomes.",
+      keywords:["diversity","inclusion","bias","decision","team","quality","fair","voice"]
+    },
+    activity:{
+      expected:["Define the improvement-team selection decision.","Use transparent job-relevant selection criteria.","Reduce similarity, favoritism and stereotype bias.","Ensure diverse expertise and meaningful participation."],
+      model:"A strong design uses published, job-relevant criteria such as process knowledge, improvement skills and stakeholder representation, applies the same criteria to all candidates, documents the decision and checks the team for diversity of relevant perspectives.",
+      keywords:["criteria","transparent","bias","selection","diversity","team","fair","skills"]
+    },
+    case:{
+      expected:["Recognize unequal participation and exclusion.","Explain how missing voices reduce information and decision quality.","Recommend facilitation practices that ensure inclusion and psychological safety."],
+      model:"The case should be diagnosed as an inclusion and voice problem. The leader should structure turn-taking, invite quieter members, use objective evidence, challenge dismissive behavior and ensure decisions reflect relevant perspectives.",
+      keywords:["voice","include","participation","decision","leader","team","bias","quality"]
+    },
+    assignment:{
+      expected:["Choose one workplace process.","Identify where diversity and inclusion affect the process.","Analyze benefits and risks for decision quality.","Recommend practical inclusion controls.","Link recommendations to measurable quality outcomes."],
+      model:"Model structure: process selected → diversity/inclusion touchpoints → possible bias or exclusion → effect on information and decisions → controls such as transparent criteria, inclusive meetings and structured review → quality indicators.",
+      keywords:["process","diversity","inclusion","bias","decision","quality","criteria","recommend"]
+    },
+    reflection:{
+      expected:["State one diversity/inclusion concept.","Describe one practical behavior you will use.","Explain how it improves fairness or quality decisions."],
+      model:"Example: I will deliberately seek input from team members with different roles before making an improvement decision. This can reduce blind spots and improve the quality of the final decision.",
+      keywords:["apply","diversity","include","input","decision","quality","team","bias"]
+    }
+  },
+  3:{
+    preclass:{
+      expected:["Identify an attitude or job-satisfaction issue.","Connect it to employee behavior.","Explain a possible quality-performance consequence."],
+      model:"A strong observation links an attitude such as satisfaction, commitment or engagement to a behavior such as voice, effort, withdrawal or neglect, and then to a quality consequence.",
+      keywords:["attitude","satisfaction","engagement","commitment","behavior","quality","voice","performance"]
+    },
+    activity:{
+      expected:["Identify the attitude issue.","Link attitude → behavior → quality outcome.","Recommend an intervention.","Specify one indicator to monitor."],
+      model:"Example: low job satisfaction → neglect/low voice → missed defects and rework → supervisor listening and recognition → monitor defect reporting, absenteeism and engagement.",
+      keywords:["attitude","behavior","quality","intervention","indicator","satisfaction","voice","neglect"]
+    },
+    case:{
+      expected:["Recognize silence/low voice as an attitude and climate signal.","Explain risks to continuous improvement.","Distinguish exit, voice, loyalty and neglect where relevant.","Recommend actions that rebuild trust and participation."],
+      model:"A strong response explains that silence may reflect dissatisfaction, low psychological safety or learned futility. This can hide quality problems. Managers should respond to employee voice, close feedback loops and track participation and improvement indicators.",
+      keywords:["voice","silence","satisfaction","quality","improvement","trust","employee","feedback"]
+    },
+    assignment:{
+      expected:["Define a workplace quality problem.","Analyze relevant attitudes/job satisfaction.","Explain resulting employee behavior.","Link the behavior to quality performance.","Recommend evidence-based managerial actions and indicators."],
+      model:"Model structure: problem → attitude/satisfaction diagnosis → employee response (voice, exit, loyalty or neglect) → quality consequence → managerial intervention → indicator for follow-up.",
+      keywords:["satisfaction","attitude","behavior","quality","voice","neglect","intervention","indicator"]
+    },
+    reflection:{
+      expected:["Identify one attitude/satisfaction concept.","Describe how you will apply it.","State the expected effect on employee or quality performance."],
+      model:"Example: I will pay closer attention to signs of dissatisfaction and encourage employee voice during quality discussions, because early concerns can reveal process problems before they become defects.",
+      keywords:["apply","satisfaction","voice","quality","employee","improve","attitude","work"]
+    }
+  },
+  4:{
+    preclass:{
+      expected:["Identify an emotion or mood relevant to work.","Explain its likely influence on behavior or judgment.","Connect it to service, safety or quality."],
+      model:"A strong response identifies a specific emotion or mood, its trigger, the behavior it may influence and the resulting quality or service implication.",
+      keywords:["emotion","mood","quality","service","stress","behavior","decision","work"]
+    },
+    activity:{
+      expected:["State the work event.","Identify the emotion or mood.","Describe the likely behavior.","Identify the quality risk.","Propose an individual or managerial control."],
+      model:"Example: repeated system delay → frustration → rushing/sharp communication → skipped verification and complaints → pause protocol, workload support and recovery script.",
+      keywords:["event","emotion","mood","behavior","risk","quality","control","response"]
+    },
+    case:{
+      expected:["Identify frustration and negative mood.","Explain mood contagion within the team.","Identify quality risks such as skipped verification.","Recommend immediate supervisor action and process-level improvement."],
+      model:"The supervisor should stabilize the interaction immediately, reinforce verification controls, redistribute workload if possible and use calm communication. Longer-term action should address the recurring system delays and support emotion regulation and service recovery.",
+      keywords:["frustration","mood","contagion","verification","quality","supervisor","delay","control"]
+    },
+    assignment:{
+      expected:["Describe one real work situation involving emotions or moods.","Explain effects on service, safety, teamwork or decision quality.","Distinguish individual and system factors.","Recommend individual and managerial controls.","Use quality indicators to judge improvement."],
+      model:"Model structure: event → emotion/mood → affected behavior/judgment → quality consequence → individual regulation strategy → managerial/process control → indicator such as complaints, errors, rework, near misses or recovery time.",
+      keywords:["emotion","mood","behavior","quality","service","safety","control","indicator"]
+    },
+    reflection:{
+      expected:["Identify one concept such as emotional labor, regulation, EI or mood contagion.","Explain how you will use it.","Link it to a concrete quality benefit."],
+      model:"Example: I will use reappraisal and a short pause before responding to difficult service situations so that frustration does not affect communication or verification accuracy.",
+      keywords:["apply","emotion","regulation","quality","communication","service","reappraisal","work"]
+    }
+  }
+};
+
+function reviewGuide(w,key){
+ return (reviewGuides[w]&&reviewGuides[w][key]) || {expected:["Address the task directly.","Use a relevant workplace example.","Connect the response to quality performance."],model:"A complete response should answer the task, provide relevant reasoning and link the discussion to quality.",keywords:["quality","work","improve"]};
+}
+function wordCount_(s){return String(s||"").trim()?String(s||"").trim().split(/\s+/).length:0}
+function suggestFeedback(id,w,key){
+ const p=getProg(id,w),txt=workTextFor(p,key),g=reviewGuide(w,key),box=document.getElementById(`fb_${id}_${w}_${key}`);
+ if(!box)return;
+ if(!String(txt||"").trim()){
+   if(key==="assignment" && p.assignmentPdfUrl){
+     box.value="The assignment PDF has been submitted. Review it against the displayed rubric, especially the clarity of the problem analysis, connection to this week’s OB concept, quality implications, and practicality of the recommendations.";
+   }else{
+     box.value="Submission is recorded, but there is not enough text in the portal for a content-based suggestion. Please review the submitted work manually against the displayed rubric.";
+   }
+   return;
+ }
+ const lower=String(txt).toLowerCase();
+ const hits=(g.keywords||[]).filter(k=>lower.includes(String(k).toLowerCase()));
+ const ratio=(g.keywords||[]).length ? hits.length/g.keywords.length : 0;
+ const wc=wordCount_(txt);
+ let level="developing";
+ if(ratio>=0.5)level="strong";
+ if(ratio<0.25)level="revision";
+
+ let msg="";
+ if(level==="strong"){
+   msg="Good response. You address the main concept and make a relevant connection to quality practice. ";
+   msg+="To strengthen it further, make the cause–behavior–quality link more explicit and add a specific indicator or practical example where appropriate.";
+ }else if(level==="revision"){
+   msg="Your response shows an initial understanding, but it needs a clearer connection to this week’s concept and to quality performance. ";
+   msg+="Please explain the workplace situation more specifically, show how the behavior affects quality, and add a practical action or recommendation.";
+ }else{
+   msg="A relevant start. The response would be stronger with a more explicit explanation of how the concept influences employee behavior and the resulting quality outcome. ";
+   msg+="Add one concrete workplace example and a practical improvement action.";
+ }
+ if(key==="assignment"){
+   if(wc<250)msg+=" The written response also appears brief for an analytical assignment; expand the analysis with evidence, mechanisms and recommendations.";
+   else if(wc>=500 && wc<=750)msg+=" The response length is appropriate for the requested analytical assignment.";
+ }
+ box.value=msg;
+}
+function guideHtml(w,key){
+ const g=reviewGuide(w,key);
+ return `<details class="review-guide">
+   <summary>Model Answer + Rubric</summary>
+   <h4>Expected Points</h4>
+   <ul>${g.expected.map(x=>`<li>${escapeHtml(x)}</li>`).join("")}</ul>
+   <h4>Model / Expected Answer</h4>
+   <div class="review-text">${escapeHtml(g.model)}</div>
+   <h4>Quick Rubric</h4>
+   <div class="rubric-grid">
+     <div class="rubric-cell"><b>Meets Expectations</b><br>Addresses the task, applies the week concept correctly, links it to quality, and gives a relevant example/action.</div>
+     <div class="rubric-cell"><b>Partially Meets</b><br>Relevant idea is present but the explanation, application, quality link, or recommendation is incomplete.</div>
+     <div class="rubric-cell"><b>Needs Revision</b><br>Response is unclear, off-task, too general, or does not demonstrate the required concept-to-quality connection.</div>
+   </div>
+ </details>`;
+}
+
 async function openStudentReview(id){
  if(!adminUnlocked)return;
  const s=db.students.find(x=>String(x.id)===String(id));if(!s)return;
@@ -791,10 +969,13 @@ async function openStudentReview(id){
          </div>`:""}
          ${!txt&&!hasPdf?`<div class="review-text"><i>Submission recorded, but no text or PDF link is stored.</i></div>`:""}
 
+         ${guideHtml(w,key)}
+
          <label style="display:block;margin-top:10px"><b>Instructor Feedback</b></label>
          <textarea id="fb_${id}_${w}_${key}" placeholder="Write feedback for the student...">${escapeHtml(r.feedback||"")}</textarea>
 
          <div class="file-actions">
+           <button class="btn" onclick="suggestFeedback('${id}',${w},'${key}')">Suggested Feedback</button>
            <button class="btn good" onclick="saveReview('${id}',${w},'${key}','Reviewed')">Mark Reviewed</button>
            <button class="btn alt" onclick="saveReview('${id}',${w},'${key}','Needs Revision')">Needs Revision</button>
          </div>
@@ -809,7 +990,7 @@ async function openStudentReview(id){
  }
 
  reviewWorkspace.innerHTML=`<div class="section-head">
-   <div><b>${escapeHtml(s.name)}</b><div class="muted">${escapeHtml(s.id)} • ${escapeHtml(s.group||"—")}</div></div>
+   <div><b>${escapeHtml(s.name)}</b><div class="muted">${escapeHtml(s.id)} • ${escapeHtml(s.group||"—")}</div><div class="muted" style="margin-top:4px">Model answers, rubric and rule-based feedback are built into the portal — no OpenAI API cost.</div></div>
    <div class="file-actions" style="margin:0">
      <button class="btn" onclick="openStudentReview('${id}')">Refresh Submissions</button>
      <button class="btn alt" onclick="reviewWorkspace.innerHTML='Choose Review beside a student.'">Close Review</button>
