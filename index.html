@@ -5,28 +5,52 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>G TQM 511 Learning Portal</title>
 <style>
-:root{--navy:#10233f;--blue:#2457c5;--green:#14805e;--amber:#b7791f;--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#667085;--line:#e5e7eb;--soft:#eef4ff}
-*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
-header{background:var(--navy);color:#fff;position:sticky;top:0;z-index:10}.top{max-width:1250px;margin:auto;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-.brand b{font-size:20px}.brand small{display:block;opacity:.8;margin-top:3px}nav{display:flex;gap:7px;flex-wrap:wrap}
-button{font:inherit}.nav,.btn{border:0;border-radius:9px;padding:9px 12px;cursor:pointer}.nav{background:#203b65;color:#fff}.nav.active{background:#fff;color:#13233d;font-weight:bold}
-.btn{background:var(--blue);color:#fff;text-decoration:none;display:inline-block}.btn.alt{background:#eef2f7;color:#172033}.btn.good{background:var(--green)}.btn.danger{background:#b42318;color:#fff}
+:root{--navy:#10233f;--blue:#2457c5;--green:#14805e;--red:#b42318;--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#667085;--line:#e5e7eb;--soft:#eef4ff}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+header{background:var(--navy);color:#fff;position:sticky;top:0;z-index:10}
+.top{max-width:1250px;margin:auto;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand b{font-size:20px}.brand small{display:block;opacity:.85;margin-top:3px}
+nav{display:flex;gap:7px;flex-wrap:wrap}
+button{font:inherit}.nav,.btn{border:0;border-radius:9px;padding:9px 12px;cursor:pointer}
+.nav{background:#203b65;color:#fff}.nav.active{background:#fff;color:#13233d;font-weight:bold}
+.btn{background:var(--blue);color:#fff;text-decoration:none;display:inline-block}
+.btn.alt{background:#eef2f7;color:#172033}.btn.good{background:var(--green)}.btn.danger{background:var(--red)}
+.btn:disabled{opacity:.6;cursor:not-allowed}
 main{max-width:1250px;margin:22px auto;padding:0 16px}.hidden{display:none!important}
-.hero{background:linear-gradient(135deg,#173566,#285dc9);color:#fff;padding:28px;border-radius:18px;display:grid;grid-template-columns:1.5fr 1fr;gap:20px}.hero h1{font-size:34px;margin:6px 0 10px}
-.glass{background:#ffffff18;border:1px solid #ffffff2b;border-radius:14px;padding:17px}.pill{display:inline-block;padding:5px 9px;border-radius:99px;background:var(--soft);color:var(--blue);font-size:12px;margin:2px}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.weeks{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}.card h3{margin-top:0}
-.week{cursor:pointer;transition:.15s}.week:hover{transform:translateY(-2px);box-shadow:0 8px 24px #17203312}.muted{color:var(--muted)}.section{margin-top:24px}
-.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap}.stat strong{display:block;font-size:28px;margin-top:5px}.progress{height:8px;background:#edf0f5;border-radius:10px;overflow:hidden}.bar{height:100%;background:var(--green)}
-.layout{display:grid;grid-template-columns:2fr 1fr;gap:14px}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}table{width:100%;border-collapse:collapse}th,td{padding:9px;border-bottom:1px solid var(--line);text-align:left;font-size:13px;vertical-align:top}th{background:#f2f4f7}
-input,select,textarea{width:100%;padding:10px;border:1px solid #cfd5df;border-radius:8px;background:#fff}textarea{min-height:110px;resize:vertical}.formrow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.task{display:flex;align-items:flex-start;gap:8px;padding:10px 0}.task input{width:auto;margin-top:3px}.topic{padding:12px 0;border-bottom:1px solid var(--line)}.topic:last-child{border-bottom:0}
-.notice{padding:12px;border-radius:10px;background:#fff8e7;border:1px solid #f4d18d;color:#704300}.success{padding:12px;border-radius:10px;background:#ecfdf3;border:1px solid #abefc6;color:#067647}
-.quiz label{display:block;padding:9px;border:1px solid var(--line);border-radius:8px;margin:7px 0;cursor:pointer}.weeknav{display:flex;gap:8px;flex-wrap:wrap}.tab{padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;cursor:pointer}.tab.active{background:var(--soft);color:var(--blue);border-color:#b9cdfb}
-.slide-frame{width:100%;height:68vh;min-height:480px;border:1px solid var(--line);border-radius:12px;background:#fff}.file-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
-.student-week{border:1px solid var(--line);border-radius:12px;padding:15px;margin:14px 0;background:#fff}.student-week-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-.student-activities{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}.student-activity{border:1px solid var(--line);border-radius:9px;padding:10px;background:#fafbfc}.activity-done{color:var(--green);font-weight:bold}.activity-pending{color:var(--muted);font-weight:bold}
+.hero{background:linear-gradient(135deg,#173566,#285dc9);color:#fff;padding:28px;border-radius:18px;display:grid;grid-template-columns:1.5fr 1fr;gap:20px}
+.hero h1{font-size:34px;margin:6px 0 10px}
+.glass{background:#ffffff18;border:1px solid #ffffff2b;border-radius:14px;padding:17px}
+.pill{display:inline-block;padding:5px 9px;border-radius:99px;background:var(--soft);color:var(--blue);font-size:12px;margin:2px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.weeks{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+.card h3{margin-top:0}.week{cursor:pointer;transition:.15s}.week:hover{transform:translateY(-2px);box-shadow:0 8px 24px #17203312}
+.muted{color:var(--muted)}.section{margin-top:24px}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+.stat strong{display:block;font-size:28px;margin-top:5px}
+.progress{height:8px;background:#edf0f5;border-radius:10px;overflow:hidden}.bar{height:100%;background:var(--green)}
+.layout{display:grid;grid-template-columns:2fr 1fr;gap:14px}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+table{width:100%;border-collapse:collapse}th,td{padding:9px;border-bottom:1px solid var(--line);text-align:left;font-size:13px;vertical-align:top}th{background:#f2f4f7}
+input,select,textarea{width:100%;padding:10px;border:1px solid #cfd5df;border-radius:8px;background:#fff}
+textarea{min-height:110px;resize:vertical}
+.formrow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.task{display:flex;align-items:flex-start;gap:8px;padding:10px 0}.task input{width:auto;margin-top:3px}
+.topic{padding:12px 0;border-bottom:1px solid var(--line)}.topic:last-child{border-bottom:0}
+.notice{padding:12px;border-radius:10px;background:#fff8e7;border:1px solid #f4d18d;color:#704300}
+.success{padding:12px;border-radius:10px;background:#ecfdf3;border:1px solid #abefc6;color:#067647}
+.error{padding:12px;border-radius:10px;background:#fef3f2;border:1px solid #fecdca;color:#b42318}
+.quiz label{display:block;padding:9px;border:1px solid var(--line);border-radius:8px;margin:7px 0;cursor:pointer}
+.weeknav{display:flex;gap:8px;flex-wrap:wrap}.tab{padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;cursor:pointer}.tab.active{background:var(--soft);color:var(--blue);border-color:#b9cdfb}
+.slide-frame{width:100%;height:68vh;min-height:480px;border:1px solid var(--line);border-radius:12px;background:#fff}
+.file-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.student-week{border:1px solid var(--line);border-radius:12px;padding:15px;margin:14px 0;background:#fff}
+.student-week-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.student-activities{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.student-activity{border:1px solid var(--line);border-radius:9px;padding:10px;background:#fafbfc}
+.activity-done{color:var(--green);font-weight:bold}.activity-pending{color:var(--muted);font-weight:bold}
 .rtl{direction:rtl;text-align:right}.rtl th,.rtl td{text-align:right}
-footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);font-size:12px}
+footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);font-size:12px}.review-card{border:1px solid var(--line);border-radius:10px;padding:12px;margin:10px 0;background:#fafbfc}.review-text{white-space:pre-wrap;background:#fff;border:1px solid var(--line);padding:10px;border-radius:8px;margin:8px 0;max-height:220px;overflow:auto}
 @media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.weeks{grid-template-columns:1fr 1fr}.layout,.hero,.two,.formrow{grid-template-columns:1fr}.student-activities{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.grid,.weeks,.student-activities{grid-template-columns:1fr}.hero h1{font-size:27px}}
 </style>
@@ -52,61 +76,58 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 <button class="btn" onclick="showPage('register')">Student Access</button></div>
 <div class="glass"><h3>Learning Journey</h3><p>Prepare → Learn → Apply → Discuss → Assess → Reflect</p>
 <div class="progress"><div id="overallBar" class="bar" style="width:0%"></div></div><p><b id="overallPct">0%</b> overall course progress</p>
-<p style="font-size:12px;opacity:.85">Weeks 1–4 are fully tracked using the same 8-activity learning cycle.</p></div>
+<p style="font-size:12px;opacity:.85">Each expanded week uses the same 8-activity cycle. Every completed activity contributes 12.5% to weekly completion.</p></div>
 </div>
 <div class="section"><div class="section-head"><h2>15-Week Learning Path</h2><span class="muted">Weeks 1–4 expanded</span></div><div id="weeks" class="weeks"></div></div>
 </section>
 
 <section id="register" class="page hidden">
-<div class="section-head"><h2>Student Access</h2><span class="muted">Only pre-registered Student IDs are accepted</span></div>
+<div class="section-head"><h2>Student Access</h2><span class="muted">Use your registered email address or Student ID</span></div>
 <div class="card"><div class="formrow" style="grid-template-columns:2fr 1fr">
-<div><label>Student ID</label><input id="regId" placeholder="Enter your Student ID"></div>
+<div><label>Email or Student ID</label><input id="regId" placeholder="Enter your registered email or Student ID" autocomplete="email"></div>
 <div style="display:flex;align-items:end"><button class="btn good" style="width:100%" onclick="registerStudent()">Enter Course</button></div>
 </div><p id="regMsg"></p></div>
 </section>
 
 <section id="student" class="page hidden">
-<div class="section-head"><div><h2 style="margin-bottom:4px">Student Progress</h2><span id="studentName" class="muted">No student registered</span></div><span class="muted">Individual and group learning progress</span></div>
+<div class="section-head">
+<div><h2 style="margin-bottom:4px">Student Progress</h2><span id="studentName" class="muted">No student registered</span></div>
+<div class="file-actions" style="margin:0">
+  <button id="refreshProgressBtn" class="btn alt" onclick="refreshStudentProgress()">Refresh Progress</button>
+</div>
+</div>
+<p id="studentRefreshMsg" class="muted" style="margin-top:-4px"></p>
 <div class="grid">
 <div class="card stat"><span class="muted">Overall Course Progress</span><strong id="sProgress">0%</strong><div class="progress"><div id="studentOverallBar" class="bar" style="width:0%"></div></div></div>
-<div class="card stat"><span class="muted">Weeks 1–4 Progress</span><strong id="sFirst3">0%</strong></div>
+<div class="card stat"><span class="muted">Weeks 1–4 Progress</span><strong id="sFirst4">0%</strong></div>
 <div class="card stat"><span class="muted">Quiz Average</span><strong id="sQuiz">0%</strong></div>
 <div class="card stat"><span class="muted">Group</span><strong id="sGroup">—</strong></div>
 </div>
-<div class="card section"><div class="section-head"><h3 style="margin:0">Weeks 1–4 Detailed Progress</h3><span class="muted">Tracked learning activities</span></div><div id="studentWeekDetails"></div></div>
+<div class="card section"><div class="section-head"><h3 style="margin:0">Weeks 1–4 Detailed Progress</h3><span class="muted">8 tracked activities per week</span></div><div id="studentWeekDetails"></div></div>
 <div class="card section"><div class="section-head"><h3 style="margin:0">Group Progress</h3><span id="studentGroupLabel" class="muted">—</span></div>
 <div class="two"><div><p class="muted">Your Progress</p><div class="progress"><div id="studentGroupBar" class="bar" style="width:0%"></div></div><p><b id="studentGroupPct">0%</b></p></div>
 <div><p class="muted">Group Average</p><div class="progress"><div id="groupAverageBar" class="bar" style="width:0%"></div></div><p><b id="groupAveragePct">—</b></p></div></div>
-<p id="groupNote" class="muted" style="font-size:12px">Group average is shown when group member data are available to the current session.</p>
-</div>
+<p id="groupNote" class="muted" style="font-size:12px"></p></div>
 <div class="card section" style="overflow:auto"><h3>15-Week Course Progress</h3><table><thead><tr><th>Week</th><th>Topic</th><th>Status</th><th>Progress</th><th>Quiz</th><th>Reflection</th></tr></thead><tbody id="studentRows"></tbody></table></div>
 </section>
 
 <section id="groups" class="page hidden">
-<div class="section-head"><h2>Group Dashboard</h2><span class="muted">Based on data available in the current session</span></div>
+<div class="section-head"><h2>Group Dashboard</h2><span class="muted">Based on centrally loaded data</span></div>
 <div id="groupCards" class="grid"></div>
 <div class="card section" style="overflow:auto"><h3>Group Membership</h3><table><thead><tr><th>Group</th><th>Students</th><th>Average Progress</th><th>Quiz Average</th></tr></thead><tbody id="groupRows"></tbody></table></div>
 </section>
 
 <section id="instructor" class="page hidden">
-<div class="section-head">
-  <div><h2 style="margin-bottom:4px">Instructor Dashboard</h2><span class="muted">Central cohort overview for Weeks 1–4</span></div>
-  <button class="btn alt" onclick="refreshInstructor()">Refresh Data</button>
-</div>
-
+<div class="section-head"><div><h2 style="margin-bottom:4px">Instructor Dashboard</h2><span class="muted">Central cohort overview for Weeks 1–4</span></div>
+<button class="btn alt" onclick="refreshInstructor()">Refresh Data</button></div>
 <div class="grid">
 <div class="card stat"><span class="muted">Registered Students</span><strong id="iStudents">0</strong></div>
 <div class="card stat"><span class="muted">Groups</span><strong id="iGroups">0</strong></div>
-<div class="card stat"><span class="muted">Active Students Avg.</span><strong id="iCompletion">0%</strong><small class="muted">Weeks 1–4</small></div>
-<div class="card stat"><span class="muted">At-Risk Students</span><strong id="iRisk">0</strong><small class="muted">Started + W1–4 average below 50%</small></div>
+<div class="card stat"><span class="muted">Active Students Avg.</span><strong id="iCompletion">0%</strong></div>
+<div class="card stat"><span class="muted">At-Risk Students</span><strong id="iRisk">0</strong></div>
 </div>
-
-<div class="section card">
-  <div class="section-head"><h3 style="margin:0">Group Performance</h3><span class="muted">Calculated from the central snapshot</span></div>
-  <div id="instructorGroupCards" class="grid"></div>
-</div>
-
-
+<div class="section card" style="overflow:auto"><h3>Student Tracking</h3>
+<table><thead><tr><th>Name</th><th>ID</th><th>Group</th><th>W1</th><th>W2</th><th>W3</th><th>W4</th><th>W1–4 Avg.</th><th>Risk</th><th>Action</th></tr></thead><tbody id="rosterRows"></tbody></table></div>
 <div class="section card">
   <div class="section-head">
     <div>
@@ -119,7 +140,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
     <div class="card stat"><span class="muted">Online Now</span><strong id="liveOnline">0</strong></div>
     <div class="card stat"><span class="muted">Recently Active</span><strong id="liveRecent">0</strong></div>
     <div class="card stat"><span class="muted">Offline</span><strong id="liveOffline">0</strong></div>
-    <div class="card stat"><span class="muted">Tracked Sessions</span><strong id="liveTracked">0</strong></div>
+    <div class="card stat"><span class="muted">Tracked Students</span><strong id="liveTracked">0</strong></div>
   </div>
   <div style="overflow:auto">
     <table>
@@ -129,16 +150,11 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
   </div>
 </div>
 
-<div class="section card" style="overflow:auto">
-<div class="section-head"><h3 style="margin:0">Student Tracking</h3><span class="muted">Reset clears Weeks 1–3 through the same central API used by the portal</span></div>
-<table>
-<thead><tr>
-<th>Name</th><th>ID</th><th>Group</th><th>W1</th><th>W2</th><th>W3</th><th>W4</th>
-<th>W4 Activities</th><th>W1–4 Avg.</th><th>Risk</th><th>Action</th>
-</tr></thead>
-<tbody id="rosterRows"></tbody>
-</table>
+<div class="section card">
+<div class="section-head"><h3 style="margin:0">Pending Manual Reviews</h3><span class="muted">All submitted items requiring instructor review</span></div>
+<div id="pendingReviews"></div>
 </div>
+<div class="section card"><div class="section-head"><h3 style="margin:0">Review Student Work</h3><span class="muted">Pre-Class • Activity • Case • Assignment • Post-Class</span></div><div id="reviewWorkspace" class="muted">Choose Review beside a student.</div></div>
 </section>
 
 <section id="week" class="page hidden">
@@ -147,7 +163,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 </main>
 
-<footer>G TQM 511 Learning Portal • Central tracking enabled • Student Progress v10 • Live Student Presence</footer>
+<footer>G TQM 511 Learning Portal • v21 • Review Restored + Live Students</footer>
 
 <script>
 const course=[
@@ -200,40 +216,156 @@ quiz:[["Attitudes include cognitive, affective and ______ components.",["technic
 assignment:"Write 500–700 words analyzing a workplace quality problem through the lens of employee attitudes and job satisfaction."
 },
 4:{
-objectives:[
-"Differentiate emotions from moods and explain their workplace relevance.",
-"Explain the functions of emotions and the role of emotional labor.",
-"Analyze how affect influences judgment, service quality and safety behavior.",
-"Identify sources of workplace emotions and mood contagion.",
-"Apply emotional intelligence and regulation strategies to quality-sensitive situations."
-],
-topics:[
-["Emotions and Moods","Emotions are intense, short-lived responses to specific events, while moods are usually less intense, more diffuse and longer-lasting. Both influence attention, judgment and behavior at work."],
-["Why Emotions Matter for Quality","Affective states can shape vigilance, communication, patience and decision quality. In customer-facing and safety-critical work, unmanaged emotion can become a process risk."],
-["Emotional Labor","Employees may be required to display emotions that differ from what they actually feel. Surface acting changes the display; deep acting attempts to change the underlying feeling."],
-["Affective Events Theory","Workplace events generate emotional reactions that influence job attitudes and behavior. Small recurring events can accumulate into meaningful effects on service quality and engagement."],
-["Emotional Intelligence","Emotional intelligence involves recognizing and managing one's own emotions and responding effectively to others. It supports conflict handling, teamwork and service recovery."],
-["Emotion Regulation and Mood Contagion","People regulate emotions through reappraisal, suppression and other strategies. Emotions can also spread through teams, affecting climate, cooperation and error reporting."]
-],
-activity:"Emotion-to-Quality Mapping: choose a real work event, identify the emotion or mood it triggers, the likely behavior, the quality risk, and one regulation or leadership response.",
+objectives:["Differentiate emotions from moods and explain their workplace relevance.","Explain the functions of emotions and the role of emotional labor.","Analyze how affect influences judgment, service quality and safety behavior.","Identify sources of workplace emotions and mood contagion.","Apply emotional intelligence and regulation strategies to quality-sensitive situations."],
+topics:[["Emotions and Moods","Emotions are intense, short-lived responses to specific events, while moods are usually less intense, more diffuse and longer-lasting."],["Why Emotions Matter for Quality","Affective states can shape vigilance, communication, patience and decision quality."],["Emotional Labor","Surface acting changes outward display; deep acting attempts to change the underlying feeling."],["Affective Events Theory","Workplace events generate emotional reactions that influence job attitudes and behavior."],["Emotional Intelligence","Recognizing and managing emotions supports conflict handling, teamwork and service recovery."],["Emotion Regulation and Mood Contagion","People regulate emotions through reappraisal, suppression and other strategies, while emotions can spread through teams."]],
+activity:"Emotion-to-Quality Mapping: choose a work event, identify the emotion or mood, likely behavior, quality risk, and one regulation or leadership response.",
 caseTitle:"Mini Case: The Frustrated Service Desk",
 caseText:"A customer service unit faces repeated system delays. Employees are frustrated and begin speaking sharply to customers. Team members copy each other's tone, complaints increase, and staff start skipping verification steps to clear the queue faster.",
-caseQuestions:[
-"Which emotions and moods are visible in the case?",
-"How is mood contagion affecting the team?",
-"What quality risks arise from emotional spillover?",
-"What should the supervisor do immediately and what should be changed in the process?"
-],
-quiz:[
-["Which statement best distinguishes emotions from moods?",["Emotions are always positive","Emotions are usually more intense and linked to a specific event","Moods are always short-lived","Moods never affect behavior"],1],
-["Changing only the outward emotional display is called:",["Deep acting","Surface acting","Reappraisal","Cognitive dissonance"],1],
-["Affective Events Theory suggests that:",["Work events can trigger emotions that influence attitudes and behavior","Emotions have no role in performance","Only personality affects mood","Quality is unrelated to affect"],0],
-["One quality benefit of emotional intelligence is:",["Eliminating all conflict","Improving regulation, communication and service recovery","Replacing procedures","Avoiding customer feedback"],1],
-["Mood contagion means:",["A mood spreads through interaction among people","Employees stop communicating","Only managers influence emotion","Moods are fixed traits"],0]
-],
-assignment:"Write 500–700 words analyzing one work situation where emotions or moods affected service quality, safety, teamwork or decision quality. Recommend individual and managerial controls."
+caseQuestions:["Which emotions and moods are visible?","How is mood contagion affecting the team?","What quality risks arise from emotional spillover?","What should the supervisor do immediately?"],
+quiz:[["Which statement best distinguishes emotions from moods?",["Emotions are always positive","Emotions are usually more intense and linked to a specific event","Moods are always short-lived","Moods never affect behavior"],1],["Changing only the outward emotional display is called:",["Deep acting","Surface acting","Reappraisal","Cognitive dissonance"],1],["Affective Events Theory suggests that:",["Work events can trigger emotions that influence attitudes and behavior","Emotions have no role in performance","Only personality affects mood","Quality is unrelated to affect"],0],["One quality benefit of emotional intelligence is:",["Eliminating all conflict","Improving regulation, communication and service recovery","Replacing procedures","Avoiding customer feedback"],1],["Mood contagion means:",["A mood spreads through interaction among people","Employees stop communicating","Only managers influence emotion","Moods are fixed traits"],0]],
+assignment:"Write 500–700 words analyzing one work situation where emotions or moods affected service quality, safety, teamwork or decision quality."
 }
 };
+
+
+const COURSE_TZ="Asia/Riyadh";
+const WEEK4_LECTURE_ISO="2026-08-22T20:00:00+03:00"; // Week 4 starts Saturday 8:00 PM Makkah time
+
+function addDays(date,days){const d=new Date(date.getTime());d.setUTCDate(d.getUTCDate()+days);return d}
+function addMinutes(date,mins){return new Date(date.getTime()+mins*60000)}
+function weekSchedule(w){
+ if(w<4)return null;
+ const lecture=addDays(new Date(WEEK4_LECTURE_ISO),(w-4)*7);
+
+ // Content opens Wednesday 8:00 PM Makkah = 72 hours before lecture.
+ const guidedOpen=addDays(lecture,-3);
+
+ // Pre-class reflection opens Friday 8:00 PM = 24 hours before lecture.
+ const preclassOpen=addDays(lecture,-1);
+
+ // Final reminder window begins Saturday 4:00 PM = 4 hours before lecture.
+ const preclassReminder=addMinutes(lecture,-240);
+
+ // Pre-class closes Saturday 7:45 PM = 15 minutes before lecture.
+ const preclassClose=addMinutes(lecture,-15);
+
+ // Lecture / Activity / Case open at lecture start.
+ const lectureOpen=lecture;
+
+ // Post-class reflection opens at lecture end, Saturday 10:00 PM.
+ const postclassOpen=addMinutes(lecture,120);
+
+ // Quiz opens 10:05 PM for 30 minutes.
+ const quizOpen=addMinutes(lecture,125);
+ const quizClose=addMinutes(quizOpen,30);
+
+ // Assignment opens 10:30 PM.
+ const assignmentOpen=addMinutes(lecture,150);
+
+ // Assignment due Thursday 12:00 PM Makkah.
+ const due=addDays(lecture,5);
+ due.setUTCHours(9,0,0,0); // 12:00 PM Makkah (UTC+3)
+
+ // Short late window closes Thursday 6:00 PM Makkah.
+ const lateUntil=addDays(lecture,5);
+ lateUntil.setUTCHours(15,0,0,0); // 6:00 PM Makkah
+
+ // Post-class reflection closes Thursday 12:00 PM Makkah.
+ const postclassClose=addDays(lecture,5);
+ postclassClose.setUTCHours(9,0,0,0);
+
+ return {
+   lecture,guidedOpen,preclassOpen,preclassReminder,preclassClose,
+   lectureOpen,postclassOpen,postclassClose,
+   quizOpen,quizClose,assignmentOpen,due,lateUntil
+ };
+}
+function fmtRiyadh(d){
+ return new Intl.DateTimeFormat("en-GB",{timeZone:COURSE_TZ,weekday:"short",day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit",hour12:true}).format(d)+" (Makkah)";
+}
+function nowMs(){return Date.now()}
+function activityAvailability(w,tab){
+ // Instructor bypass: once the instructor dashboard is unlocked,
+ // all weeks and activities remain fully accessible regardless of schedule.
+ if(adminUnlocked)return {open:true,label:"Instructor access • no time restriction",instructor:true};
+
+ if(w<4)return {open:true,label:"Available"};
+ const s=weekSchedule(w),now=nowMs();
+
+ if(tab==="overview")return {open:true,label:"Schedule available"};
+
+ if(tab==="content"){
+   return now>=s.guidedOpen.getTime()
+     ? {open:true,label:`Available since ${fmtRiyadh(s.guidedOpen)}`}
+     : {open:false,label:`Opens ${fmtRiyadh(s.guidedOpen)}`};
+ }
+
+ if(tab==="preclass"){
+   if(now<s.preclassOpen.getTime())
+     return {open:false,label:`Opens ${fmtRiyadh(s.preclassOpen)}`};
+
+   if(now>=s.preclassClose.getTime())
+     return {open:false,label:`Closed ${fmtRiyadh(s.preclassClose)} • 15 minutes before lecture`};
+
+   if(now>=s.preclassReminder.getTime())
+     return {open:true,label:`Final pre-class window • due by ${fmtRiyadh(s.preclassClose)}`,urgent:true};
+
+   return {open:true,label:`Open • due by ${fmtRiyadh(s.preclassClose)}`};
+ }
+
+ if(["slides","activity","case"].includes(tab)){
+   return now>=s.lectureOpen.getTime()
+     ? {open:true,label:"Available"}
+     : {open:false,label:`Opens ${fmtRiyadh(s.lectureOpen)}`};
+ }
+
+ if(tab==="quiz"){
+   if(now<s.quizOpen.getTime())
+     return {open:false,label:`Opens ${fmtRiyadh(s.quizOpen)}`};
+   if(now>=s.quizClose.getTime())
+     return {open:false,label:`Closed ${fmtRiyadh(s.quizClose)}`};
+   return {open:true,label:`Open until ${fmtRiyadh(s.quizClose)}`};
+ }
+
+ if(tab==="assignment"){
+   if(now<s.assignmentOpen.getTime())
+     return {open:false,label:`Opens ${fmtRiyadh(s.assignmentOpen)}`};
+   if(now<=s.due.getTime())
+     return {open:true,label:`Due ${fmtRiyadh(s.due)}`,late:false};
+   if(now<=s.lateUntil.getTime())
+     return {open:true,label:`Late submission • closes ${fmtRiyadh(s.lateUntil)}`,late:true};
+   return {open:false,label:`Submission closed ${fmtRiyadh(s.lateUntil)}`};
+ }
+
+ if(tab==="reflection"){
+   if(now<s.postclassOpen.getTime())
+     return {open:false,label:`Opens ${fmtRiyadh(s.postclassOpen)}`};
+   if(now>s.postclassClose.getTime())
+     return {open:false,label:`Closed ${fmtRiyadh(s.postclassClose)}`};
+   return {open:true,label:`Open until ${fmtRiyadh(s.postclassClose)}`};
+ }
+
+ return {open:true,label:"Available"};
+}
+function scheduleCard(w){
+ if(w<4)return "";
+ const s=weekSchedule(w);
+ const accessNote=adminUnlocked
+   ? `<div class="success" style="margin-bottom:10px"><b>Instructor access:</b> Time restrictions are bypassed for teaching, review and preparation.</div>`
+   : `<div class="notice" style="margin-bottom:10px"><b>Student access:</b> The opening and closing times below are enforced.</div>`;
+ return `<div class="card" style="margin-bottom:14px"><h3>Week ${w} Schedule • Makkah Time</h3>${accessNote}
+ <div class="two">
+  <div><b>Guided Reading / Core Content</b><p class="muted">Opens: ${fmtRiyadh(s.guidedOpen)}<br>Remains available after opening.</p></div>
+  <div><b>Pre-Class Reflection</b><p class="muted">Opens: ${fmtRiyadh(s.preclassOpen)}<br>Final reminder window: ${fmtRiyadh(s.preclassReminder)}<br>Closes: ${fmtRiyadh(s.preclassClose)}</p></div>
+  <div><b>Lecture / Activity / Case</b><p class="muted">Lecture: ${fmtRiyadh(s.lecture)} • 8:00–10:00 PM<br>Activity and Case open at 8:00 PM.</p></div>
+  <div><b>Post-Class Reflection</b><p class="muted">Opens: ${fmtRiyadh(s.postclassOpen)}<br>Closes: ${fmtRiyadh(s.postclassClose)}</p></div>
+  <div><b>Quiz</b><p class="muted">${fmtRiyadh(s.quizOpen)} → ${fmtRiyadh(s.quizClose)} • 30 minutes • one attempt</p></div>
+  <div><b>Assignment</b><p class="muted">Opens: ${fmtRiyadh(s.assignmentOpen)}<br>Due: ${fmtRiyadh(s.due)}<br>Late until: ${fmtRiyadh(s.lateUntil)}</p></div>
+ </div></div>`;
+}
+function lockedCard(tab,av){
+ weekBody.innerHTML=`${scheduleCard(currentWeek)}<div class="card"><h3>${tab[0].toUpperCase()+tab.slice(1)}</h3><div class="notice"><b>Not available now.</b><br>${av.label}</div></div>`;
+}
 
 const API_URL="https://script.google.com/macros/s/AKfycbxnbCjhDwhYbhQ9WT3yeVqHqzxE3T39f129hGCfA0jbUrwlLihRUr9zxt3NBcBgZVKl/exec";
 let centralOnline=false;
@@ -244,72 +376,62 @@ let currentWeek=1,currentTab="overview",adminUnlocked=false,adminPin="",liveActi
 function save(){localStorage.setItem("gtqm511_v3",JSON.stringify(db))}
 function student(){return db.students.find(s=>s.id===db.activeStudentId)||null}
 function pkey(id,w){return id+"_"+w}
-function blankProg(){return{tasks:0,taskStates:[false,false,false,false],quiz:null,reflection:false,reflectionText:"",preClassReflection:false,preClassText:"",miniCase:false}}
+function blankProg(){return{tasks:0,taskStates:[false,false,false,false],quiz:null,reflection:false,reflectionText:"",preClassReflection:false,preClassText:"",miniCase:false,activityText:"",caseText:"",assignmentText:"",assignmentPdfUrl:"",assignmentPdfName:"",reviews:{preclass:{status:"Submitted",feedback:""},activity:{status:"Submitted",feedback:""},case:{status:"Submitted",feedback:""},assignment:{status:"Submitted",feedback:""},reflection:{status:"Submitted",feedback:""}}}}
 const META_PREFIX="GTQM511_META::";
 function encodeReflectionPayload(p){
- return META_PREFIX+JSON.stringify({
-   post:p.reflectionText||"",
-   pre:p.preClassText||"",
-   preDone:Boolean(p.preClassReflection),
-   mini:Boolean(p.miniCase)
- });
+ return META_PREFIX+JSON.stringify({post:p.reflectionText||"",pre:p.preClassText||"",preDone:Boolean(p.preClassReflection),mini:Boolean(p.miniCase),activityText:p.activityText||"",caseText:p.caseText||"",assignmentText:p.assignmentText||"",assignmentPdfUrl:p.assignmentPdfUrl||"",assignmentPdfName:p.assignmentPdfName||"",reviews:p.reviews||{}})
 }
 function decodeReflectionPayload(raw){
  const s=String(raw||"");
- if(!s.startsWith(META_PREFIX)){
-   return {post:s,pre:"",preDone:false,mini:false};
- }
- try{
-   const x=JSON.parse(s.slice(META_PREFIX.length));
-   return {post:x.post||"",pre:x.pre||"",preDone:Boolean(x.preDone),mini:Boolean(x.mini)};
- }catch(e){
-   return {post:"",pre:"",preDone:false,mini:false};
- }
+ if(!s.startsWith(META_PREFIX))return{post:s,pre:"",preDone:false,mini:false,activityText:"",caseText:"",assignmentText:"",assignmentPdfUrl:"",assignmentPdfName:"",reviews:{}};
+ try{const x=JSON.parse(s.slice(META_PREFIX.length));return{post:x.post||"",pre:x.pre||"",preDone:Boolean(x.preDone),mini:Boolean(x.mini),activityText:x.activityText||"",caseText:x.caseText||"",assignmentText:x.assignmentText||"",assignmentPdfUrl:x.assignmentPdfUrl||"",assignmentPdfName:x.assignmentPdfName||"",reviews:x.reviews||{}}}catch(e){return{post:"",pre:"",preDone:false,mini:false,activityText:"",caseText:"",assignmentText:"",assignmentPdfUrl:"",assignmentPdfName:"",reviews:{}}}
 }
-function getProg(id,w){return Object.assign(blankProg(),db.progress[pkey(id,w)]||{})}
+function ensureReviews(p){
+ const base={preclass:{status:"Not Submitted",feedback:""},activity:{status:"Not Submitted",feedback:""},case:{status:"Not Submitted",feedback:""},assignment:{status:"Not Submitted",feedback:""},reflection:{status:"Not Submitted",feedback:""}};
+ p.reviews=Object.assign({},base,p.reviews||{});Object.keys(base).forEach(k=>p.reviews[k]=Object.assign({},base[k],p.reviews[k]||{}));return p
+}
+function getProg(id,w){return ensureReviews(Object.assign(blankProg(),db.progress[pkey(id,w)]||{}))}
 function getTaskStates(p){if(Array.isArray(p.taskStates))return[0,1,2,3].map(i=>!!p.taskStates[i]);const n=Math.max(0,Math.min(4,Number(p.tasks)||0));return[0,1,2,3].map(i=>i<n)}
-function completedTaskCount(p){return getTaskStates(p).filter(Boolean).length}
-function weekPct(id,w){
- const p=getProg(id,w);
- if(w>=1 && w<=4){
-   let score=completedTaskCount(p)*10;   // Guided Reading, Lecture, In-Class Activity, Assignment = 40%
-   if(p.preClassReflection)score+=10;   // Pre-Class Reflection = 10%
-   if(p.miniCase)score+=10;             // Mini Case = 10%
-   if(p.quiz!==null)score+=Math.round(p.quiz*.2); // Quiz = 20%
-   if(p.reflection)score+=20;           // Post-Class Reflection = 20%
-   return Math.min(100,score);
- }
- return 0
+function trackedActivityCount(id,w){
+ const p=getProg(id,w),st=getTaskStates(p); let n=st.filter(Boolean).length;
+ if(p.preClassReflection)n++; if(p.miniCase)n++; if(p.quiz!==null)n++; if(p.reflection)n++;
+ return Math.min(8,n)
 }
+function weekPct(id,w){return (w>=1&&w<=4)?Math.round(trackedActivityCount(id,w)/8*100):0}
 function weekStatus(id,w){const pct=weekPct(id,w);return pct===100?"Completed":pct>0?"In Progress":"Not Started"}
 
 async function apiGet(params={}){const u=new URL(API_URL);Object.entries(params).forEach(([k,v])=>u.searchParams.set(k,v));const r=await fetch(u,{cache:"no-store"});if(!r.ok)throw new Error("GET failed");const d=await r.json();if(d&&d.ok===false)throw new Error(d.error||"API error");return d}
 async function apiPost(payload){const r=await fetch(API_URL,{method:"POST",body:JSON.stringify(payload)});if(!r.ok)throw new Error("POST failed");const d=await r.json();if(d&&d.ok===false)throw new Error(d.error||"API error");return d}
 function updateSyncStatus(){syncStatus.textContent=centralOnline?"Central database connected ✓":"Connecting...";syncStatus.style.color=centralOnline?"#abefc6":"#f4d18d"}
 function setSaveStatus(msg,ok=true){saveStatus.textContent=msg||"";saveStatus.style.color=ok?"#abefc6":"#ffb4b4";if(msg)setTimeout(()=>{if(saveStatus.textContent===msg)saveStatus.textContent=""},3000)}
+async function checkCentral(){try{await apiGet({});centralOnline=true}catch(e){centralOnline=false}updateSyncStatus()}
+
+function applyProgressRows(rows){
+ db.progress={};
+ (rows||[]).forEach(x=>{
+   const st=Array.isArray(x.taskStates)?x.taskStates.map(Boolean):[false,false,false,false];
+   const meta=decodeReflectionPayload(x.reflectionText||"");
+   db.progress[pkey(String(x.studentId),Number(x.week))]=ensureReviews({tasks:st.filter(Boolean).length,taskStates:st,quiz:x.quiz===null||x.quiz===undefined||x.quiz===""?null:Number(x.quiz),reflection:Boolean(x.reflection),reflectionText:meta.post,preClassReflection:meta.preDone,preClassText:meta.pre,miniCase:meta.mini,activityText:meta.activityText||"",caseText:meta.caseText||"",assignmentText:meta.assignmentText||"",assignmentPdfUrl:meta.assignmentPdfUrl||"",assignmentPdfName:meta.assignmentPdfName||"",reviews:meta.reviews||{}});
+ });
+}
 
 function currentPageLabel(){
  if(currentPageId==="week") return `Week ${currentWeek} • ${currentTab}`;
  if(currentPageId==="student") return "Student Progress";
  if(currentPageId==="groups") return "Groups";
  if(currentPageId==="register") return "Register";
- if(currentPageId==="home") return "Home";
- return currentPageId || "Portal";
+ if(currentPageId==="instructor") return "Instructor";
+ return "Home";
 }
 async function sendHeartbeat(){
  const s=student();
- if(!s || !s.id) return;
- try{
-   await apiPost({action:"heartbeat",studentId:String(s.id),page:currentPageLabel()});
- }catch(e){}
+ if(!s || !s.id || adminUnlocked) return;
+ try{ await apiPost({action:"heartbeat",studentId:String(s.id),page:currentPageLabel()}); }catch(e){}
 }
 function startHeartbeat(){
  if(heartbeatTimer) clearInterval(heartbeatTimer);
- heartbeatTimer=setInterval(sendHeartbeat,60000);
  sendHeartbeat();
-}
-function stopHeartbeat(){
- if(heartbeatTimer){clearInterval(heartbeatTimer);heartbeatTimer=null;}
+ heartbeatTimer=setInterval(sendHeartbeat,60000);
 }
 function formatLastSeen(x){
  if(!x) return "—";
@@ -318,177 +440,160 @@ function formatLastSeen(x){
  return d.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit",second:"2-digit"});
 }
 function renderLiveActivity(){
- if(!document.getElementById("liveRows")) return;
+ const tbody=document.getElementById("liveRows");
+ if(!tbody) return;
  const list=Array.isArray(liveActivity)?liveActivity:[];
  const rank={Online:0,"Recently Active":1,Offline:2};
  const sorted=[...list].sort((a,b)=>(rank[a.status]??9)-(rank[b.status]??9)||(a.ageSeconds||0)-(b.ageSeconds||0));
  const online=sorted.filter(x=>x.status==="Online").length;
  const recent=sorted.filter(x=>x.status==="Recently Active").length;
  const offline=sorted.filter(x=>x.status==="Offline").length;
- onlineNowCount.textContent=online;
- liveOnline.textContent=online;
- liveRecent.textContent=recent;
- liveOffline.textContent=offline;
- liveTracked.textContent=sorted.length;
- liveRows.innerHTML=sorted.length?sorted.map(x=>{
-   let statusHtml=x.status==="Online"
-     ?'<span style="color:var(--green);font-weight:bold">● Online</span>'
-     :x.status==="Recently Active"
-       ?'<span style="color:var(--amber);font-weight:bold">● Recently Active</span>'
-       :'<span class="muted">○ Offline</span>';
+ document.getElementById("onlineNowCount").textContent=online;
+ document.getElementById("liveOnline").textContent=online;
+ document.getElementById("liveRecent").textContent=recent;
+ document.getElementById("liveOffline").textContent=offline;
+ document.getElementById("liveTracked").textContent=sorted.length;
+ tbody.innerHTML=sorted.length ? sorted.map(x=>{
+   const statusHtml=x.status==="Online"
+     ? '<span style="color:var(--green);font-weight:bold">● Online</span>'
+     : x.status==="Recently Active"
+       ? '<span style="color:var(--amber);font-weight:bold">● Recently Active</span>'
+       : '<span class="muted">○ Offline</span>';
    return `<tr>
-     <td>${x.name||"—"}</td>
-     <td>${x.studentId||"—"}</td>
-     <td>${x.group||"—"}</td>
-     <td>${x.currentPage||"—"}</td>
+     <td>${escapeHtml(x.name||"—")}</td>
+     <td>${escapeHtml(x.studentId||"—")}</td>
+     <td>${escapeHtml(x.group||"—")}</td>
+     <td>${escapeHtml(x.currentPage||"—")}</td>
      <td>${formatLastSeen(x.lastSeen)}</td>
      <td>${statusHtml}</td>
    </tr>`;
- }).join(""):'<tr><td colspan="6" class="muted">No student activity has been recorded yet.</td></tr>';
-}
-
-async function checkCentral(){try{await apiGet({});centralOnline=true}catch(e){centralOnline=false}updateSyncStatus()}
-
-function applyProgressRows(rows){
- db.progress={};
- (rows||[]).forEach(x=>{
-   const st=Array.isArray(x.taskStates)?x.taskStates.map(Boolean):[false,false,false,false];
-   const meta=decodeReflectionPayload(x.reflectionText||"");
-   db.progress[pkey(String(x.studentId),Number(x.week))]={
-     tasks:st.filter(Boolean).length,
-     taskStates:st,
-     quiz:x.quiz===null||x.quiz===undefined||x.quiz===""?null:Number(x.quiz),
-     reflection:Boolean(x.reflection),
-     reflectionText:meta.post,
-     preClassReflection:meta.preDone,
-     preClassText:meta.pre,
-     miniCase:meta.mini
-   };
- });
+ }).join("") : '<tr><td colspan="6" class="muted">No student activity has been recorded yet.</td></tr>';
 }
 
 async function loadStudentById(id){
- const sResp=await apiGet({action:"student",studentId:id});if(!sResp.student)return null;
- const pResp=await apiGet({action:"progress",studentId:id});const s=sResp.student;
+ const sResp=await apiGet({action:"student",identifier:id});if(!sResp.student)return null;
+ const pResp=await apiGet({action:"progress",studentId:String(sResp.student.id)});const s=sResp.student;
  db.students=[{name:s.name,id:String(s.id),email:s.email||"",group:s.group||""}];db.activeStudentId=String(s.id);
- if(s.group&&!db.groups.includes(s.group))db.groups.push(s.group);
- applyProgressRows(pResp.progress||[]);save();renderAll();startHeartbeat();return s
+ if(s.group&&!db.groups.includes(s.group))db.groups.push(s.group);applyProgressRows(pResp.progress||[]);save();renderAll();startHeartbeat();return s
 }
 async function pushProgress(id,w){
  const q=getProg(id,w),st=getTaskStates(q);setSaveStatus("Saving...",true);
  try{
    await apiPost({action:"saveProgress",progress:{studentId:String(id),week:Number(w),taskStates:st,quiz:q.quiz,reflection:Boolean(q.reflection),reflectionText:encodeReflectionPayload(q),preClassReflection:Boolean(q.preClassReflection),preClassText:q.preClassText||"",miniCase:Boolean(q.miniCase),total:weekPct(id,w)}});
    centralOnline=true;updateSyncStatus();setSaveStatus("Saved ✓",true);save();renderStudent();if(adminUnlocked)renderInstructor();return true
- }catch(e){setSaveStatus("Save failed ✕",false);alert("Your work was not saved centrally. Local progress remains on this device.");return false}
+ }catch(e){
+   setSaveStatus("Save failed ✕",false);return false
+ }
 }
 
 function renderWeeks(){
- weeks.innerHTML="";course.forEach((w,i)=>{const n=i+1,s=student(),pct=s?weekPct(s.id,n):0,e=document.createElement("div");e.className="card week";
- e.innerHTML=`<small style="color:var(--blue);font-weight:bold">WEEK ${n}</small><h3>${w[0]}</h3><p class="muted">${w[1]}</p><div class="progress"><div class="bar" style="width:${pct}%"></div></div><small>${pct}% complete</small>${n<=3?'<p><span class="pill">Full content</span></p>':''}`;
+ weeks.innerHTML="";
+ course.forEach((w,i)=>{const n=i+1,s=student(),pct=s?weekPct(s.id,n):0,e=document.createElement("div");e.className="card week";
+ const sInfo=n>=4?weekSchedule(n):null;
+ const access=n>=4?activityAvailability(n,"content"):null;
+ e.innerHTML=`<small style="color:var(--blue);font-weight:bold">WEEK ${n}</small><h3>${w[0]}</h3><p class="muted">${w[1]}</p><div class="progress"><div class="bar" style="width:${pct}%"></div></div><small>${pct}% complete</small>${n<=4?'<p><span class="pill">Full content</span></p>':''}${n>=4?`<p><span class="pill">${adminUnlocked?"Instructor access":(access.open?"Scheduled":"🔒 "+access.label)}</span></p>`:""}`;
  e.onclick=()=>openWeek(n);weeks.appendChild(e)});overall()
 }
 function overall(){const s=student();let sum=0;if(s)for(let i=1;i<=15;i++)sum+=weekPct(s.id,i);const pct=s?Math.round(sum/15):0;overallPct.textContent=pct+"%";overallBar.style.width=pct+"%"}
-async function showPage(id){if(id==="instructor"&&!adminUnlocked){await unlockInstructor();return}currentPageId=id;document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));document.getElementById(id).classList.remove("hidden");document.querySelectorAll(".nav[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===id));if(id==="student")renderStudent();if(id==="groups")renderGroups();if(id==="instructor")renderInstructor();sendHeartbeat();window.scrollTo({top:0,behavior:"smooth"})}
+async function showPage(id){
+ if(id==="instructor"&&!adminUnlocked){await unlockInstructor();return}
+ document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));document.getElementById(id).classList.remove("hidden");
+ document.querySelectorAll(".nav[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===id));
+ if(id==="student")renderStudent();if(id==="groups")renderGroups();if(id==="instructor")renderInstructor();window.scrollTo({top:0,behavior:"smooth"})
+}
 document.querySelectorAll(".nav[data-page]").forEach(b=>{if(b.id!=="adminNav")b.onclick=()=>showPage(b.dataset.page)});
 
 async function registerStudent(){
- const id=(regId.value||"").trim();if(!id){regMsg.className="notice";regMsg.textContent="Student ID is required.";return}
- regMsg.className="muted";regMsg.textContent="Checking Student ID...";
- try{const s=await loadStudentById(id);if(!s){regMsg.className="notice";regMsg.textContent="This Student ID is not registered.";return}regMsg.className="success";regMsg.textContent=`Welcome ${s.name}. Your course record is ready.`;setTimeout(()=>showPage("student"),300)}
- catch(e){regMsg.className="notice";regMsg.textContent="This Student ID is not registered, or the central service is unavailable."}
+ const id=(regId.value||"").trim();if(!id){regMsg.className="notice";regMsg.textContent="Email or Student ID is required.";return}
+ regMsg.className="muted";regMsg.textContent="Checking your account...";
+ try{const s=await loadStudentById(id);if(!s){regMsg.className="notice";regMsg.textContent="This email or Student ID is not registered.";return}
+ regMsg.className="success";regMsg.textContent=`Welcome ${s.name}. Your course record is ready.`;setTimeout(()=>showPage("student"),300)}
+ catch(e){regMsg.className="notice";regMsg.textContent="This email or Student ID is not registered, or the central service is unavailable."}
+}
+
+async function refreshStudentProgress(){
+ const s=student();
+ const btn=document.getElementById("refreshProgressBtn");
+ const msg=document.getElementById("studentRefreshMsg");
+
+ if(!s){
+   if(msg){msg.className="notice";msg.textContent="Please register first."}
+   return;
+ }
+
+ if(btn){btn.disabled=true;btn.textContent="Refreshing..."}
+ if(msg){msg.className="muted";msg.textContent="Loading your latest progress..."}
+
+ try{
+   const pResp=await apiGet({action:"progress",studentId:String(s.id)});
+   mergeStudentProgressRows(s.id,pResp.progress||[]);
+   renderAll();
+
+   const msg2=document.getElementById("studentRefreshMsg");
+   if(msg2){
+     msg2.className="success";
+     msg2.textContent="Progress updated ✓";
+   }
+ }catch(e){
+   const msg2=document.getElementById("studentRefreshMsg");
+   if(msg2){
+     msg2.className="error";
+     msg2.textContent="Could not refresh progress. Please check the connection and try again.";
+   }
+ }finally{
+   const btn2=document.getElementById("refreshProgressBtn");
+   if(btn2){
+     btn2.disabled=false;
+     btn2.textContent="Refresh Progress";
+   }
+ }
 }
 
 function renderStudent(){
  const s=student();studentName.textContent=s?`${s.name} • ${s.id}`:"No student registered";sGroup.textContent=s?(s.group||"—"):"—";studentGroupLabel.textContent=s?(s.group||"—"):"—";
- if(!s){sProgress.textContent=sFirst3.textContent=sQuiz.textContent="0%";studentOverallBar.style.width=studentGroupBar.style.width="0%";studentGroupPct.textContent="0%";studentWeekDetails.innerHTML=studentRows.innerHTML="";return}
+ if(!s){sProgress.textContent=sFirst4.textContent=sQuiz.textContent="0%";studentOverallBar.style.width=studentGroupBar.style.width="0%";studentGroupPct.textContent="0%";studentWeekDetails.innerHTML=studentRows.innerHTML="";return}
  let sum=0,first4=0,qsum=0,qn=0,rows="";
  for(let i=1;i<=15;i++){const p=getProg(s.id,i),pct=weekPct(s.id,i);sum+=pct;if(i<=4)first4+=pct;if(p.quiz!==null){qsum+=p.quiz;qn++}
  rows+=`<tr><td>Week ${i}</td><td>${course[i-1][0]}</td><td>${weekStatus(s.id,i)}</td><td><div class="progress" style="min-width:90px"><div class="bar" style="width:${pct}%"></div></div><small>${pct}%</small></td><td>${p.quiz!==null?p.quiz+"%":"—"}</td><td>${p.reflection?"✓":"—"}</td></tr>`}
- const overall=Math.round(sum/15),first4avg=Math.round(first4/4),quizavg=qn?Math.round(qsum/qn):0;
- sProgress.textContent=overall+"%";sFirst3.textContent=first4avg+"%";sQuiz.textContent=quizavg+"%";studentOverallBar.style.width=studentGroupBar.style.width=overall+"%";studentGroupPct.textContent=overall+"%";studentRows.innerHTML=rows;
+ const overallPctVal=Math.round(sum/15),first4avg=Math.round(first4/4),quizavg=qn?Math.round(qsum/qn):0;
+ sProgress.textContent=overallPctVal+"%";sFirst4.textContent=first4avg+"%";sQuiz.textContent=quizavg+"%";
+ studentOverallBar.style.width=studentGroupBar.style.width=overallPctVal+"%";studentGroupPct.textContent=overallPctVal+"%";studentRows.innerHTML=rows;
  studentWeekDetails.innerHTML=[1,2,3,4].map(w=>detailWeek(s.id,w)).join("");calculateStudentGroupAverage(s)
 }
 function activityBox(name,done,text){return `<div class="student-activity"><b>${name}</b><div class="${done?'activity-done':'activity-pending'}">${done?(text||"Completed ✓"):"Pending"}</div></div>`}
 function detailWeek(id,w){
- const p=getProg(id,w),st=getTaskStates(p),pct=weekPct(id,w);
- let a="";
- a+=activityBox("Guided Reading",st[0]);
- a+=activityBox("Lecture Viewed",st[1]);
- a+=activityBox("Pre-Class Reflection",p.preClassReflection);
- a+=activityBox("In-Class Activity",st[2]);
- a+=activityBox("Mini Case",p.miniCase);
- a+=activityBox("Knowledge Check / Quiz",p.quiz!==null,p.quiz!==null?p.quiz+"%":"");
- a+=activityBox("Assignment",st[3]);
- a+=activityBox("Post-Class Reflection",p.reflection);
- return `<div class="student-week"><div class="student-week-head"><div><b>Week ${w}: ${course[w-1][0]}</b><div class="muted">${weekStatus(id,w)}</div></div><strong>${pct}%</strong></div><div class="progress" style="margin-top:9px"><div class="bar" style="width:${pct}%"></div></div><div class="student-activities">${a}</div></div>`
+ const p=getProg(id,w),st=getTaskStates(p),pct=weekPct(id,w);let a="";
+ a+=activityBox("Guided Reading",st[0]);a+=activityBox("Lecture Viewed",st[1]);a+=activityBox("Pre-Class Reflection",p.preClassReflection);a+=activityBox("In-Class Activity",st[2]);a+=activityBox("Mini Case",p.miniCase);a+=activityBox("Knowledge Check / Quiz",p.quiz!==null,p.quiz!==null?p.quiz+"%":"");a+=activityBox("Assignment",st[3]);a+=activityBox("Post-Class Reflection",p.reflection);
+ return `<div class="student-week"><div class="student-week-head"><div><b>Week ${w}: ${course[w-1][0]}</b><div class="muted">${weekStatus(id,w)} • ${trackedActivityCount(id,w)}/8 activities</div></div><strong>${pct}%</strong></div><div class="progress" style="margin-top:9px"><div class="bar" style="width:${pct}%"></div></div><div class="student-activities">${a}</div></div>`
 }
+function studentFirst4Average(id){return Math.round((weekPct(id,1)+weekPct(id,2)+weekPct(id,3)+weekPct(id,4))/4)}
 function calculateStudentGroupAverage(s){
  const members=db.students.filter(x=>x.group===s.group);
- if(!s.group||members.length<2){
-   groupAveragePct.textContent="—";
-   groupAverageBar.style.width="0%";
-   groupNote.textContent="Open the Instructor Dashboard first to load the full central cohort, then return to this student to compare with the group average.";
-   return;
- }
- let total=0;
- members.forEach(m=>{total+=studentFirst4Average(m.id)});
- const avg=Math.round(total/members.length);
- groupAveragePct.textContent=avg+"%";
- groupAverageBar.style.width=avg+"%";
- groupNote.textContent=`Group average for Weeks 1–4 based on ${members.length} centrally loaded students.`;
+ if(!s.group||members.length<2){groupAveragePct.textContent="—";groupAverageBar.style.width="0%";groupNote.textContent="Open the Instructor Dashboard to load the full cohort, then return here for group comparison.";return}
+ const avg=Math.round(members.reduce((a,m)=>a+studentFirst4Average(m.id),0)/members.length);groupAveragePct.textContent=avg+"%";groupAverageBar.style.width=avg+"%";groupNote.textContent=`Group average based on ${members.length} centrally loaded students.`
 }
 function renderGroups(){
  const groups=[...new Set(db.students.map(s=>s.group).filter(Boolean))];
- groupCards.innerHTML=groups.map(g=>{
-   const members=db.students.filter(s=>s.group===g);
-   const avg=members.length?Math.round(members.reduce((a,s)=>a+studentFirst4Average(s.id),0)/members.length):0;
-   const w3avg=members.length?Math.round(members.reduce((a,s)=>a+weekPct(s.id,4),0)/members.length):0;
-   return `<div class="card stat">
-     <span class="muted">${g}</span>
-     <strong>${avg}%</strong>
-     <span class="muted">${members.length} students • W4 avg ${w3avg}%</span>
-   </div>`;
- }).join("");
-
- groupRows.innerHTML=groups.map(g=>{
-   const m=db.students.filter(s=>s.group===g);
-   const avg=m.length?Math.round(m.reduce((a,s)=>a+studentFirst4Average(s.id),0)/m.length):0;
-   let qs=[];m.forEach(x=>{for(let w=1;w<=4;w++){const q=getProg(x.id,w).quiz;if(q!==null)qs.push(q)}});
-   const qa=qs.length?Math.round(qs.reduce((a,b)=>a+b,0)/qs.length):0;
-   return `<tr><td>${g}</td><td>${m.map(x=>x.name).join(", ")||"—"}</td><td>${avg}%</td><td>${qa}%</td></tr>`;
- }).join("");
+ groupCards.innerHTML=groups.map(g=>{const m=db.students.filter(s=>s.group===g),avg=m.length?Math.round(m.reduce((a,s)=>a+studentFirst4Average(s.id),0)/m.length):0;return `<div class="card stat"><span class="muted">${g}</span><strong>${avg}%</strong><span class="muted">${m.length} students</span></div>`}).join("");
+ groupRows.innerHTML=groups.map(g=>{const m=db.students.filter(s=>s.group===g),avg=m.length?Math.round(m.reduce((a,s)=>a+studentFirst4Average(s.id),0)/m.length):0;let qs=[];m.forEach(x=>{for(let w=1;w<=4;w++){const q=getProg(x.id,w).quiz;if(q!==null)qs.push(q)}});const qa=qs.length?Math.round(qs.reduce((a,b)=>a+b,0)/qs.length):0;return `<tr><td>${g}</td><td>${m.map(x=>x.name).join(", ")||"—"}</td><td>${avg}%</td><td>${qa}%</td></tr>`}).join("")
 }
+function studentStarted(id){return [1,2,3,4].some(w=>trackedActivityCount(id,w)>0)}
+function studentRiskStatus(id){if(!studentStarted(id))return"Not Started";return studentFirst4Average(id)<50?"At Risk":"On Track"}
 
 async function unlockInstructor(){
  if(adminUnlocked){showPage("instructor");return}const pin=prompt("Instructor PIN:");if(!pin)return;
- try{const snap=await apiPost({action:"adminSnapshot",pin});adminPin=pin;adminUnlocked=true;db.students=(snap.students||[]).map(s=>({name:s.name,id:String(s.id),email:s.email||"",group:s.group||""}));const gs=[...new Set(db.students.map(s=>s.group).filter(Boolean))];if(gs.length)db.groups=gs;applyProgressRows(snap.progress||[]);liveActivity=snap.activity||[];save();renderAll();adminNav.style.display="";showPage("instructor")}catch(e){alert("Incorrect instructor PIN.")}
+ try{const snap=await apiPost({action:"adminSnapshot",pin});adminPin=pin;adminUnlocked=true;db.students=(snap.students||[]).map(s=>({name:s.name,id:String(s.id),email:s.email||"",group:s.group||""}));applyProgressRows(snap.progress||[]);liveActivity=snap.activity||[];save();renderAll();adminNav.style.display="";showPage("instructor")}catch(e){alert("Incorrect instructor PIN.")}
 }
-async function refreshInstructor(){if(!adminUnlocked)return;try{const snap=await apiPost({action:"adminSnapshot",pin:adminPin});db.students=(snap.students||[]).map(s=>({name:s.name,id:String(s.id),email:s.email||"",group:s.group||""}));applyProgressRows(snap.progress||[]);liveActivity=snap.activity||[];save();renderAll();setSaveStatus("Instructor data refreshed ✓",true)}catch(e){alert("Could not refresh instructor data.")}}
-function trackedActivityCount(id,w){
- const p=getProg(id,w),st=getTaskStates(p);
- let n=st.filter(Boolean).length;
- if(p.preClassReflection)n++;
- if(p.miniCase)n++;
- if(p.quiz!==null)n++;
- if(p.reflection)n++;
- return Math.min(8,n);
+async function refreshInstructor(){
+ if(!adminUnlocked)return;
+ try{const snap=await apiPost({action:"adminSnapshot",pin:adminPin});db.students=(snap.students||[]).map(s=>({name:s.name,id:String(s.id),email:s.email||"",group:s.group||""}));applyProgressRows(snap.progress||[]);liveActivity=snap.activity||[];save();renderAll();setSaveStatus("Instructor data refreshed ✓",true)}catch(e){alert("Could not refresh instructor data.")}
 }
-function studentFirst4Average(id){
- return Math.round((weekPct(id,1)+weekPct(id,2)+weekPct(id,3)+weekPct(id,4))/4);
-}
-function studentStarted(id){
- return weekPct(id,1)>0 || weekPct(id,2)>0 || weekPct(id,3)>0 || weekPct(id,4)>0 ||
-        trackedActivityCount(id,1)>0 || trackedActivityCount(id,2)>0 || trackedActivityCount(id,3)>0 || trackedActivityCount(id,4)>0;
-}
-function studentRiskStatus(id){
- if(!studentStarted(id)) return "Not Started";
- return studentFirst4Average(id)<50 ? "At Risk" : "On Track";
-}
+
 async function resetStudentProgress(id){
  if(!adminUnlocked){alert("Instructor access is required.");return}
  const target=db.students.find(s=>String(s.id)===String(id));
  const name=target?target.name:String(id);
- const ok=confirm(`Reset Weeks 1–4 for ${name} to zero? This clears checklist items, quiz scores, pre/post reflections, mini case, and assignment status.`);
+ const ok=confirm(`Reset Weeks 1–4 for ${name} to zero? This clears all 8 tracked activities, quiz scores, pre/post reflections, mini case, and assignment status.`);
  if(!ok)return;
 
  setSaveStatus("Resetting...",true);
@@ -515,12 +620,11 @@ async function resetStudentProgress(id){
      });
    }catch(e){
      setSaveStatus("Reset failed ✕",false);
-     alert(`Could not reset Week ${w}. Please check the connection and try again.`);
+     alert(`Could not reset Week ${w}. Please check the central database connection and try again.`);
      return;
    }
  }
 
- // Clear local state immediately before verifying from the central snapshot.
  for(let w=1;w<=4;w++) db.progress[pkey(id,w)]=blankProg();
  save();
  renderAll();
@@ -528,8 +632,7 @@ async function resetStudentProgress(id){
  try{
    const snap=await apiPost({action:"adminSnapshot",pin:adminPin});
    db.students=(snap.students||[]).map(s=>({name:s.name,id:String(s.id),email:s.email||"",group:s.group||""}));
-   applyProgressRows(snap.progress||[]);
-   liveActivity=snap.activity||[];
+   applyProgressRows(snap.progress||[]);liveActivity=snap.activity||[];
    save();
    renderAll();
    setSaveStatus("Student reset to zero ✓",true);
@@ -538,113 +641,353 @@ async function resetStudentProgress(id){
    setSaveStatus("Reset saved; refresh data",true);
  }
 }
-function renderInstructor(){
- iStudents.textContent=db.students.length;
- const groups=[...new Set(db.students.map(s=>s.group).filter(Boolean))];
- iGroups.textContent=groups.length;
 
- const active=db.students.filter(s=>studentStarted(s.id));
- const activeVals=active.map(s=>studentFirst4Average(s.id));
- const avg=activeVals.length?Math.round(activeVals.reduce((a,b)=>a+b,0)/activeVals.length):0;
- iCompletion.textContent=avg+"%";
 
- const riskCount=db.students.filter(s=>studentRiskStatus(s.id)==="At Risk").length;
- iRisk.textContent=riskCount;
-
- instructorGroupCards.innerHTML=groups.map(g=>{
-   const members=db.students.filter(s=>s.group===g);
-   const activeMembers=members.filter(s=>studentStarted(s.id));
-   const gav=activeMembers.length?Math.round(activeMembers.reduce((a,s)=>a+studentFirst4Average(s.id),0)/activeMembers.length):0;
-   const w3active=activeMembers.filter(s=>weekPct(s.id,4)>0 || trackedActivityCount(s.id,4)>0);
-   const w3avg=w3active.length?Math.round(w3active.reduce((a,s)=>a+weekPct(s.id,4),0)/w3active.length):0;
-   const risk=members.filter(s=>studentRiskStatus(s.id)==="At Risk").length;
-   const notStarted=members.filter(s=>studentRiskStatus(s.id)==="Not Started").length;
-   return `<div class="card stat">
-     <span class="muted">${g}</span>
-     <strong>${activeMembers.length?gav+"%":"—"}</strong>
-     <div class="progress" style="margin-top:8px"><div class="bar" style="width:${activeMembers.length?gav:0}%"></div></div>
-     <small class="muted">${members.length} students • Active ${activeMembers.length} • Not started ${notStarted} • At risk ${risk} • W4 avg ${w3active.length?w3avg+"%":"—"}</small>
-   </div>`;
- }).join("");
-
- renderLiveActivity();
- rosterRows.innerHTML=db.students.map(s=>{
-   const w1=weekPct(s.id,1),w2=weekPct(s.id,2),w3=weekPct(s.id,3),w4=weekPct(s.id,4);
-   const avg3=studentFirst4Average(s.id);
-   const a3=trackedActivityCount(s.id,4);
-   const status=studentRiskStatus(s.id);
-   let statusHtml="";
-   if(status==="At Risk") statusHtml='<span style="color:#b42318;font-weight:bold">At Risk</span>';
-   else if(status==="On Track") statusHtml='<span style="color:var(--green);font-weight:bold">On Track</span>';
-   else statusHtml='<span style="color:var(--muted);font-weight:bold">Not Started</span>';
-
-   return `<tr>
-     <td>${s.name}</td>
-     <td>${s.id}</td>
-     <td>${s.group||"—"}</td>
-     <td>${w1}%</td>
-     <td>${w2}%</td>
-     <td>${w3}%</td>
-     <td>${w4}%</td>
-     <td>${a3}/8</td>
-     <td>${studentStarted(s.id)?'<b>'+avg3+'%</b>':'—'}</td>
-     <td>${statusHtml}</td>
-     <td><div class="file-actions" style="margin:0">
-       <button class="btn alt" onclick="db.activeStudentId='${s.id}';save();renderAll();showPage('student')">View</button>
-       <button class="btn danger" onclick="resetStudentProgress('${s.id}')">Reset</button>
-     </div></td>
-   </tr>`;
- }).join("");
+function manualReviewItemsForStudent(s){
+ const labels={
+   preclass:"Pre-Class Reflection",
+   activity:"In-Class Activity",
+   case:"Mini Case",
+   assignment:"Assignment",
+   reflection:"Post-Class Reflection"
+ };
+ const items=[];
+ for(let w=1;w<=4;w++){
+   const p=getProg(s.id,w);
+   Object.keys(labels).forEach(key=>{
+     const submitted=workSubmitted(p,key);
+     if(!submitted)return;
+     const r=p.reviews[key]||{status:"Submitted",feedback:""};
+     const status=r.status||"Submitted";
+     if(status==="Reviewed")return;
+     items.push({
+       studentId:s.id,
+       studentName:s.name,
+       group:s.group||"",
+       week:w,
+       key,
+       label:labels[key],
+       status,
+       hasText:!!String(workTextFor(p,key)||"").trim(),
+       hasPdf:key==="assignment" && !!p.assignmentPdfUrl
+     });
+   });
+ }
+ return items;
 }
-function initAccess(){const p=new URLSearchParams(location.search);if(p.get("admin")==="1"){adminNav.style.display="";adminNav.onclick=()=>unlockInstructor()}}
+function renderPendingReviews(){
+ if(!window.pendingReviews)return;
+ let items=[];
+ db.students.forEach(s=>items=items.concat(manualReviewItemsForStudent(s)));
+ if(!items.length){
+   pendingReviews.innerHTML='<div class="success">No pending manual reviews.</div>';
+   return;
+ }
+ pendingReviews.innerHTML=`<div style="overflow:auto"><table>
+ <thead><tr><th>Student</th><th>Group</th><th>Week</th><th>Item</th><th>Submission</th><th>Status</th><th>Action</th></tr></thead>
+ <tbody>${items.map(x=>`<tr>
+   <td>${escapeHtml(x.studentName)}<br><small class="muted">${escapeHtml(x.studentId)}</small></td>
+   <td>${escapeHtml(x.group||"—")}</td>
+   <td>Week ${x.week}</td>
+   <td>${x.label}</td>
+   <td>${x.hasPdf?"PDF":x.hasText?"Text":"Recorded"}</td>
+   <td>${escapeHtml(x.status)}</td>
+   <td><button class="btn" onclick="openStudentReview('${x.studentId}')">Review</button></td>
+ </tr>`).join("")}</tbody></table></div>`;
+}
 
+function renderInstructor(){
+ iStudents.textContent=db.students.length;renderLiveActivity();
+ renderPendingReviews();const groups=[...new Set(db.students.map(s=>s.group).filter(Boolean))];iGroups.textContent=groups.length;
+ const active=db.students.filter(s=>studentStarted(s.id)),vals=active.map(s=>studentFirst4Average(s.id)),avg=vals.length?Math.round(vals.reduce((a,b)=>a+b,0)/vals.length):0;iCompletion.textContent=avg+"%";
+ iRisk.textContent=db.students.filter(s=>studentRiskStatus(s.id)==="At Risk").length;
+ rosterRows.innerHTML=db.students.map(s=>{const av=studentFirst4Average(s.id),status=studentRiskStatus(s.id);return `<tr><td>${s.name}</td><td>${s.id}</td><td>${s.group||"—"}</td><td>${weekPct(s.id,1)}%</td><td>${weekPct(s.id,2)}%</td><td>${weekPct(s.id,3)}%</td><td>${weekPct(s.id,4)}%</td><td>${studentStarted(s.id)?av+"%":"—"}</td><td>${status}</td><td><div class="file-actions" style="margin:0">
+<button class="btn alt" onclick="db.activeStudentId='${s.id}';save();renderAll();showPage('student')">View</button>
+<button class="btn" onclick="openStudentReview('${s.id}')">Review</button>
+<button class="btn danger" onclick="resetStudentProgress('${s.id}')">Reset</button>
+</div></td></tr>`}).join("")
+}
+
+function mergeStudentProgressRows(studentId,rows){
+ Object.keys(db.progress||{}).forEach(k=>{
+   if(k.startsWith(String(studentId)+"_"))delete db.progress[k];
+ });
+ (rows||[]).forEach(x=>{
+   const st=Array.isArray(x.taskStates)?x.taskStates.map(Boolean):[false,false,false,false];
+   const meta=decodeReflectionPayload(x.reflectionText||"");
+   db.progress[pkey(String(x.studentId),Number(x.week))]=ensureReviews({
+     tasks:st.filter(Boolean).length,
+     taskStates:st,
+     quiz:x.quiz===null||x.quiz===undefined||x.quiz===""?null:Number(x.quiz),
+     reflection:Boolean(x.reflection),
+     reflectionText:meta.post,
+     preClassReflection:meta.preDone,
+     preClassText:meta.pre,
+     miniCase:meta.mini,
+     activityText:meta.activityText||"",
+     caseText:meta.caseText||"",
+     assignmentText:meta.assignmentText||"",
+     assignmentPdfUrl:meta.assignmentPdfUrl||"",
+     assignmentPdfName:meta.assignmentPdfName||"",
+     reviews:meta.reviews||{}
+   });
+ });
+ save();
+}
+
+function workTextFor(p,key){if(key==="preclass")return p.preClassText||"";if(key==="activity")return p.activityText||"";if(key==="case")return p.caseText||"";if(key==="assignment")return p.assignmentText||"";if(key==="reflection")return p.reflectionText||"";return""}
+function workSubmitted(p,key){
+ if(key==="preclass")return !!p.preClassReflection || !!String(p.preClassText||"").trim();
+ if(key==="activity")return !!getTaskStates(p)[2] || !!String(p.activityText||"").trim();
+ if(key==="case")return !!p.miniCase || !!String(p.caseText||"").trim();
+ if(key==="assignment")return !!getTaskStates(p)[3] || !!String(p.assignmentText||"").trim() || !!p.assignmentPdfUrl;
+ if(key==="reflection")return !!p.reflection || !!String(p.reflectionText||"").trim();
+ return false
+}
+function escapeHtml(str){return String(str||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]))}
+async function openStudentReview(id){
+ if(!adminUnlocked)return;
+ const s=db.students.find(x=>String(x.id)===String(id));if(!s)return;
+
+ reviewWorkspace.innerHTML=`<div class="muted">Loading latest submissions for ${escapeHtml(s.name)}...</div>`;
+ reviewWorkspace.scrollIntoView({behavior:"smooth",block:"start"});
+
+ try{
+   const fresh=await apiGet({action:"progress",studentId:String(id)});
+   mergeStudentProgressRows(id,fresh.progress||[]);
+ }catch(e){
+   reviewWorkspace.innerHTML=`<div class="notice">Could not refresh the latest central record. Showing the last loaded data.</div>`;
+ }
+
+ const labels={
+   preclass:"Pre-Class Reflection",
+   activity:"In-Class Activity",
+   case:"Mini Case",
+   assignment:"Assignment",
+   reflection:"Post-Class Reflection"
+ };
+ let cards="";
+
+ for(let w=1;w<=4;w++){
+   const p=getProg(id,w);
+   let inner="";
+
+   Object.keys(labels).forEach(key=>{
+     const submitted=workSubmitted(p,key);
+     const txt=workTextFor(p,key);
+     const r=p.reviews[key]||{status:"Not Submitted",feedback:""};
+     const status=submitted ? (r.status && r.status!=="Not Submitted" ? r.status : "Submitted") : "Not Submitted";
+     const hasPdf=key==="assignment" && !!p.assignmentPdfUrl;
+
+     inner+=`<div class="review-card">
+       <b>Week ${w} • ${labels[key]}</b>
+       <div class="muted">${submitted?"Submitted":"Not submitted"} • Review status: ${status}</div>
+
+       ${submitted?`
+         ${txt?`<div class="review-text">${escapeHtml(txt)}</div>`:""}
+         ${hasPdf?`<div class="success" style="margin-top:8px">
+           <b>Submitted PDF:</b>
+           <a href="${p.assignmentPdfUrl}" target="_blank" rel="noopener">${escapeHtml(p.assignmentPdfName||"Open submitted PDF")}</a>
+         </div>`:""}
+         ${!txt&&!hasPdf?`<div class="review-text"><i>Submission recorded, but no text or PDF link is stored.</i></div>`:""}
+
+         <label style="display:block;margin-top:10px"><b>Instructor Feedback</b></label>
+         <textarea id="fb_${id}_${w}_${key}" placeholder="Write feedback for the student...">${escapeHtml(r.feedback||"")}</textarea>
+
+         <div class="file-actions">
+           <button class="btn good" onclick="saveReview('${id}',${w},'${key}','Reviewed')">Mark Reviewed</button>
+           <button class="btn alt" onclick="saveReview('${id}',${w},'${key}','Needs Revision')">Needs Revision</button>
+         </div>
+       `:`<div class="muted" style="margin-top:8px">No student submission is currently stored for this item.</div>`}
+     </div>`;
+   });
+
+   cards+=`<div class="student-week">
+     <h3>Week ${w}: ${course[w-1][0]}</h3>
+     ${inner}
+   </div>`;
+ }
+
+ reviewWorkspace.innerHTML=`<div class="section-head">
+   <div><b>${escapeHtml(s.name)}</b><div class="muted">${escapeHtml(s.id)} • ${escapeHtml(s.group||"—")}</div></div>
+   <div class="file-actions" style="margin:0">
+     <button class="btn" onclick="openStudentReview('${id}')">Refresh Submissions</button>
+     <button class="btn alt" onclick="reviewWorkspace.innerHTML='Choose Review beside a student.'">Close Review</button>
+   </div>
+ </div>${cards}`;
+
+ reviewWorkspace.scrollIntoView({behavior:"smooth",block:"start"});
+}
+async function saveReview(id,w,key,status){if(!adminUnlocked)return;const p=getProg(id,w),el=document.getElementById(`fb_${id}_${w}_${key}`);ensureReviews(p);p.reviews[key]={status,feedback:el?(el.value||"").trim():""};db.progress[pkey(id,w)]=p;save();const ok=await pushProgress(id,w);if(ok){setSaveStatus("Review saved ✓",true);renderPendingReviews();openStudentReview(id)}else alert("Review could not be saved centrally.")}
+function initAccess(){const p=new URLSearchParams(location.search);if(p.get("admin")==="1"){adminNav.style.display="";adminNav.onclick=()=>unlockInstructor()}}
 function renderAll(){renderWeeks();renderStudent();renderGroups();if(adminUnlocked)renderInstructor()}
+
 function openWeek(n){currentWeek=n;currentTab="overview";wkNum.textContent="Week "+n;wkTitle.textContent=course[n-1][0];renderWeekTabs();renderWeekBody();showPage("week")}
 function renderWeekTabs(){
- let tabs=currentWeek===3
-   ?["overview","slides","materials","preclass","content","activity","case","quiz","assignment","reflection"]
-   :currentWeek<=4
-     ?["overview","slides","preclass","content","activity","case","quiz","assignment","reflection"]
-     :["overview"];
- weekTabs.innerHTML=tabs.map(t=>`<button class="tab ${t===currentTab?"active":""}" onclick="currentTab='${t}';renderWeekTabs();renderWeekBody();sendHeartbeat()">${t[0].toUpperCase()+t.slice(1)}</button>`).join("")
+ let tabs=currentWeek<=4?["overview","slides","preclass","content","activity","case","quiz","assignment","reflection"]:["overview"];
+ if(currentWeek>=4 && currentWeek<=15)tabs=["overview","slides","preclass","content","activity","case","quiz","assignment","reflection"];
+ weekTabs.innerHTML=tabs.map(t=>{
+   const av=activityAvailability(currentWeek,t);
+   const lock=(!adminUnlocked && !av.open)?" 🔒":"";
+   return `<button class="tab ${t===currentTab?"active":""}" onclick="currentTab='${t}';renderWeekTabs();renderWeekBody();sendHeartbeat()">${t[0].toUpperCase()+t.slice(1)}${lock}</button>`
+ }).join("")
 }
 function renderWeekBody(){
  const d=packs[currentWeek],s=student(),p=s?getProg(s.id,currentWeek):blankProg();
- if(!d){weekBody.innerHTML=`<div class="card"><h3>${course[currentWeek-1][0]}</h3><p>${course[currentWeek-1][1]}</p><div class="notice">Detailed learning materials will be added in the next build.</div></div>`;return}
+ const av=activityAvailability(currentWeek,currentTab);
+ if(!adminUnlocked && !av.open && currentTab!=="overview"){lockedCard(currentTab,av);return}
+ if(!d){
+   weekBody.innerHTML=`${scheduleCard(currentWeek)}<div class="card"><h3>${course[currentWeek-1][0]}</h3><p>${course[currentWeek-1][1]}</p><div class="notice">Detailed learning materials will be added in the next build.</div></div>`;
+   return
+ }
  if(currentTab==="overview"){
    const st=getTaskStates(p);
-   const labels=["Guided Reading","Lecture Viewed","In-Class Activity","Assignment"];
-   weekBody.innerHTML=`<div class="layout"><div class="card"><h3>Learning Outcomes</h3><ol>${d.objectives.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol></div><div class="card"><h3>Progress Checklist</h3>${labels.map((x,i)=>`<label class="task"><input type="checkbox" ${st[i]?"checked":""} onchange="setTask(${i},this.checked)"> ${x}</label>`).join("")}<div class="success">Each week tracks 8 items: Guided Reading, Lecture Viewed, Pre-Class Reflection, In-Class Activity, Mini Case, Quiz, Assignment, and Post-Class Reflection.</div></div></div>`
+   weekBody.innerHTML=`${scheduleCard(currentWeek)}<div class="layout"><div class="card"><h3>Learning Outcomes</h3><ol>${d.objectives.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol></div><div class="card"><h3>Progress Checklist</h3><label class="task"><input type="checkbox" ${st[0]?"checked":""} onchange="setTask(0,this.checked)"> Guided Reading</label><label class="task"><input type="checkbox" ${st[1]?"checked":""} disabled> Lecture Viewed <span class="muted">(automatic)</span></label><div class="task">Pre-Class Reflection: <b>${p.preClassReflection?"Completed ✓":"Pending"}</b></div><div class="task">In-Class Activity: <b>${st[2]?"Submitted ✓":"Pending"}</b></div><div class="task">Mini Case: <b>${p.miniCase?"Submitted ✓":"Pending"}</b></div><div class="task">Knowledge Check / Quiz: <b>${p.quiz!==null?"Submitted ✓":"Pending"}</b></div><div class="task">Assignment: <b>${st[3]?"Submitted ✓":"Pending"}</b></div><div class="task">Post-Class Reflection: <b>${p.reflection?"Completed ✓":"Pending"}</b></div><div class="success">Weekly completion is based on 8 equal activities. Each completed activity = 12.5%. Quiz score is separate from completion.</div></div></div>`
  }
  if(currentTab==="slides"){
    const pdf=`Week${currentWeek}_Lecture.pdf`,ppt=`Week${currentWeek}_Lecture.pptx`;
-   weekBody.innerHTML=`<div class="card"><h3>Week ${currentWeek} Lecture Slides</h3><div class="file-actions"><a class="btn" href="${pdf}" target="_blank">Open PDF</a><a class="btn alt" href="${ppt}">Open PowerPoint</a></div><iframe class="slide-frame" src="${pdf}#view=FitH"></iframe></div>`
+   weekBody.innerHTML=`<div class="card"><h3>Week ${currentWeek} Lecture Slides</h3><div class="file-actions"><a class="btn" href="${pdf}" target="_blank" onclick="markLectureViewed()">Open PDF</a><a class="btn alt" href="${ppt}" onclick="markLectureViewed()">Open PowerPoint</a></div><iframe class="slide-frame" src="${pdf}#view=FitH" onload="markLectureViewed()"></iframe></div>`
  }
- if(currentTab==="materials"&&currentWeek===3)weekBody.innerHTML=`<div class="card"><h3>Week 3 Learning Package</h3><div class="topic"><h4>Student Learning Pack</h4><a class="btn alt" href="Week3_Student_Learning_Pack.docx">Open Student Pack</a></div><div class="topic"><h4>Assessment Pack</h4><a class="btn alt" href="Week3_Assessment_Pack.docx">Open Assessment Pack</a></div><div class="topic"><h4>Instructor Guide</h4><a class="btn alt" href="Week3_Instructor_Guide.docx">Open Instructor Guide</a></div><div class="topic"><h4>Google Classroom Guide</h4><a class="btn alt" href="Week3_Google_Classroom_Guide.docx">Open Classroom Guide</a></div></div>`;
- if(currentTab==="preclass"&&currentWeek<=4)weekBody.innerHTML=`<div class="card"><h3>Pre-Class Reflection</h3><p>Before class, write one short observation, question, or workplace example related to this week’s topic.</p><textarea id="preClassText" placeholder="Your pre-class reflection...">${p.preClassText||""}</textarea><div class="file-actions"><button class="btn good" onclick="savePreClassReflection()">Save Pre-Class Reflection</button>${p.preClassReflection?'<button class="btn alt" onclick="undoPreClassReflection()">Mark as Not Completed</button>':""}</div><p class="muted">${p.preClassReflection?"Completed ✓":"Not yet completed"}</p></div>`;
- if(currentTab==="content")weekBody.innerHTML=`<div class="card"><h3>Core Learning Content</h3>${d.topics.map(t=>`<div class="topic"><h4>${t[0]}</h4><p>${t[1]}</p></div>`).join("")}</div>`;
- if(currentTab==="activity")weekBody.innerHTML=`<div class="card"><h3>In-Class Activity</h3><p>${d.activity}</p><div class="file-actions"><button class="btn good" onclick="markActivityCompleted()">Mark In-Class Activity Completed</button>${getTaskStates(p)[2]?'<button class="btn alt" onclick="undoActivityCompleted()">Undo Completion</button>':""}</div></div>`;
- if(currentTab==="case")weekBody.innerHTML=`<div class="card"><h3>${d.caseTitle}</h3><p>${d.caseText}</p><ol>${d.caseQuestions.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol>${currentWeek<=4?`<div class="file-actions"><button class="btn good" onclick="markMiniCaseCompleted()">Mark Mini Case Completed</button>${p.miniCase?'<button class="btn alt" onclick="undoMiniCaseCompleted()">Undo Completion</button>':""}</div>`:""}</div>`;
+ if(currentTab==="preclass")weekBody.innerHTML=`<div class="card"><h3>Pre-Class Reflection</h3><p>Write one short observation, question, or workplace example related to this week’s topic.</p><textarea id="preClassText" placeholder="Your pre-class reflection...">${p.preClassText||""}</textarea><div class="file-actions"><button class="btn good" onclick="savePreClassReflection()">Save Pre-Class Reflection</button></div><p class="muted">${p.preClassReflection?"Completed ✓":"Not yet completed"}</p>${reviewPanelStudent(p.reviews.preclass)}</div>`;
+ if(currentTab==="content")weekBody.innerHTML=`<div class="card"><h3>Core Learning Content</h3>${d.topics.map(t=>`<div class="topic"><h4>${t[0]}</h4><p>${t[1]}</p></div>`).join("")}<div class="file-actions"><button class="btn good" onclick="markGuidedReading()">Mark Guided Reading Completed</button></div></div>`;
+ if(currentTab==="activity")weekBody.innerHTML=`<div class="card"><h3>In-Class Activity</h3><p>${d.activity}</p><p class="muted">Write your response or a brief summary of your group output. The instructor can review it and provide feedback.</p><textarea id="activityText" placeholder="Write your activity response...">${p.activityText||""}</textarea><div class="file-actions"><button class="btn good" onclick="submitActivity()">Submit Activity</button></div>${reviewPanelStudent(p.reviews.activity)}</div>`;
+ if(currentTab==="case")weekBody.innerHTML=`<div class="card"><h3>${d.caseTitle}</h3><p>${d.caseText}</p><ol>${d.caseQuestions.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol><p class="muted">Write your case analysis below. Your instructor can review it and return feedback.</p><textarea id="caseText" placeholder="Write your case analysis...">${p.caseText||""}</textarea><div class="file-actions"><button class="btn good" onclick="submitCase()">Submit Mini Case</button></div>${reviewPanelStudent(p.reviews.case)}</div>`;
  if(currentTab==="quiz")renderQuiz(d);
- if(currentTab==="assignment")weekBody.innerHTML=`<div class="card"><h3>Week ${currentWeek} Assignment</h3><p>${d.assignment}</p><div class="file-actions"><button class="btn good" onclick="markAssignmentCompleted()">Mark Assignment Completed</button>${getTaskStates(p)[3]?'<button class="btn alt" onclick="undoAssignmentCompleted()">Undo Completion</button>':""}</div></div>`;
- if(currentTab==="reflection")weekBody.innerHTML=`<div class="card"><h3>${currentWeek<=4?"Post-Class Reflection":"Reflection"}</h3><p>Write one concept you will apply in your work or quality practice, and explain how.</p><textarea id="reflectionText" placeholder="Your reflection...">${p.reflectionText||""}</textarea><div class="file-actions"><button class="btn good" onclick="saveReflection()">Save Reflection</button>${p.reflection?'<button class="btn alt" onclick="undoReflection()">Mark as Not Completed</button>':""}</div><p class="muted">${p.reflection?"Completed ✓":"Not yet completed"}</p></div>`
+ if(currentTab==="assignment")weekBody.innerHTML=`<div class="card"><h3>Week ${currentWeek} Assignment</h3><p>${d.assignment}</p>
+<div class="${activityAvailability(currentWeek,"assignment").late?"notice":"success"}">${activityAvailability(currentWeek,"assignment").label}</div>
+<p class="muted">You may write your answer below, upload a PDF, or submit both. Maximum PDF size: 5 MB.</p>
+<label><b>Written response</b></label>
+<textarea id="assignmentText" placeholder="Write or paste your assignment here...">${p.assignmentText||""}</textarea>
+<div style="margin-top:14px"><label><b>PDF file</b></label><input id="assignmentPdf" type="file" accept="application/pdf,.pdf"></div>
+${p.assignmentPdfUrl?`<div class="success" style="margin-top:12px"><b>Uploaded PDF:</b> <a href="${p.assignmentPdfUrl}" target="_blank" rel="noopener">${p.assignmentPdfName||"Open PDF"}</a></div>`:""}
+<div class="file-actions"><button id="assignmentSubmitBtn" class="btn good" onclick="submitAssignment()">Submit Assignment</button></div>
+<p id="assignmentMsg" class="muted"></p>
+${reviewPanelStudent(p.reviews.assignment)}</div>`;
+ if(currentTab==="reflection")weekBody.innerHTML=`<div class="card"><h3>Post-Class Reflection</h3><p>Write one concept you will apply in your work or quality practice, and explain how.</p><textarea id="reflectionText" placeholder="Your reflection...">${p.reflectionText||""}</textarea><div class="file-actions"><button class="btn good" onclick="saveReflection()">Save Reflection</button></div><p class="muted">${p.reflection?"Completed ✓":"Not yet completed"}</p>${reviewPanelStudent(p.reviews.reflection)}</div>`
 }
-async function setTask(i,checked){const s=student();if(!s){alert("Register/select a student first.");renderWeekBody();return}const p=getProg(s.id,currentWeek),st=getTaskStates(p);st[i]=checked;p.taskStates=st;p.tasks=st.filter(Boolean).length;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();await pushProgress(s.id,currentWeek)}
-async function markActivityCompleted(){await setTask(2,true)}
-async function markAssignmentCompleted(){await setTask(3,true)}
-async function undoActivityCompleted(){await setTask(2,false)}
-async function undoAssignmentCompleted(){await setTask(3,false)}
-async function markMiniCaseCompleted(){const s=student();if(!s){alert("Register first.");return}const p=getProg(s.id,currentWeek);p.miniCase=true;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();await pushProgress(s.id,currentWeek)}
-async function undoMiniCaseCompleted(){const s=student();if(!s)return;const p=getProg(s.id,currentWeek);p.miniCase=false;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();await pushProgress(s.id,currentWeek)}
-async function savePreClassReflection(){const s=student();if(!s){alert("Register first.");return}const text=(preClassText.value||"").trim();if(!text){alert("Please write your pre-class reflection.");return}const p=getProg(s.id,currentWeek);p.preClassReflection=true;p.preClassText=text;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();await pushProgress(s.id,currentWeek)}
-async function undoPreClassReflection(){const s=student();if(!s)return;const p=getProg(s.id,currentWeek);p.preClassReflection=false;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();await pushProgress(s.id,currentWeek)}
-function renderQuiz(d){const p=student()?getProg(student().id,currentWeek):blankProg();weekBody.innerHTML=`<div class="card quiz"><h3>Knowledge Check</h3>${d.quiz.map((q,qi)=>`<div class="topic"><p><b>${qi+1}. ${q[0]}</b></p>${q[1].map((a,ai)=>`<label><input style="width:auto" type="radio" name="q${qi}" value="${ai}"> ${a}</label>`).join("")}</div>`).join("")}<div class="file-actions"><button class="btn" onclick="gradeCurrentQuiz()">Submit Quiz</button>${p.quiz!==null?'<button class="btn alt" onclick="undoQuiz()">Clear Quiz Score</button>':""}</div><p id="quizMsg">${p.quiz!==null?`Previous score: ${p.quiz}%`:""}</p></div>`}
-async function gradeCurrentQuiz(){const s=student();if(!s){alert("Register first.");return}const d=packs[currentWeek];let correct=0;d.quiz.forEach((q,qi)=>{const x=document.querySelector(`input[name=q${qi}]:checked`);if(x&&+x.value===q[2])correct++});const score=Math.round(correct/d.quiz.length*100),p=getProg(s.id,currentWeek);p.quiz=score;db.progress[pkey(s.id,currentWeek)]=p;save();quizMsg.textContent=`Score: ${score}% (${correct}/${d.quiz.length})`;renderAll();await pushProgress(s.id,currentWeek)}
-async function undoQuiz(){const s=student();if(!s)return;const p=getProg(s.id,currentWeek);p.quiz=null;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();await pushProgress(s.id,currentWeek)}
-async function saveReflection(){const s=student();if(!s){alert("Register first.");return}const text=(reflectionText.value||"").trim();if(!text){alert("Please write your reflection.");return}const p=getProg(s.id,currentWeek);p.reflection=true;p.reflectionText=text;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();await pushProgress(s.id,currentWeek)}
-async function undoReflection(){const s=student();if(!s)return;const p=getProg(s.id,currentWeek);p.reflection=false;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();await pushProgress(s.id,currentWeek)}
+function reviewPanelStudent(r){if(!r)return"";const status=r.status||"Submitted",fb=(r.feedback||"").trim(),cls=status==="Reviewed"?"success":status==="Needs Revision"?"notice":"muted";return `<div class="${cls}" style="margin-top:12px"><b>Instructor review:</b> ${status}${fb?`<br><b>Feedback:</b> ${fb}`:""}</div>`}
+function setReviewSubmitted(p,key){ensureReviews(p);p.reviews[key]={status:"Submitted",feedback:""}}
+async function submitActivity(){
+ if(adminUnlocked){alert("Instructor mode is view-only for student submissions.");return}const s=student();if(!s){alert("Please register first.");return}const text=(activityText.value||"").trim();if(!text){alert("Please write your activity response before submitting.");return}const p=getProg(s.id,currentWeek),st=getTaskStates(p);p.activityText=text;st[2]=true;p.taskStates=st;p.tasks=st.filter(Boolean).length;setReviewSubmitted(p,"activity");db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();const ok=await pushProgress(s.id,currentWeek);alert(ok?"Activity submitted and saved ✓":"Activity saved locally, but central saving failed.")}
+async function submitCase(){
+ if(adminUnlocked){alert("Instructor mode is view-only for student submissions.");return}const s=student();if(!s){alert("Please register first.");return}const text=(caseText.value||"").trim();if(!text){alert("Please write your case analysis before submitting.");return}const p=getProg(s.id,currentWeek);p.caseText=text;p.miniCase=true;setReviewSubmitted(p,"case");db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();const ok=await pushProgress(s.id,currentWeek);alert(ok?"Mini Case submitted and saved ✓":"Mini Case saved locally, but central saving failed.")}
+function readFileAsDataURL(file){
+ return new Promise((resolve,reject)=>{
+   const reader=new FileReader();
+   reader.onload=()=>resolve(String(reader.result||""));
+   reader.onerror=()=>reject(new Error("Could not read file"));
+   reader.readAsDataURL(file);
+ });
+}
+async function uploadAssignmentPdf(file,studentId,week){
+ if(!file)return null;
+ if(file.type!=="application/pdf" && !file.name.toLowerCase().endsWith(".pdf"))throw new Error("Only PDF files are allowed.");
+ const max=10*1024*1024;
+ if(file.size>max)throw new Error("PDF is larger than 10 MB.");
+ const dataUrl=await readFileAsDataURL(file);
+ const base64=dataUrl.split(",")[1]||"";
+ const resp=await apiPost({
+   action:"uploadAssignmentPdf",
+   studentId:String(studentId),
+   week:Number(week),
+   fileName:file.name,
+   mimeType:"application/pdf",
+   base64
+ });
+ if(!resp || !resp.url)throw new Error(resp&&resp.error?resp.error:"PDF upload failed");
+ return {url:resp.url,name:resp.name||file.name};
+}
+async function submitAssignment(){
+ if(adminUnlocked){alert("Instructor mode is view-only for student submissions.");return}
+ const s=student();if(!s){alert("Please register first.");return}
+ const av=activityAvailability(currentWeek,"assignment");
+ if(!av.open){alert(av.label);renderWeekTabs();renderWeekBody();return}
+ const text=(assignmentText.value||"").trim();
+ const fileInput=document.getElementById("assignmentPdf");
+ const file=fileInput&&fileInput.files?fileInput.files[0]:null;
+ const p=getProg(s.id,currentWeek);
 
-lang.onclick=()=>{const ar=document.body.classList.toggle("rtl");document.documentElement.dir=ar?"rtl":"ltr";lang.textContent=ar?"English":"العربية";heroText.textContent=ar?"بوابة تعلم تطبيقية تربط السلوك التنظيمي بأداء الجودة والخدمة والمشاركة والتحسين المستمر.":"A practical learning portal linking individual, group and organizational behavior to quality performance, service, engagement, leadership and continuous improvement."}
+ if(!text && !file && !p.assignmentPdfUrl){
+   assignmentMsg.className="error";
+   assignmentMsg.textContent="Please write an answer or choose a PDF file before submitting.";
+   return;
+ }
+
+ const btn=document.getElementById("assignmentSubmitBtn");
+ btn.disabled=true;btn.textContent=file?"Uploading PDF...":"Submitting...";
+ assignmentMsg.className="muted";assignmentMsg.textContent=file?"Uploading your PDF...":"Saving your assignment...";
+
+ try{
+   if(file){
+     const uploaded=await uploadAssignmentPdf(file,s.id,currentWeek);
+     p.assignmentPdfUrl=uploaded.url;
+     p.assignmentPdfName=uploaded.name;
+   }
+   p.assignmentText=text;
+   const st=getTaskStates(p);st[3]=true;p.taskStates=st;p.tasks=st.filter(Boolean).length;
+   setReviewSubmitted(p,"assignment");
+   db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();
+   const ok=await pushProgress(s.id,currentWeek);
+   if(!ok)throw new Error("Assignment metadata could not be saved centrally.");
+   assignmentMsg.className="success";
+   assignmentMsg.textContent="Assignment submitted and saved ✓";
+   btn.textContent="Submitted ✓";
+   setTimeout(()=>renderWeekBody(),700);
+ }catch(e){
+   assignmentMsg.className="error";
+   assignmentMsg.textContent=e.message||"Assignment upload failed. Please try again.";
+   btn.disabled=false;btn.textContent="Retry Submit";
+ }
+}
+async function setTask(i,checked){
+ if(adminUnlocked){return}
+ const s=student();if(!s){alert("Please register/select a student first.");renderWeekBody();return}
+ const p=getProg(s.id,currentWeek),st=getTaskStates(p);st[i]=checked;p.taskStates=st;p.tasks=st.filter(Boolean).length;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();
+ const ok=await pushProgress(s.id,currentWeek);if(!ok)alert("The activity was saved on this device, but could not be saved centrally. Please check the connection and try again.")
+}
+async function markGuidedReading(){const av=activityAvailability(currentWeek,"content");if(!av.open){alert(av.label);return}await setTask(0,true)}
+async function markLectureViewed(){
+ if(adminUnlocked)return;
+ const av=activityAvailability(currentWeek,"slides");
+ if(!av.open)return;
+ if(student() && !getTaskStates(getProg(student().id,currentWeek))[1]) await setTask(1,true)
+}
+async function markActivityCompleted(){const av=activityAvailability(currentWeek,"activity");if(!av.open){alert(av.label);return}await setTask(2,true)}
+async function markAssignmentCompleted(){await setTask(3,true)}
+async function markMiniCaseCompleted(){const s=student();if(!s){alert("Please register first.");return}const p=getProg(s.id,currentWeek);p.miniCase=true;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();const ok=await pushProgress(s.id,currentWeek);if(!ok)alert("Mini Case completion could not be saved centrally.")}
+async function savePreClassReflection(){
+ if(adminUnlocked){alert("Instructor mode is view-only for student submissions.");return}const s=student();if(!s){alert("Please register first.");return}const av=activityAvailability(currentWeek,"preclass");if(!av.open){alert(av.label);renderWeekTabs();renderWeekBody();return}const text=(preClassText.value||"").trim();if(!text){alert("Please write your pre-class reflection.");return}const p=getProg(s.id,currentWeek);p.preClassReflection=true;p.preClassText=text;setReviewSubmitted(p,"preclass");db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();const ok=await pushProgress(s.id,currentWeek);if(!ok)alert("Reflection could not be saved centrally.")}
+function renderQuiz(d){
+ const p=student()?getProg(student().id,currentWeek):blankProg();
+ if(currentWeek>=4 && p.quiz!==null){
+   weekBody.innerHTML=`${scheduleCard(currentWeek)}<div class="card quiz"><h3>Knowledge Check</h3><div class="success"><b>Quiz completed.</b><br>Score: ${p.quiz}%<br>Only one attempt is allowed.</div></div>`;
+   return;
+ }
+ weekBody.innerHTML=`${scheduleCard(currentWeek)}<div class="card quiz"><h3>Knowledge Check</h3><div class="notice">Answer all questions before submitting. The quiz counts as one completed activity; your score is recorded separately.</div>${d.quiz.map((q,qi)=>`<div class="topic"><p><b>${qi+1}. ${q[0]}</b></p>${q[1].map((a,ai)=>`<label><input style="width:auto" type="radio" name="q${qi}" value="${ai}"> ${a}</label>`).join("")}</div>`).join("")}<div class="file-actions"><button id="submitQuizBtn" class="btn" onclick="gradeCurrentQuiz()">Submit Quiz</button></div><p id="quizMsg" class="${p.quiz!==null?'success':'muted'}">${p.quiz!==null?`Previous score: ${p.quiz}%`:""}</p></div>`
+}
+async function gradeCurrentQuiz(){
+ if(adminUnlocked){alert("Instructor mode is view-only for student submissions.");return}
+ const s=student();if(!s){alert("Please register first.");return}
+ const av=activityAvailability(currentWeek,"quiz");
+ if(!av.open){alert(av.label);renderWeekTabs();renderWeekBody();return}
+ const existing=getProg(s.id,currentWeek);
+ if(currentWeek>=4 && existing.quiz!==null){alert("Only one quiz attempt is allowed.");return}
+ const d=packs[currentWeek],answers=[];let firstMissing=-1;
+ d.quiz.forEach((q,qi)=>{const x=document.querySelector(`input[name=q${qi}]:checked`);answers.push(x);if(!x&&firstMissing<0)firstMissing=qi});
+ if(firstMissing>=0){quizMsg.className="error";quizMsg.textContent=`Please answer all questions before submitting. Question ${firstMissing+1} is unanswered.`;document.querySelectorAll(".topic")[firstMissing]?.scrollIntoView({behavior:"smooth",block:"center"});return}
+ let correct=0;answers.forEach((x,qi)=>{if(+x.value===d.quiz[qi][2])correct++});
+ const score=Math.round(correct/d.quiz.length*100),p=getProg(s.id,currentWeek),btn=document.getElementById("submitQuizBtn");
+ btn.disabled=true;btn.textContent="Submitting...";quizMsg.className="muted";quizMsg.textContent="Saving your quiz...";
+ p.quiz=score;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();
+ const ok=await pushProgress(s.id,currentWeek);
+ if(ok){quizMsg.className="success";quizMsg.textContent=`Submitted and saved ✓ Score: ${score}% (${correct}/${d.quiz.length})`;btn.textContent="Submitted ✓"}
+ else{quizMsg.className="error";quizMsg.textContent=`Score calculated: ${score}%, but central saving failed. Please check the connection and press Submit Quiz again.`;btn.disabled=false;btn.textContent="Retry Submit"}
+}
+async function saveReflection(){
+ if(adminUnlocked){alert("Instructor mode is view-only for student submissions.");return}const s=student();if(!s){alert("Please register first.");return}const av=activityAvailability(currentWeek,"reflection");if(!av.open){alert(av.label);renderWeekTabs();renderWeekBody();return}const text=(reflectionText.value||"").trim();if(!text){alert("Please write your reflection.");return}const p=getProg(s.id,currentWeek);p.reflection=true;p.reflectionText=text;setReviewSubmitted(p,"reflection");db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();const ok=await pushProgress(s.id,currentWeek);if(!ok)alert("Reflection could not be saved centrally.")}
+
+lang.onclick=()=>{const ar=document.body.classList.toggle("rtl");document.documentElement.dir=ar?"rtl":"ltr";lang.textContent=ar?"English":"العربية";heroText.textContent=ar?"بوابة تعلم تطبيقية تربط السلوك التنظيمي بأداء الجودة والخدمة والمشاركة والتحسين المستمر.":"A practical learning portal linking individual, group and organizational behavior to quality performance, service, engagement, leadership and continuous improvement."};
+
 db.activeStudentId="";db.students=[];db.progress={};save();renderAll();updateSyncStatus();checkCentral();initAccess();
 
 setInterval(()=>{
