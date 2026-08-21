@@ -62,6 +62,13 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 .rubric-cell{border:1px solid var(--line);border-radius:8px;padding:9px;background:#fff;font-size:12px}
 @media(max-width:700px){.rubric-grid{grid-template-columns:1fr}}
 
+
+.ai-review-box{margin-top:10px;border:1px solid #b9cdfb;border-radius:10px;background:#f3f7ff;padding:11px}
+.ai-review-box h4{margin:0 0 7px}
+.ai-review-box ul{margin:5px 0 8px 20px;padding:0}
+.ai-status{display:inline-block;padding:4px 8px;border-radius:99px;background:var(--soft);color:var(--blue);font-size:12px;font-weight:bold}
+.ai-loading{opacity:.7}
+
 </style>
 </head>
 <body>
@@ -172,7 +179,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 </main>
 
-<footer>G TQM 511 Learning Portal • v25 • Durable Reviews + Varied Feedback + Live Tracking</footer>
+<footer>G TQM 511 Learning Portal • v26 • AI Review Workflow + Durable Reviews + Live Tracking</footer>
 
 <script>
 const course=[
@@ -870,6 +877,76 @@ function reviewGuide(w,key){
  return (reviewGuides[w]&&reviewGuides[w][key]) || {expected:["Address the task directly.","Use a relevant workplace example.","Connect the response to quality performance."],model:"A complete response should answer the task, provide relevant reasoning and link the discussion to quality.",keywords:["quality","work","improve"]};
 }
 function wordCount_(s){return String(s||"").trim()?String(s||"").trim().split(/\s+/).length:0}
+
+function activityLabel_(key){
+ const x={preclass:"Pre-Class Reflection",activity:"In-Class Activity",case:"Mini Case",assignment:"Assignment",reflection:"Post-Class Reflection"};
+ return x[key]||key;
+}
+async function requestAiFeedback(id,w,key){
+ if(!adminUnlocked)return;
+ const p=getProg(id,w);
+ const answer=workTextFor(p,key);
+ const box=document.getElementById(`fb_${id}_${w}_${key}`);
+ const result=document.getElementById(`ai_${id}_${w}_${key}`);
+ const btn=document.getElementById(`aibtn_${id}_${w}_${key}`);
+ const g=reviewGuide(w,key);
+
+ if(!String(answer||"").trim()){
+   if(result) result.innerHTML='<div class="notice">AI analysis requires text from the student. If the work is only a PDF, review it manually for now.</div>';
+   return;
+ }
+
+ if(btn){btn.disabled=true;btn.textContent="Analyzing...";}
+ if(result){
+   result.className="ai-review-box ai-loading";
+   result.innerHTML="<b>AI is comparing this answer with the model answer and rubric...</b>";
+ }
+
+ try{
+   const r=await apiPost({
+     action:"aiFeedback",
+     pin:adminPin,
+     payload:{
+       week:Number(w),
+       weekTopic:(course[w-1]&&course[w-1][0])||("Week "+w),
+       activity:activityLabel_(key),
+       studentAnswer:String(answer),
+       modelAnswer:String(g.model||""),
+       expectedPoints:Array.isArray(g.expected)?g.expected:[]
+     }
+   });
+
+   if(!r || !r.ok) throw new Error((r&&r.error)||"AI feedback failed.");
+
+   const strengths=Array.isArray(r.strengths)?r.strengths:[];
+   const improvements=Array.isArray(r.improvements)?r.improvements:[];
+   if(box && r.feedback) box.value=r.feedback;
+
+   if(result){
+     result.className="ai-review-box";
+     result.innerHTML=`
+       <div class="section-head" style="margin-bottom:6px">
+         <h4>AI Suggested Review</h4>
+         <span class="ai-status">${escapeHtml(r.suggestedStatus||"")}</span>
+       </div>
+       <b>Strengths</b>
+       <ul>${strengths.length?strengths.map(x=>`<li>${escapeHtml(x)}</li>`).join(""):"<li>—</li>"}</ul>
+       <b>Improvement Needed</b>
+       <ul>${improvements.length?improvements.map(x=>`<li>${escapeHtml(x)}</li>`).join(""):"<li>—</li>"}</ul>
+       <div><b>Instructor rationale:</b> ${escapeHtml(r.rationale||"—")}</div>
+       <div class="muted" style="margin-top:7px">The feedback paragraph has been copied into Instructor Feedback. Edit it before approval if needed.</div>
+     `;
+   }
+ }catch(e){
+   if(result){
+     result.className="ai-review-box";
+     result.innerHTML=`<div class="notice">${escapeHtml(e.message||String(e))}</div>`;
+   }
+ }finally{
+   if(btn){btn.disabled=false;btn.textContent="AI Feedback";}
+ }
+}
+
 function feedbackVariantIndex_(id,w,key,n){
  const s=String(id)+"|"+String(w)+"|"+String(key);
  let h=0;
@@ -1021,11 +1098,16 @@ async function openStudentReview(id){
 
          ${guideHtml(w,key)}
 
+         <div class="file-actions">
+           <button class="btn good" id="aibtn_${id}_${w}_${key}" onclick="requestAiFeedback('${id}',${w},'${key}')">AI Feedback</button>
+           <button class="btn alt" onclick="suggestFeedback('${id}',${w},'${key}')">Rule-Based Suggestion</button>
+         </div>
+         <div id="ai_${id}_${w}_${key}"></div>
+
          <label style="display:block;margin-top:10px"><b>Instructor Feedback</b></label>
          <textarea id="fb_${id}_${w}_${key}" placeholder="Write feedback for the student...">${escapeHtml(r.feedback||"")}</textarea>
 
          <div class="file-actions">
-           <button class="btn" onclick="suggestFeedback('${id}',${w},'${key}')">Suggested Feedback</button>
            <button class="btn good" onclick="saveReview('${id}',${w},'${key}','Reviewed')">Mark Reviewed</button>
            <button class="btn alt" onclick="saveReview('${id}',${w},'${key}','Needs Revision')">Needs Revision</button>
          </div>
@@ -1040,7 +1122,7 @@ async function openStudentReview(id){
  }
 
  reviewWorkspace.innerHTML=`<div class="section-head">
-   <div><b>${escapeHtml(s.name)}</b><div class="muted">${escapeHtml(s.id)} • ${escapeHtml(s.group||"—")}</div><div class="muted" style="margin-top:4px">Model answers and rubric are built in. Suggested Feedback is varied by student/task and remains an instructor-editable draft — no OpenAI API cost.</div></div>
+   <div><b>${escapeHtml(s.name)}</b><div class="muted">${escapeHtml(s.id)} • ${escapeHtml(s.group||"—")}</div><div class="muted" style="margin-top:4px">Model answers and rubric are built in. AI Feedback analyzes the student's actual text against them; Rule-Based Suggestion remains available as a no-API fallback. Final approval always remains with the instructor.</div></div>
    <div class="file-actions" style="margin:0">
      <button class="btn" onclick="openStudentReview('${id}')">Refresh Submissions</button>
      <button class="btn alt" onclick="reviewWorkspace.innerHTML='Choose Review beside a student.'">Close Review</button>
