@@ -216,7 +216,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 </main>
 
-<footer>G TQM 511 Learning Portal • v36 • Full Weeks 1–4 Restored + In-Class Time Locks + 4 Major Assignments</footer>
+<footer>G TQM 511 Learning Portal • v37 • Student View Simplified + In-Class Activities Hidden + 4 Major Assignments</footer>
 
 <script>
 const course=[
@@ -435,7 +435,7 @@ function scheduleCard(w){
  <div class="two">
   <div><b>Guided Reading / Core Content</b><p class="muted">Opens: ${fmtRiyadh(s.guidedOpen)}<br>Remains available after opening.</p></div>
   <div><b>Pre-Class Reflection</b><p class="muted">Opens: ${fmtRiyadh(s.preclassOpen)}<br>Final reminder window: ${fmtRiyadh(s.preclassReminder)}<br>Closes: ${fmtRiyadh(s.preclassClose)}</p></div>
-  <div><b>In-Class Activity — Completed during class</b><p class="muted">${fmtRiyadh(s.lecture)} → ${fmtRiyadh(s.lectureClose)}<br>Available only during the live class.</p></div><div><b>Mini Case / Application — Completed during class</b><p class="muted">${fmtRiyadh(s.lecture)} → ${fmtRiyadh(s.lectureClose)}<br>Available only during the live class.</p></div>
+  ${adminUnlocked?`<div><b>Instructor In-Class Activity</b><p class="muted">${fmtRiyadh(s.lecture)} → ${fmtRiyadh(s.lectureClose)}<br>Teaching activity only • not visible to students • not assessed.</p></div><div><b>Instructor Mini Case / Application</b><p class="muted">${fmtRiyadh(s.lecture)} → ${fmtRiyadh(s.lectureClose)}<br>Teaching activity only • not visible to students • not assessed.</p></div>`:""}
   <div><b>Post-Class Reflection</b><p class="muted">Opens: ${fmtRiyadh(s.postclassOpen)}<br>Closes: ${fmtRiyadh(s.postclassClose)}</p></div>
   <div><b>Quiz</b><p class="muted">${fmtRiyadh(s.quizOpen)} → ${fmtRiyadh(s.quizClose)} • 30 minutes • one attempt</p></div>
   <div><b>Major Assignment</b><p class="muted">${majorForWeek(w)?(isMajorDueWeek(w)?`${majorForWeek(w).id} final submission week • Due: ${fmtRiyadh(s.due)}`:`${majorForWeek(w).id} development only • Submit in Week ${majorForWeek(w).due}`):"—"}</p></div>
@@ -472,10 +472,28 @@ function getProg(id,w){return ensureReviews(Object.assign(blankProg(),db.progres
 function getTaskStates(p){if(Array.isArray(p.taskStates))return[0,1,2,3].map(i=>!!p.taskStates[i]);const n=Math.max(0,Math.min(4,Number(p.tasks)||0));return[0,1,2,3].map(i=>i<n)}
 function trackedActivityCount(id,w){
  const p=getProg(id,w),st=getTaskStates(p);
- if(w<=3){let n=st.filter(Boolean).length;if(p.preClassReflection)n++;if(p.miniCase)n++;if(p.quiz!==null)n++;if(p.reflection)n++;return Math.min(8,n);}
- let n=0;if(st[0])n++;if(st[1])n++;if(p.preClassReflection)n++;if(st[2])n++;if(p.miniCase)n++;if(p.quiz!==null)n++;if(p.reflection)n++;return Math.min(7,n);
+ if(w<=3){
+   let n=st.filter(Boolean).length;
+   if(p.preClassReflection)n++;
+   if(p.miniCase)n++;
+   if(p.quiz!==null)n++;
+   if(p.reflection)n++;
+   return Math.min(8,n);
+ }
+ // From Week 4 onward, in-class activities and mini cases are teaching activities only.
+ // They are hidden from students and do not count toward assessment or weekly completion.
+ let n=0;
+ if(st[0])n++;               // Guided Reading
+ if(st[1])n++;               // Lecture Viewed
+ if(p.preClassReflection)n++;
+ if(p.quiz!==null)n++;
+ if(p.reflection)n++;
+ return Math.min(5,n);
 }
-function weekPct(id,w){if(w<1||w>15)return 0;return Math.round(trackedActivityCount(id,w)/(w<=3?8:7)*100)}
+function weekPct(id,w){
+ if(w<1||w>15)return 0;
+ return Math.round(trackedActivityCount(id,w)/(w<=3?8:5)*100);
+}
 function weekStatus(id,w){const pct=weekPct(id,w);return pct===100?"Completed":pct>0?"In Progress":"Not Started"}
 
 async function apiGet(params={}){const u=new URL(API_URL);Object.entries(params).forEach(([k,v])=>u.searchParams.set(k,v));const r=await fetch(u,{cache:"no-store"});if(!r.ok)throw new Error("GET failed");const d=await r.json();if(d&&d.ok===false)throw new Error(d.error||"API error");return d}
@@ -644,7 +662,16 @@ function renderStudent(){
 function activityBox(name,done,text){return `<div class="student-activity"><b>${name}</b><div class="${done?'activity-done':'activity-pending'}">${done?(text||"Completed ✓"):"Pending"}</div></div>`}
 function detailWeek(id,w){
  const p=getProg(id,w),st=getTaskStates(p),pct=weekPct(id,w);let a="";
- a+=activityBox("Guided Reading",st[0]);a+=activityBox("Lecture Viewed",st[1]);a+=activityBox("Pre-Class Reflection",p.preClassReflection);a+=activityBox("In-Class Activity — Completed during class",st[2]);a+=activityBox("Mini Case / Application — Completed during class",p.miniCase);a+=activityBox("Knowledge Check / Quiz",p.quiz!==null,p.quiz!==null?p.quiz+"%":"");a+=activityBox("Assignment",st[3]);a+=activityBox("Post-Class Reflection",p.reflection);
+ a+=activityBox("Guided Reading",st[0]);
+ a+=activityBox("Lecture Viewed",st[1]);
+ a+=activityBox("Pre-Class Reflection",p.preClassReflection);
+ if(w<=3){
+   a+=activityBox("In-Class Activity",st[2]);
+   a+=activityBox("Mini Case / Application",p.miniCase);
+ }
+ a+=activityBox("Knowledge Check / Quiz",p.quiz!==null,p.quiz!==null?p.quiz+"%":"");
+ if(w<=3)a+=activityBox("Assignment",st[3]);
+ a+=activityBox("Post-Class Reflection",p.reflection);
  return `<div class="student-week"><div class="student-week-head"><div><b>Week ${w}: ${course[w-1][0]}</b><div class="muted">${weekStatus(id,w)} • ${trackedActivityCount(id,w)}/8 activities</div></div><strong>${pct}%</strong></div><div class="progress" style="margin-top:9px"><div class="bar" style="width:${pct}%"></div></div><div class="student-activities">${a}</div></div>`
 }
 function studentFirst4Average(id){return Math.round((weekPct(id,1)+weekPct(id,2)+weekPct(id,3)+weekPct(id,4))/4)}
@@ -1469,8 +1496,10 @@ function renderAll(){renderWeeks();renderStudent();renderGroups();if(adminUnlock
 
 function openWeek(n){currentPageId="week";currentWeek=n;currentTab="overview";wkNum.textContent="Week "+n;wkTitle.textContent=course[n-1][0];renderWeekTabs();renderWeekBody();showPage("week");sendHeartbeat()}
 function renderWeekTabs(){
- let tabs=currentWeek<=4?["overview","slides","preclass","content","activity","case","quiz","assignment","reflection"]:["overview"];
- if(currentWeek>=4 && currentWeek<=15)tabs=["overview","slides","preclass","content","activity","case","quiz","assignment","reflection"];
+ let tabs=currentWeek<=3?["overview","slides","preclass","content","activity","case","quiz","assignment","reflection"]:["overview","slides","preclass","content","quiz","assignment","reflection"];
+ if(adminUnlocked && currentWeek>=4 && currentWeek<=15){
+   tabs=["overview","slides","preclass","content","activity","case","quiz","assignment","reflection"];
+ }
  weekTabs.innerHTML=tabs.map(t=>{
    const av=activityAvailability(currentWeek,t);
    const lock=(!adminUnlocked && !av.open)?" 🔒":"";
@@ -1479,6 +1508,9 @@ function renderWeekTabs(){
 }
 function renderWeekBody(){
  const d=packs[currentWeek],s=student(),p=s?getProg(s.id,currentWeek):blankProg();
+ if(!adminUnlocked && currentWeek>=4 && ["activity","case"].includes(currentTab)){
+   currentTab="overview";
+ }
  const av=activityAvailability(currentWeek,currentTab);
  if(!adminUnlocked && !av.open && currentTab!=="overview"){lockedCard(currentTab,av);return}
  if(!d){
@@ -1487,7 +1519,7 @@ function renderWeekBody(){
  }
  if(currentTab==="overview"){
    const st=getTaskStates(p);
-   weekBody.innerHTML=`${scheduleCard(currentWeek)}${currentWeek>=4?majorCard(currentWeek):""}<div class="layout"><div class="card"><h3>Learning Outcomes</h3><ol>${d.objectives.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol></div><div class="card"><h3>Progress Checklist</h3><label class="task"><input type="checkbox" ${st[0]?"checked":""} onchange="setTask(0,this.checked)"> Guided Reading</label><label class="task"><input type="checkbox" ${st[1]?"checked":""} disabled> Lecture Viewed <span class="muted">(automatic)</span></label><div class="task">Pre-Class Reflection: <b>${p.preClassReflection?"Completed ✓":"Pending"}</b></div><div class="task">In-Class Activity: <b>${st[2]?"Submitted ✓":"Pending"}</b></div><div class="task">Mini Case: <b>${p.miniCase?"Submitted ✓":"Pending"}</b></div><div class="task">Knowledge Check / Quiz: <b>${p.quiz!==null?"Submitted ✓":"Pending"}</b></div><div class="task">Assignment: <b>${st[3]?"Submitted ✓":"Pending"}</b></div><div class="task">Post-Class Reflection: <b>${p.reflection?"Completed ✓":"Pending"}</b></div><div class="success">Weekly completion is based on 8 equal activities. Each completed activity = 12.5%. Quiz score is separate from completion.</div></div></div>`
+   weekBody.innerHTML=`${scheduleCard(currentWeek)}${currentWeek>=4?majorCard(currentWeek):""}<div class="layout"><div class="card"><h3>Learning Outcomes</h3><ol>${d.objectives.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol></div><div class="card"><h3>Progress Checklist</h3><label class="task"><input type="checkbox" ${st[0]?"checked":""} onchange="setTask(0,this.checked)"> Guided Reading</label><label class="task"><input type="checkbox" ${st[1]?"checked":""} disabled> Lecture Viewed <span class="muted">(automatic)</span></label><div class="task">Pre-Class Reflection: <b>${p.preClassReflection?"Completed ✓":"Pending"}</b></div>${adminUnlocked?`<div class="task">In-Class Activity: <b>${st[2]?"Completed during class ✓":"Teaching activity"}</b></div><div class="task">Mini Case / Application: <b>${p.miniCase?"Completed during class ✓":"Teaching activity"}</b></div>`:""}<div class="task">Knowledge Check / Quiz: <b>${p.quiz!==null?"Submitted ✓":"Pending"}</b></div><div class="task">Assignment: <b>${st[3]?"Submitted ✓":"Pending"}</b></div><div class="task">Post-Class Reflection: <b>${p.reflection?"Completed ✓":"Pending"}</b></div><div class="success">${currentWeek<=3?"Weekly completion is based on the original 8-activity structure.":"From Week 4 onward, weekly completion uses 5 student-facing items only: Guided Reading, Lecture Viewed, Pre-Class Reflection, Knowledge Check, and Post-Class Reflection. In-class activities are teaching-only and are not assessed."}</div></div></div>`
  }
  if(currentTab==="slides"){
    const pdf=`Week${currentWeek}_Lecture.pdf`,ppt=`Week${currentWeek}_Lecture.pptx`;
