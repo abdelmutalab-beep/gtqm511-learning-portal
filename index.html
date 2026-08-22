@@ -216,7 +216,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 </main>
 
-<footer>G TQM 511 Learning Portal • v42 • In-Class Items Removed from Students + Instructor Progress Restored</footer>
+<footer>G TQM 511 Learning Portal • v43 • Instructor Login Fixed + Student Tracking Restored</footer>
 
 <script>
 const course=[
@@ -666,6 +666,27 @@ function detailWeek(id,w){
  return `<div class="student-week"><div class="student-week-head"><div><b>Week ${w}: ${course[w-1][0]}</b><div class="muted">${weekStatus(id,w)} • ${trackedActivityCount(id,w)}/${w<=3?6:5} student activities</div></div><strong>${pct}%</strong></div><div class="progress" style="margin-top:9px"><div class="bar" style="width:${pct}%"></div></div><div class="student-activities">${a}</div></div>`
 }
 function studentFirst4Average(id){return Math.round((weekPct(id,1)+weekPct(id,2)+weekPct(id,3)+weekPct(id,4))/4)}
+
+function studentStarted(id){
+  for(let w=1;w<=15;w++){
+    const p=getProg(id,w),st=getTaskStates(p);
+    if(st.some(Boolean) || p.preClassReflection || p.quiz!==null || p.reflection ||
+       String(p.preClassText||"").trim() || String(p.reflectionText||"").trim() ||
+       String(p.assignmentText||"").trim() || p.assignmentPdfUrl){
+      return true;
+    }
+  }
+  return false;
+}
+
+function studentRiskStatus(id){
+  if(!studentStarted(id))return "Not Started";
+  const avg=studentFirst4Average(id);
+  if(avg<50)return "At Risk";
+  if(avg<75)return "Monitor";
+  return "On Track";
+}
+
 function calculateStudentGroupAverage(s){
  const members=db.students.filter(x=>x.group===s.group);
  if(!s.group||members.length<2){groupAveragePct.textContent="—";groupAverageBar.style.width="0%";groupNote.textContent="Open the Instructor Dashboard to load the full cohort, then return here for group comparison.";return}
@@ -1002,10 +1023,23 @@ async function unlockInstructor(){
     try{renderAll();}catch(renderErr){console.error("Instructor render warning:",renderErr);}
 
     adminNav.style.display="";
-    await showPage("instructor");
+    document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));
+    const instructorPage=document.getElementById("instructor");
+    if(instructorPage)instructorPage.classList.remove("hidden");
+    document.querySelectorAll(".nav[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page==="instructor"));
+    currentPageId="instructor";
+
+    try{
+      renderInstructor();
+    }catch(renderErr){
+      console.error("Instructor dashboard render warning:",renderErr);
+    }
+
+    window.scrollTo({top:0,behavior:"smooth"});
     setSaveStatus("Instructor access granted ✓",true);
 
   }catch(e){
+    // Only authentication/data-loading errors reach this block.
     adminUnlocked=false;
     adminPin="";
     console.error("Instructor unlock failed:",e);
@@ -1027,7 +1061,8 @@ async function refreshInstructor(){
    allGroupConfirmations=snap.groupConfirmations||[];
    allGroupHistory=snap.groupHistory||[];
    save();
-   renderAll();
+   try{renderAll();}catch(renderErr){console.error("Instructor refresh render warning:",renderErr);}
+   try{renderInstructor();}catch(renderErr){console.error("Instructor table render warning:",renderErr);}
    setSaveStatus("Instructor data refreshed ✓",true);
  }catch(e){
    console.error("Instructor refresh failed:",e);
@@ -1114,7 +1149,7 @@ function renderInstructor(){
  iCompletion.textContent=avg+"%";
  iRisk.textContent=(db.students||[]).filter(s=>studentRiskStatus(s.id)==="At Risk").length;
 
- rosterRows.innerHTML=(db.students||[]).map(s=>{
+ rosterRows.innerHTML=(db.students||[]).length ? (db.students||[]).map(s=>{
    const av=studentFirst4Average(s.id),status=studentRiskStatus(s.id);
    return `<tr>
      <td>${escapeHtml(s.name)}</td><td>${escapeHtml(s.id)}</td><td>${escapeHtml(s.group||"—")}</td>
@@ -1126,7 +1161,7 @@ function renderInstructor(){
        <button class="btn danger" onclick="resetStudentProgress('${String(s.id).replace(/'/g,"\\'")}')">Reset</button>
      </div></td>
    </tr>`;
- }).join("");
+ }).join("") : '<tr><td colspan="10" class="muted">No student records were returned by the instructor snapshot.</td></tr>';
 
  // Optional panels are isolated. A failure here cannot stop the progress table above.
  const safe=(name,fn)=>{
