@@ -179,7 +179,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 </main>
 
-<footer>G TQM 511 Learning Portal • v26 • AI Review Workflow + Durable Reviews + Live Tracking</footer>
+<footer>G TQM 511 Learning Portal • v27 • Slides Open 2:00 PM Makkah + AI Review + Live Tracking</footer>
 
 <script>
 const course=[
@@ -245,7 +245,7 @@ assignment:"Write 500–700 words analyzing one work situation where emotions or
 
 
 const COURSE_TZ="Asia/Riyadh";
-const WEEK4_LECTURE_ISO="2026-08-22T20:00:00+03:00"; // Week 4 starts Saturday 8:00 PM Makkah time
+const WEEK4_LECTURE_ISO="2026-08-22T20:00:00+03:00"; // Lecture start remains Saturday 8:00 PM Makkah; slides open at 2:00 PM
 
 function addDays(date,days){const d=new Date(date.getTime());d.setUTCDate(d.getUTCDate()+days);return d}
 function addMinutes(date,mins){return new Date(date.getTime()+mins*60000)}
@@ -265,7 +265,11 @@ function weekSchedule(w){
  // Pre-class closes Saturday 7:45 PM = 15 minutes before lecture.
  const preclassClose=addMinutes(lecture,-15);
 
- // Lecture / Activity / Case open at lecture start.
+ // Slides open on the lecture day at 2:00 PM Makkah (UTC+3).
+ const slidesOpen=new Date(lecture.getTime());
+ slidesOpen.setUTCHours(11,0,0,0);
+
+ // In-class Activity / Case open at lecture start.
  const lectureOpen=lecture;
 
  // Post-class reflection opens at lecture end, Saturday 10:00 PM.
@@ -292,7 +296,7 @@ function weekSchedule(w){
 
  return {
    lecture,guidedOpen,preclassOpen,preclassReminder,preclassClose,
-   lectureOpen,postclassOpen,postclassClose,
+   slidesOpen,lectureOpen,postclassOpen,postclassClose,
    quizOpen,quizClose,assignmentOpen,due,lateUntil
  };
 }
@@ -329,7 +333,13 @@ function activityAvailability(w,tab){
    return {open:true,label:`Open • due by ${fmtRiyadh(s.preclassClose)}`};
  }
 
- if(["slides","activity","case"].includes(tab)){
+ if(tab==="slides"){
+   return now>=s.slidesOpen.getTime()
+     ? {open:true,label:"Available"}
+     : {open:false,label:`Opens ${fmtRiyadh(s.slidesOpen)}`};
+ }
+
+ if(["activity","case"].includes(tab)){
    return now>=s.lectureOpen.getTime()
      ? {open:true,label:"Available"}
      : {open:false,label:`Opens ${fmtRiyadh(s.lectureOpen)}`};
