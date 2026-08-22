@@ -216,7 +216,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 </main>
 
-<footer>G TQM 511 Learning Portal • v44 • In-Class Activities Removed from Student Assessment</footer>
+<footer>G TQM 511 Learning Portal • v45 • Major Assignments Only in Weeks 6, 9, 12, 15</footer>
 
 <script>
 const course=[
@@ -406,11 +406,14 @@ function activityAvailability(w,tab){
  }
 
  if(tab==="assignment"){
-   const m=majorForWeek(w);
-   if(w>=4 && m && w!==m.due) return {open:false,label:`${m.id} development week • final submission in Week ${m.due}`};
-   if(now<s.assignmentOpen.getTime()) return {open:false,label:`Opens ${fmtRiyadh(s.assignmentOpen)}`};
-   if(now<=s.due.getTime()) return {open:true,label:`Due ${fmtRiyadh(s.due)}`,late:false};
-   if(now<=s.lateUntil.getTime()) return {open:true,label:`Late submission • closes ${fmtRiyadh(s.lateUntil)}`,late:true};
+   if(![6,9,12,15].includes(w))
+     return {open:false,label:"No Major Assignment scheduled this week"};
+   if(now<s.assignmentOpen.getTime())
+     return {open:false,label:`Opens ${fmtRiyadh(s.assignmentOpen)}`};
+   if(now<=s.due.getTime())
+     return {open:true,label:`Due ${fmtRiyadh(s.due)}`,late:false};
+   if(now<=s.lateUntil.getTime())
+     return {open:true,label:`Late submission • closes ${fmtRiyadh(s.lateUntil)}`,late:true};
    return {open:false,label:`Submission closed ${fmtRiyadh(s.lateUntil)}`};
  }
 
@@ -437,7 +440,7 @@ function scheduleCard(w){
   ${adminUnlocked?`<div><b>Instructor In-Class Activity</b><p class="muted">${fmtRiyadh(s.lecture)} → ${fmtRiyadh(s.lectureClose)}<br>Teaching activity only • not visible to students • not assessed.</p></div><div><b>Instructor Mini Case / Application</b><p class="muted">${fmtRiyadh(s.lecture)} → ${fmtRiyadh(s.lectureClose)}<br>Teaching activity only • not visible to students • not assessed.</p></div>`:""}
   <div><b>Post-Class Reflection</b><p class="muted">Opens: ${fmtRiyadh(s.postclassOpen)}<br>Closes: ${fmtRiyadh(s.postclassClose)}</p></div>
   <div><b>Quiz</b><p class="muted">${fmtRiyadh(s.quizOpen)} → ${fmtRiyadh(s.quizClose)} • 30 minutes • one attempt</p></div>
-  <div><b>Major Assignment</b><p class="muted">${majorForWeek(w)?(isMajorDueWeek(w)?`${majorForWeek(w).id} final submission week • Due: ${fmtRiyadh(s.due)}`:`${majorForWeek(w).id} development only • Submit in Week ${majorForWeek(w).due}`):"—"}</p></div>
+  ${isMajorDueWeek(w)?`<div><b>Major Assignment</b><p class="muted">${majorForWeek(w).id} final submission week • Due: ${fmtRiyadh(s.due)}</p></div>`:""}
  </div></div>`;
 }
 function lockedCard(tab,av){
@@ -1617,9 +1620,14 @@ function renderAll(){
 
 function openWeek(n){currentPageId="week";currentWeek=n;currentTab="overview";wkNum.textContent="Week "+n;wkTitle.textContent=course[n-1][0];renderWeekTabs();renderWeekBody();showPage("week");sendHeartbeat()}
 function renderWeekTabs(){
+ const majorDueWeeks=[6,9,12,15];
  let tabs=adminUnlocked
-   ? ["overview","slides","preclass","content","activity","case","quiz","assignment","reflection"]
-   : ["overview","slides","preclass","content","quiz","assignment","reflection"];
+   ? ["overview","slides","preclass","content","activity","case","quiz","reflection"]
+   : ["overview","slides","preclass","content","quiz","reflection"];
+
+ // Major Assignment appears only in the agreed submission weeks.
+ if(majorDueWeeks.includes(currentWeek)) tabs.splice(tabs.indexOf("reflection"),0,"assignment");
+
  weekTabs.innerHTML=tabs.map(t=>{
    const av=activityAvailability(currentWeek,t);
    const lock=(!adminUnlocked && !av.open)?" 🔒":"";
@@ -1629,15 +1637,16 @@ function renderWeekTabs(){
 function renderWeekBody(){
  const d=packs[currentWeek],s=student(),p=s?getProg(s.id,currentWeek):blankProg();
  if(!adminUnlocked && ["activity","case"].includes(currentTab)){ currentTab="overview"; }
+ if(![6,9,12,15].includes(currentWeek) && currentTab==="assignment"){ currentTab="overview"; }
  const av=activityAvailability(currentWeek,currentTab);
  if(!adminUnlocked && !av.open && currentTab!=="overview"){lockedCard(currentTab,av);return}
  if(!d){
-   weekBody.innerHTML=`${scheduleCard(currentWeek)}${majorCard(currentWeek)}<div class="card"><h3>${course[currentWeek-1][0]}</h3><p>${course[currentWeek-1][1]}</p><div class="notice">Detailed weekly learning content for this week will be added progressively. The approved Major Assignment roadmap is already active.</div></div>`;
+   weekBody.innerHTML=`${scheduleCard(currentWeek)}${isMajorDueWeek(currentWeek)?majorCard(currentWeek):""}<div class="card"><h3>${course[currentWeek-1][0]}</h3><p>${course[currentWeek-1][1]}</p><div class="notice">Detailed weekly learning content for this week will be added progressively. The approved Major Assignment roadmap is already active.</div></div>`;
    return
  }
  if(currentTab==="overview"){
    const st=getTaskStates(p);
-   weekBody.innerHTML=`${scheduleCard(currentWeek)}${currentWeek>=4?majorCard(currentWeek):""}<div class="layout"><div class="card"><h3>Learning Outcomes</h3><ol>${d.objectives.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol></div><div class="card"><h3>Progress Checklist</h3><label class="task"><input type="checkbox" ${st[0]?"checked":""} onchange="setTask(0,this.checked)"> Guided Reading</label><label class="task"><input type="checkbox" ${st[1]?"checked":""} disabled> Lecture Viewed <span class="muted">(automatic)</span></label><div class="task">Pre-Class Reflection: <b>${p.preClassReflection?"Completed ✓":"Pending"}</b></div>${adminUnlocked?`<div class="task">In-Class Activity: <b>Teaching activity only</b></div><div class="task">Mini Case / Application: <b>Teaching activity only</b></div>`:""}<div class="task">Knowledge Check / Quiz: <b>${p.quiz!==null?"Submitted ✓":"Pending"}</b></div><div class="task">Assignment: <b>${st[3]?"Submitted ✓":"Pending"}</b></div><div class="task">Post-Class Reflection: <b>${p.reflection?"Completed ✓":"Pending"}</b></div><div class="success">${currentWeek<=3?"Weekly completion is based on the original 8-activity structure.":"From Week 4 onward, weekly completion uses 5 student-facing items only: Guided Reading, Lecture Viewed, Pre-Class Reflection, Knowledge Check, and Post-Class Reflection. In-class activities are teaching-only and are not assessed."}</div></div></div>`
+   weekBody.innerHTML=`${scheduleCard(currentWeek)}${isMajorDueWeek(currentWeek)?majorCard(currentWeek):""}<div class="layout"><div class="card"><h3>Learning Outcomes</h3><ol>${d.objectives.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol></div><div class="card"><h3>Progress Checklist</h3><label class="task"><input type="checkbox" ${st[0]?"checked":""} onchange="setTask(0,this.checked)"> Guided Reading</label><label class="task"><input type="checkbox" ${st[1]?"checked":""} disabled> Lecture Viewed <span class="muted">(automatic)</span></label><div class="task">Pre-Class Reflection: <b>${p.preClassReflection?"Completed ✓":"Pending"}</b></div>${adminUnlocked?`<div class="task">In-Class Activity: <b>Teaching activity only</b></div><div class="task">Mini Case / Application: <b>Teaching activity only</b></div>`:""}<div class="task">Knowledge Check / Quiz: <b>${p.quiz!==null?"Submitted ✓":"Pending"}</b></div><div class="task">Assignment: <b>${st[3]?"Submitted ✓":"Pending"}</b></div><div class="task">Post-Class Reflection: <b>${p.reflection?"Completed ✓":"Pending"}</b></div><div class="success">${currentWeek<=3?"Weekly completion is based on the original 8-activity structure.":"From Week 4 onward, weekly completion uses 5 student-facing items only: Guided Reading, Lecture Viewed, Pre-Class Reflection, Knowledge Check, and Post-Class Reflection. In-class activities are teaching-only and are not assessed."}</div></div></div>`
  }
  if(currentTab==="slides"){
    const pdf=`Week${currentWeek}_Lecture.pdf`,ppt=`Week${currentWeek}_Lecture.pptx`;
@@ -1648,6 +1657,11 @@ function renderWeekBody(){
  if(currentTab==="activity")weekBody.innerHTML=`<div class="card"><h3>In-Class Activity — Completed during class</h3><div class="notice"><b>In-class only:</b> Available only from 8:00 PM to 10:00 PM (Makkah time) on the scheduled lecture day.</div><p>${d.activity}</p><p class="muted">Complete and submit this activity during the live class only.</p><textarea id="activityText" placeholder="Write your activity response...">${p.activityText||""}</textarea><div class="file-actions"><button class="btn good" onclick="submitActivity()">Submit Activity</button></div>${reviewPanelStudent(p.reviews.activity)}</div>`;
  if(currentTab==="case")weekBody.innerHTML=`<div class="card"><h3>Mini Case / Application — Completed during class</h3><div class="notice"><b>In-class only:</b> Available only from 8:00 PM to 10:00 PM (Makkah time) on the scheduled lecture day.</div><h4>${d.caseTitle}</h4><p>${d.caseText}</p><ol>${d.caseQuestions.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol><p class="muted">Write your case analysis below. Your instructor can review it and return feedback.</p><textarea id="caseText" placeholder="Write your case analysis...">${p.caseText||""}</textarea><div class="file-actions"><button class="btn good" onclick="submitCase()">Submit Mini Case</button></div>${reviewPanelStudent(p.reviews.case)}</div>`;
  if(currentTab==="quiz")renderQuiz(d);
+ if(currentTab==="assignment" && currentWeek>=4 && ![6,9,12,15].includes(currentWeek)){
+   currentTab="overview";
+   renderWeekTabs();
+   return renderWeekBody();
+ }
  if(currentTab==="assignment")weekBody.innerHTML=`<div class="card"><h3>Week ${currentWeek} Assignment</h3><p>${d.assignment}</p>
 <div class="${activityAvailability(currentWeek,"assignment").late?"notice":"success"}">${activityAvailability(currentWeek,"assignment").label}</div>
 <p class="muted">You may write your answer below, upload a PDF, or submit both. Maximum PDF size: 5 MB.</p>
