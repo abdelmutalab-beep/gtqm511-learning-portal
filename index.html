@@ -99,7 +99,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 <button class="btn" onclick="showPage('register')">Student Access</button></div>
 <div class="glass"><h3>Learning Journey</h3><p>Prepare → Learn → Apply → Discuss → Assess → Reflect</p>
 <div class="progress"><div id="overallBar" class="bar" style="width:0%"></div></div><p><b id="overallPct">0%</b> overall course progress</p>
-<p style="font-size:12px;opacity:.85">Student progress excludes In-Class Activity and Mini Case/Application because they are ungraded teaching activities.</p></div>
+<p style="font-size:12px;opacity:.85">In-Class Activity and Mini Case/Application are teaching-only activities and are excluded from student progress and assessment.</p></div>
 </div>
 <div class="section"><div class="section-head"><h2>15-Week Learning Path</h2><span class="muted">Weeks 1–4 expanded</span></div><div id="weeks" class="weeks"></div></div>
 </section>
@@ -207,7 +207,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 <div class="section-head"><h3 style="margin:0">Pending Manual Reviews</h3><span class="muted">All submitted items requiring instructor review</span></div>
 <div id="pendingReviews"></div>
 </div>
-<div class="section card"><div class="section-head"><h3 style="margin:0">Review Student Work</h3><span class="muted">Pre-Class • Knowledge/Assignment items • Post-Class</span></div><div id="reviewWorkspace" class="muted">Choose Review beside a student.</div></div>
+<div class="section card"><div class="section-head"><h3 style="margin:0">Review Student Work</h3><span class="muted">Pre-Class • Assignment • Post-Class</span></div><div id="reviewWorkspace" class="muted">Choose Review beside a student.</div></div>
 </section>
 
 <section id="week" class="page hidden">
@@ -216,7 +216,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 </main>
 
-<footer>G TQM 511 Learning Portal • v43 • Instructor Login Fixed + Student Tracking Restored</footer>
+<footer>G TQM 511 Learning Portal • v44 • In-Class Activities Removed from Student Assessment</footer>
 
 <script>
 const course=[
@@ -471,15 +471,15 @@ function getProg(id,w){return ensureReviews(Object.assign(blankProg(),db.progres
 function getTaskStates(p){if(Array.isArray(p.taskStates))return[0,1,2,3].map(i=>!!p.taskStates[i]);const n=Math.max(0,Math.min(4,Number(p.tasks)||0));return[0,1,2,3].map(i=>i<n)}
 function trackedActivityCount(id,w){
  const p=getProg(id,w),st=getTaskStates(p);
- // Student-facing weekly completion excludes In-Class Activity and Mini Case/Application
- // because they are ungraded teaching activities completed during the live lecture.
+ // In-Class Activity and Mini Case/Application are teaching-only.
+ // They are excluded from student progress and assessment in ALL weeks.
  let n=0;
  if(st[0])n++;               // Guided Reading
  if(st[1])n++;               // Lecture Viewed
  if(p.preClassReflection)n++;
  if(p.quiz!==null)n++;
  if(p.reflection)n++;
- // Weeks 1–3 retain the original short Assignment in the historical record.
+ // Keep only the original short Assignment for Weeks 1–3.
  if(w<=3 && st[3])n++;
  return Math.min(w<=3?6:5,n);
 }
@@ -1091,7 +1091,7 @@ function renderPendingReviews(){
       Object.keys(labels).forEach(key=>{
         // From Week 4 onward, Activity and Mini Case are teaching-only,
         // hidden from students and do not require manual review.
-        if(w>=4 && (key==="activity" || key==="case")) return;
+        if(key==="activity" || key==="case") return;
 
         // From Week 4 onward, Major Assignment review applies only
         // in the final submission weeks: 6, 9, 12 and 15.
@@ -1628,9 +1628,7 @@ function renderWeekTabs(){
 }
 function renderWeekBody(){
  const d=packs[currentWeek],s=student(),p=s?getProg(s.id,currentWeek):blankProg();
- if(!adminUnlocked && ["activity","case"].includes(currentTab)){
-   currentTab="overview";
- }
+ if(!adminUnlocked && ["activity","case"].includes(currentTab)){ currentTab="overview"; }
  const av=activityAvailability(currentWeek,currentTab);
  if(!adminUnlocked && !av.open && currentTab!=="overview"){lockedCard(currentTab,av);return}
  if(!d){
@@ -1639,7 +1637,7 @@ function renderWeekBody(){
  }
  if(currentTab==="overview"){
    const st=getTaskStates(p);
-   weekBody.innerHTML=`${scheduleCard(currentWeek)}${currentWeek>=4?majorCard(currentWeek):""}<div class="layout"><div class="card"><h3>Learning Outcomes</h3><ol>${d.objectives.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol></div><div class="card"><h3>Progress Checklist</h3><label class="task"><input type="checkbox" ${st[0]?"checked":""} onchange="setTask(0,this.checked)"> Guided Reading</label><label class="task"><input type="checkbox" ${st[1]?"checked":""} disabled> Lecture Viewed <span class="muted">(automatic)</span></label><div class="task">Pre-Class Reflection: <b>${p.preClassReflection?"Completed ✓":"Pending"}</b></div>${adminUnlocked?`<div class="task">In-Class Activity: <b>${st[2]?"Completed during class ✓":"Teaching activity"}</b></div><div class="task">Mini Case / Application: <b>${p.miniCase?"Completed during class ✓":"Teaching activity"}</b></div>`:""}<div class="task">Knowledge Check / Quiz: <b>${p.quiz!==null?"Submitted ✓":"Pending"}</b></div><div class="task">Assignment: <b>${st[3]?"Submitted ✓":"Pending"}</b></div><div class="task">Post-Class Reflection: <b>${p.reflection?"Completed ✓":"Pending"}</b></div><div class="success">${currentWeek<=3?"Weekly completion is based on the original 8-activity structure.":"From Week 4 onward, weekly completion uses 5 student-facing items only: Guided Reading, Lecture Viewed, Pre-Class Reflection, Knowledge Check, and Post-Class Reflection. In-class activities are teaching-only and are not assessed."}</div></div></div>`
+   weekBody.innerHTML=`${scheduleCard(currentWeek)}${currentWeek>=4?majorCard(currentWeek):""}<div class="layout"><div class="card"><h3>Learning Outcomes</h3><ol>${d.objectives.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol></div><div class="card"><h3>Progress Checklist</h3><label class="task"><input type="checkbox" ${st[0]?"checked":""} onchange="setTask(0,this.checked)"> Guided Reading</label><label class="task"><input type="checkbox" ${st[1]?"checked":""} disabled> Lecture Viewed <span class="muted">(automatic)</span></label><div class="task">Pre-Class Reflection: <b>${p.preClassReflection?"Completed ✓":"Pending"}</b></div>${adminUnlocked?`<div class="task">In-Class Activity: <b>Teaching activity only</b></div><div class="task">Mini Case / Application: <b>Teaching activity only</b></div>`:""}<div class="task">Knowledge Check / Quiz: <b>${p.quiz!==null?"Submitted ✓":"Pending"}</b></div><div class="task">Assignment: <b>${st[3]?"Submitted ✓":"Pending"}</b></div><div class="task">Post-Class Reflection: <b>${p.reflection?"Completed ✓":"Pending"}</b></div><div class="success">${currentWeek<=3?"Weekly completion is based on the original 8-activity structure.":"From Week 4 onward, weekly completion uses 5 student-facing items only: Guided Reading, Lecture Viewed, Pre-Class Reflection, Knowledge Check, and Post-Class Reflection. In-class activities are teaching-only and are not assessed."}</div></div></div>`
  }
  if(currentTab==="slides"){
    const pdf=`Week${currentWeek}_Lecture.pdf`,ppt=`Week${currentWeek}_Lecture.pptx`;
