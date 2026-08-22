@@ -216,7 +216,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 </main>
 
-<footer>G TQM 511 Learning Portal • v38 • Schedule Shifted One Week + Student View Simplified + 4 Major Assignments</footer>
+<footer>G TQM 511 Learning Portal • v39 • Weekly Content Always Open + Rescheduled Course + 4 Major Assignments</footer>
 
 <script>
 const course=[
@@ -368,9 +368,7 @@ function activityAvailability(w,tab){
  if(tab==="overview")return {open:true,label:"Schedule available"};
 
  if(tab==="content"){
-   return now>=s.guidedOpen.getTime()
-     ? {open:true,label:`Available since ${fmtRiyadh(s.guidedOpen)}`}
-     : {open:false,label:`Opens ${fmtRiyadh(s.guidedOpen)}`};
+   return {open:true,label:"Available at all times"};
  }
 
  if(tab==="preclass"){
@@ -433,7 +431,7 @@ function scheduleCard(w){
    : `<div class="notice" style="margin-bottom:10px"><b>Student access:</b> The opening and closing times below are enforced.</div>`;
  return `<div class="card" style="margin-bottom:14px"><h3>Week ${w} Schedule • Makkah Time</h3>${accessNote}
  <div class="two">
-  <div><b>Guided Reading / Core Content</b><p class="muted">Opens: ${fmtRiyadh(s.guidedOpen)}<br>Remains available after opening.</p></div>
+  <div><b>Guided Reading / Core Content</b><p class="muted">Available at all times for all weeks.</p></div>
   <div><b>Pre-Class Reflection</b><p class="muted">Opens: ${fmtRiyadh(s.preclassOpen)}<br>Final reminder window: ${fmtRiyadh(s.preclassReminder)}<br>Closes: ${fmtRiyadh(s.preclassClose)}</p></div>
   ${adminUnlocked?`<div><b>Instructor In-Class Activity</b><p class="muted">${fmtRiyadh(s.lecture)} → ${fmtRiyadh(s.lectureClose)}<br>Teaching activity only • not visible to students • not assessed.</p></div><div><b>Instructor Mini Case / Application</b><p class="muted">${fmtRiyadh(s.lecture)} → ${fmtRiyadh(s.lectureClose)}<br>Teaching activity only • not visible to students • not assessed.</p></div>`:""}
   <div><b>Post-Class Reflection</b><p class="muted">Opens: ${fmtRiyadh(s.postclassOpen)}<br>Closes: ${fmtRiyadh(s.postclassClose)}</p></div>
