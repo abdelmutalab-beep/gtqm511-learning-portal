@@ -69,6 +69,13 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 .ai-status{display:inline-block;padding:4px 8px;border-radius:99px;background:var(--soft);color:var(--blue);font-size:12px;font-weight:bold}
 .ai-loading{opacity:.7}
 
+
+.group-status-flow{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.group-step{padding:5px 8px;border:1px solid var(--line);border-radius:99px;font-size:12px;background:#fff}
+.group-step.active{background:var(--soft);color:var(--blue);border-color:#b9cdfb;font-weight:bold}
+.member-row{display:grid;grid-template-columns:1.7fr .8fr 1fr;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.history-item{padding:7px 0;border-bottom:1px solid var(--line);font-size:12px}
+@media(max-width:700px){.member-row{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -130,6 +137,15 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 <section id="groups" class="page hidden">
 <div class="section-head"><h2>Group Dashboard</h2><span class="muted">Based on centrally loaded data</span></div>
 <div id="groupCards" class="grid"></div>
+
+<div id="studentGroupWorkPanel" class="card section">
+  <div class="section-head">
+    <div><h3 style="margin:0">Group Work</h3><span id="groupWorkIdentity" class="muted">Sign in as a student to view group work.</span></div>
+    <button class="btn alt" onclick="loadMyGroupWork()">Refresh Group Work</button>
+  </div>
+  <div id="groupWorkBody" class="muted">No group data loaded.</div>
+</div>
+
 <div class="card section" style="overflow:auto"><h3>Group Membership</h3><table><thead><tr><th>Group</th><th>Students</th><th>Average Progress</th><th>Quiz Average</th></tr></thead><tbody id="groupRows"></tbody></table></div>
 </section>
 
@@ -144,6 +160,27 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </div>
 <div class="section card" style="overflow:auto"><h3>Student Tracking</h3>
 <table><thead><tr><th>Name</th><th>ID</th><th>Group</th><th>W1</th><th>W2</th><th>W3</th><th>W4</th><th>W1–4 Avg.</th><th>Risk</th><th>Action</th></tr></thead><tbody id="rosterRows"></tbody></table></div>
+
+<div class="section card">
+  <div class="section-head">
+    <div><h3 style="margin:0">Group Leaders</h3><span class="muted">Only the assigned leader can submit group work.</span></div>
+  </div>
+  <div id="groupLeaderManager" class="grid"></div>
+</div>
+
+<div class="section card">
+  <div class="section-head">
+    <div><h3 style="margin:0">Group Work Review</h3><span class="muted">Leader submits once; members confirm participation; instructor reviews once. Result, feedback and participation adjustment are visible to every member.</span></div>
+  </div>
+  <div style="overflow:auto">
+    <table>
+      <thead><tr><th>Group</th><th>Week</th><th>Leader</th><th>Status</th><th>Score</th><th>Participation</th><th>Action</th></tr></thead>
+      <tbody id="groupWorkReviewRows"></tbody>
+    </table>
+  </div>
+  <div id="groupReviewWorkspace" class="section"></div>
+</div>
+
 <div class="section card">
   <div class="section-head">
     <div>
@@ -179,7 +216,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 </main>
 
-<footer>G TQM 511 Learning Portal • v27 • Slides Open 2:00 PM Makkah + AI Review + Live Tracking</footer>
+<footer>G TQM 511 Learning Portal • v29 • Group Accountability + Participation Confirmation + Locked Review + History + AI</footer>
 
 <script>
 const course=[
@@ -397,7 +434,7 @@ const API_URL="https://script.google.com/macros/s/AKfycbxnbCjhDwhYbhQ9WT3yeVqHqz
 let centralOnline=false;
 let db=JSON.parse(localStorage.getItem("gtqm511_v3")||"null")||{students:[],groups:["Group A","Group B","Group C","Group D"],activeStudentId:"",progress:{}};
 if(!db.progress)db.progress={}; if(!db.students)db.students=[]; if(!db.groups)db.groups=["Group A","Group B","Group C","Group D"];
-let currentWeek=1,currentTab="overview",adminUnlocked=false,adminPin="",liveActivity=[],heartbeatTimer=null,currentPageId="home";
+let currentWeek=1,currentTab="overview",adminUnlocked=false,adminPin="",liveActivity=[],heartbeatTimer=null,currentPageId="home",groupLeader=null,groupWork=[],groupConfirmations=[],groupHistory=[],allGroupLeaders=[],allGroupWork=[],allGroupConfirmations=[],allGroupHistory=[];
 
 function save(){localStorage.setItem("gtqm511_v3",JSON.stringify(db))}
 function student(){return db.students.find(s=>s.id===db.activeStudentId)||null}
@@ -500,7 +537,7 @@ async function loadStudentById(id){
  const sResp=await apiGet({action:"student",identifier:id});if(!sResp.student)return null;
  const pResp=await apiGet({action:"progress",studentId:String(sResp.student.id)});const s=sResp.student;
  db.students=[{name:s.name,id:String(s.id),email:s.email||"",group:s.group||""}];db.activeStudentId=String(s.id);
- if(s.group&&!db.groups.includes(s.group))db.groups.push(s.group);applyProgressRows(pResp.progress||[]);save();renderAll();startHeartbeat();return s
+ if(s.group&&!db.groups.includes(s.group))db.groups.push(s.group);applyProgressRows(pResp.progress||[]);save();renderAll();startHeartbeat();loadMyGroupWork();return s
 }
 async function pushProgress(id,w){
  const q=getProg(id,w),st=getTaskStates(q);setSaveStatus("Saving...",true);
@@ -525,7 +562,7 @@ async function showPage(id){
  if(id==="instructor"&&!adminUnlocked){await unlockInstructor();return}
  document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));document.getElementById(id).classList.remove("hidden");
  document.querySelectorAll(".nav[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===id));
- if(id==="student")renderStudent();if(id==="groups")renderGroups();if(id==="instructor")renderInstructor();window.scrollTo({top:0,behavior:"smooth"})
+ if(id==="student")renderStudent();if(id==="groups"){renderGroups();loadMyGroupWork();}if(id==="instructor")renderInstructor();window.scrollTo({top:0,behavior:"smooth"})
 }
 document.querySelectorAll(".nav[data-page]").forEach(b=>{if(b.id!=="adminNav")b.onclick=()=>showPage(b.dataset.page)});
 
@@ -598,132 +635,307 @@ function calculateStudentGroupAverage(s){
  if(!s.group||members.length<2){groupAveragePct.textContent="—";groupAverageBar.style.width="0%";groupNote.textContent="Open the Instructor Dashboard to load the full cohort, then return here for group comparison.";return}
  const avg=Math.round(members.reduce((a,m)=>a+studentFirst4Average(m.id),0)/members.length);groupAveragePct.textContent=avg+"%";groupAverageBar.style.width=avg+"%";groupNote.textContent=`Group average based on ${members.length} centrally loaded students.`
 }
-function renderGroups(){
- const groups=[...new Set(db.students.map(s=>s.group).filter(Boolean))];
- groupCards.innerHTML=groups.map(g=>{const m=db.students.filter(s=>s.group===g),avg=m.length?Math.round(m.reduce((a,s)=>a+studentFirst4Average(s.id),0)/m.length):0;return `<div class="card stat"><span class="muted">${g}</span><strong>${avg}%</strong><span class="muted">${m.length} students</span></div>`}).join("");
- groupRows.innerHTML=groups.map(g=>{const m=db.students.filter(s=>s.group===g),avg=m.length?Math.round(m.reduce((a,s)=>a+studentFirst4Average(s.id),0)/m.length):0;let qs=[];m.forEach(x=>{for(let w=1;w<=4;w++){const q=getProg(x.id,w).quiz;if(q!==null)qs.push(q)}});const qa=qs.length?Math.round(qs.reduce((a,b)=>a+b,0)/qs.length):0;return `<tr><td>${g}</td><td>${m.map(x=>x.name).join(", ")||"—"}</td><td>${avg}%</td><td>${qa}%</td></tr>`}).join("")
-}
-function studentStarted(id){return [1,2,3,4].some(w=>trackedActivityCount(id,w)>0)}
-function studentRiskStatus(id){if(!studentStarted(id))return"Not Started";return studentFirst4Average(id)<50?"At Risk":"On Track"}
 
-async function unlockInstructor(){
- if(adminUnlocked){showPage("instructor");return}const pin=prompt("Instructor PIN:");if(!pin)return;
- try{const snap=await apiPost({action:"adminSnapshot",pin});adminPin=pin;adminUnlocked=true;db.students=(snap.students||[]).map(s=>({name:s.name,id:String(s.id),email:s.email||"",group:s.group||""}));applyProgressRows(snap.progress||[]);liveActivity=snap.activity||[];save();renderAll();adminNav.style.display="";showPage("instructor")}catch(e){alert("Incorrect instructor PIN.")}
-}
-async function refreshInstructor(){
- if(!adminUnlocked)return;
- try{const snap=await apiPost({action:"adminSnapshot",pin:adminPin});db.students=(snap.students||[]).map(s=>({name:s.name,id:String(s.id),email:s.email||"",group:s.group||""}));applyProgressRows(snap.progress||[]);liveActivity=snap.activity||[];save();renderAll();setSaveStatus("Instructor data refreshed ✓",true)}catch(e){alert("Could not refresh instructor data.")}
-}
-
-async function resetStudentProgress(id){
- if(!adminUnlocked){alert("Instructor access is required.");return}
- const target=db.students.find(s=>String(s.id)===String(id));
- const name=target?target.name:String(id);
- const ok=confirm(`Reset Weeks 1–4 for ${name} to zero? This clears all 8 tracked activities, quiz scores, pre/post reflections, mini case, and assignment status.`);
- if(!ok)return;
-
- setSaveStatus("Resetting...",true);
-
- for(let w=1;w<=4;w++){
-   const blank=blankProg();
-   db.progress[pkey(id,w)]=blank;
-   save();
-   try{
-     await apiPost({
-       action:"saveProgress",
-       progress:{
-         studentId:String(id),
-         week:Number(w),
-         taskStates:[false,false,false,false],
-         quiz:null,
-         reflection:false,
-         reflectionText:encodeReflectionPayload(blank),
-         preClassReflection:false,
-         preClassText:"",
-         miniCase:false,
-         total:0
-       }
-     });
-   }catch(e){
-     setSaveStatus("Reset failed ✕",false);
-     alert(`Could not reset Week ${w}. Please check the central database connection and try again.`);
-     return;
-   }
- }
-
- for(let w=1;w<=4;w++) db.progress[pkey(id,w)]=blankProg();
- save();
- renderAll();
-
- try{
-   const snap=await apiPost({action:"adminSnapshot",pin:adminPin});
-   db.students=(snap.students||[]).map(s=>({name:s.name,id:String(s.id),email:s.email||"",group:s.group||""}));
-   applyProgressRows(snap.progress||[]);liveActivity=snap.activity||[];
-   save();
-   renderAll();
-   setSaveStatus("Student reset to zero ✓",true);
- }catch(e){
-   renderAll();
-   setSaveStatus("Reset saved; refresh data",true);
- }
-}
-
-
-function manualReviewItemsForStudent(s){
- const labels={
-   preclass:"Pre-Class Reflection",
-   activity:"In-Class Activity",
-   case:"Mini Case",
-   assignment:"Assignment",
-   reflection:"Post-Class Reflection"
- };
- const items=[];
- for(let w=1;w<=4;w++){
-   const p=getProg(s.id,w);
-   Object.keys(labels).forEach(key=>{
-     const submitted=workSubmitted(p,key);
-     if(!submitted)return;
-     const r=p.reviews[key]||{status:"Submitted",feedback:""};
-     const status=r.status||"Submitted";
-     if(status==="Reviewed")return;
-     items.push({
-       studentId:s.id,
-       studentName:s.name,
-       group:s.group||"",
-       week:w,
-       key,
-       label:labels[key],
-       status,
-       hasText:!!String(workTextFor(p,key)||"").trim(),
-       hasPdf:key==="assignment" && !!p.assignmentPdfUrl
-     });
-   });
- }
- return items;
-}
-function renderPendingReviews(){
- if(!window.pendingReviews)return;
- let items=[];
- db.students.forEach(s=>items=items.concat(manualReviewItemsForStudent(s)));
- if(!items.length){
-   pendingReviews.innerHTML='<div class="success">No pending manual reviews.</div>';
+async function loadMyGroupWork(){
+ const s=student();
+ if(!s || !s.id){
+   groupLeader=null;groupWork=[];
+   renderMyGroupWork();
    return;
  }
- pendingReviews.innerHTML=`<div style="overflow:auto"><table>
- <thead><tr><th>Student</th><th>Group</th><th>Week</th><th>Item</th><th>Submission</th><th>Status</th><th>Action</th></tr></thead>
- <tbody>${items.map(x=>`<tr>
-   <td>${escapeHtml(x.studentName)}<br><small class="muted">${escapeHtml(x.studentId)}</small></td>
-   <td>${escapeHtml(x.group||"—")}</td>
-   <td>Week ${x.week}</td>
-   <td>${x.label}</td>
-   <td>${x.hasPdf?"PDF":x.hasText?"Text":"Recorded"}</td>
-   <td>${escapeHtml(x.status)}</td>
-   <td><button class="btn" onclick="openStudentReview('${x.studentId}')">Review</button></td>
- </tr>`).join("")}</tbody></table></div>`;
+ try{
+   const r=await apiGet({action:"groupstatus",studentId:String(s.id)});
+   groupLeader=r.leader||null;
+   groupWork=Array.isArray(r.work)?r.work:[];
+   groupConfirmations=Array.isArray(r.confirmations)?r.confirmations:[];
+   groupHistory=Array.isArray(r.history)?r.history:[];
+   renderMyGroupWork();
+ }catch(e){
+   groupWorkBody.innerHTML=`<div class="notice">${escapeHtml(e.message||String(e))}</div>`;
+ }
+}
+
+function groupWorkForWeek_(w){
+ return (groupWork||[]).find(x=>Number(x.week)===Number(w))||null;
+}
+
+
+function groupConfirmFor_(w,id){
+ return (groupConfirmations||[]).find(x=>Number(x.week)===Number(w)&&String(x.studentId)===String(id))||null;
+}
+function groupHistoryFor_(w){
+ return (groupHistory||[]).filter(x=>Number(x.week)===Number(w)).sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp));
+}
+function groupStatusFlow_(status){
+ const steps=["Not Started","In Progress","Submitted","Needs Revision","Resubmitted","Reviewed"];
+ return `<div class="group-status-flow">${steps.map(s=>`<span class="group-step ${s===status?"active":""}">${s}</span>`).join("")}</div>`;
+}
+
+function renderMyGroupWork(){
+ const s=student();
+ const ident=document.getElementById("groupWorkIdentity");
+ const body=document.getElementById("groupWorkBody");
+ if(!ident || !body)return;
+
+ if(!s){
+   ident.textContent="Sign in as a student to view group work.";
+   body.innerHTML='<div class="muted">Group work becomes visible after student sign-in.</div>';
+   return;
+ }
+
+ const isLeader=groupLeader && String(groupLeader.studentId)===String(s.id);
+ ident.textContent=`${s.group||"—"} • Leader: ${groupLeader?groupLeader.name:"Not assigned yet"}${isLeader?" • You are the group leader":""}`;
+
+ let cards="";
+ for(let w=1;w<=15;w++){
+   const work=groupWorkForWeek_(w);
+   const status=work?(work.status||"In Progress"):"Not Started";
+   const score=work && work.score!==null && work.score!==undefined && work.score!=="" ? `${work.score}%` : "—";
+   const feedback=work&&work.feedback?escapeHtml(work.feedback):"No instructor feedback yet.";
+   const text=work&&work.submissionText?escapeHtml(work.submissionText):"";
+   const locked=!!(work&&work.locked);
+   const conf=groupConfirmFor_(w,s.id);
+   const canConfirm=!!work && ["Submitted","Resubmitted","Reviewed","Needs Revision"].includes(status);
+   const members=db.students.filter(m=>m.group===s.group);
+   const confirmedCount=members.filter(m=>groupConfirmFor_(w,m.id)?.confirmed).length;
+   const hist=groupHistoryFor_(w);
+
+   cards+=`<div class="student-week">
+     <div class="student-week-head">
+       <div><b>Week ${w}: ${escapeHtml(course[w-1][0])}</b><div class="muted">Group status: ${escapeHtml(status)} • Result: ${score}</div></div>
+       ${isLeader?'<span class="pill">Group Leader</span>':'<span class="pill">Member View</span>'}
+     </div>
+
+     ${groupStatusFlow_(status)}
+
+     ${isLeader?`
+       <label style="display:block;margin-top:10px"><b>Group Submission</b></label>
+       <textarea id="groupText_${w}" ${locked?"disabled":""} placeholder="Enter the agreed group response here...">${text}</textarea>
+       <div class="file-actions">
+         <button class="btn alt" ${locked?"disabled":""} onclick="saveMyGroupWork(${w},'draft')">Save Draft</button>
+         <button class="btn good" ${locked?"disabled":""} onclick="saveMyGroupWork(${w},'submit')">${status==="Needs Revision"?"Resubmit Group Work":"Submit Final"}</button>
+       </div>
+       ${locked?'<div class="notice">Submission is locked while awaiting/completing instructor review. Editing reopens only when the instructor selects Needs Revision.</div>':""}
+     `:`
+       <div class="review-text" style="margin-top:10px">${text||"<i>No group submission has been recorded yet.</i>"}</div>
+       <div class="muted" style="margin-top:7px">Only ${groupLeader?escapeHtml(groupLeader.name):"the assigned group leader"} can submit or edit this work.</div>
+     `}
+
+     <div class="review-guide" style="margin-top:10px">
+       <b>Participation Confirmation</b>
+       <div class="muted">${confirmedCount} of ${members.length} members confirmed participation.</div>
+       ${canConfirm?(
+         conf&&conf.confirmed
+           ? `<div class="success" style="margin-top:7px">✓ You confirmed your participation${conf.adjustment?` • Instructor adjustment: <b>${escapeHtml(conf.adjustment)}</b>`:""}.</div>`
+           : `<button class="btn good" style="margin-top:8px" onclick="confirmMyParticipation(${w})">I Participated — Confirm</button>`
+       ):'<div class="muted" style="margin-top:7px">Confirmation opens after the leader submits the group work.</div>'}
+     </div>
+
+     <div class="${status==="Reviewed"?"success":"review-guide"}" style="margin-top:10px">
+       <b>Instructor Result</b><br>
+       Status: <b>${escapeHtml(status)}</b> • Group Score: <b>${score}</b><br>
+       <span>${feedback}</span>
+       ${conf&&conf.adjustment?`<div style="margin-top:5px"><b>Your participation:</b> ${escapeHtml(conf.adjustment)}</div>`:""}
+     </div>
+
+     <details class="review-guide" style="margin-top:10px">
+       <summary>Submission History (${hist.length})</summary>
+       ${hist.length?hist.map(h=>`<div class="history-item"><b>${escapeHtml(h.event)}</b> • ${escapeHtml(h.actorName||"—")}<br><span class="muted">${escapeHtml(h.details||"")} ${h.timestamp?`• ${formatLastSeen(h.timestamp)}`:""}</span></div>`).join(""):'<div class="muted">No history yet.</div>'}
+     </details>
+   </div>`;
+ }
+ body.innerHTML=cards;
+}
+
+async function saveMyGroupWork(w,mode){
+ const s=student();if(!s)return;
+ const el=document.getElementById(`groupText_${w}`);
+ const text=el?(el.value||"").trim():"";
+ if(!text){alert("Please enter the group work before saving.");return}
+ if(mode==="submit" && !confirm("Submit this group work for instructor review? Editing will be locked until it is returned for revision."))return;
+ try{
+   const r=await apiPost({action:"saveGroupWork",studentId:String(s.id),week:Number(w),submissionText:text,mode});
+   if(!r || !r.ok)throw new Error((r&&r.error)||"Could not save group work.");
+   setSaveStatus(mode==="draft"?"Draft saved ✓":"Group work submitted ✓",true);
+   await loadMyGroupWork();
+ }catch(e){alert(e.message||String(e))}
+}
+
+async function confirmMyParticipation(w){
+ const s=student();if(!s)return;
+ if(!confirm("Confirm that you participated in this group work?"))return;
+ try{
+   const r=await apiPost({action:"confirmGroupParticipation",studentId:String(s.id),week:Number(w)});
+   if(!r || !r.ok)throw new Error((r&&r.error)||"Could not confirm participation.");
+   setSaveStatus("Participation confirmed ✓",true);
+   await loadMyGroupWork();
+ }catch(e){alert(e.message||String(e))}
+}
+
+function renderGroupLeaderManager(){
+ const el=document.getElementById("groupLeaderManager");
+ if(!el)return;
+ const groups=[...new Set(db.students.map(s=>s.group).filter(Boolean))].sort();
+ el.innerHTML=groups.map(g=>{
+   const members=db.students.filter(s=>s.group===g);
+   const leader=(allGroupLeaders||[]).find(x=>x.group===g);
+   return `<div class="card">
+     <b>${escapeHtml(g)}</b>
+     <div class="muted" style="margin:5px 0 8px">Current leader: ${leader?escapeHtml(leader.name):"Not assigned"}</div>
+     <select id="leader_${g.replace(/\W/g,"_")}">
+       <option value="">Select group leader</option>
+       ${members.map(m=>`<option value="${escapeHtml(m.id)}" ${leader&&String(leader.studentId)===String(m.id)?"selected":""}>${escapeHtml(m.name)} • ${escapeHtml(m.id)}</option>`).join("")}
+     </select>
+     <button class="btn good" style="margin-top:8px" onclick="setGroupLeaderUI('${g.replace(/'/g,"\\'")}','leader_${g.replace(/\W/g,"_")}')">Set Leader</button>
+   </div>`;
+ }).join("");
+}
+
+async function setGroupLeaderUI(group,selectId){
+ const sel=document.getElementById(selectId);
+ if(!sel || !sel.value){alert("Select a student first.");return}
+ try{
+   await apiPost({action:"setGroupLeader",pin:adminPin,group:group,studentId:sel.value});
+   setSaveStatus("Group leader updated ✓",true);
+   await refreshInstructor();
+ }catch(e){alert(e.message||String(e))}
+}
+
+
+function renderGroupWorkReview(){
+ const rows=document.getElementById("groupWorkReviewRows");
+ if(!rows)return;
+ const items=[...(allGroupWork||[])].sort((a,b)=>String(a.group).localeCompare(String(b.group))||Number(a.week)-Number(b.week));
+ rows.innerHTML=items.length?items.map(x=>{
+   const members=db.students.filter(m=>m.group===x.group);
+   const confirmed=members.filter(m=>(allGroupConfirmations||[]).some(c=>c.group===x.group&&Number(c.week)===Number(x.week)&&String(c.studentId)===String(m.id)&&c.confirmed)).length;
+   return `<tr>
+     <td>${escapeHtml(x.group)}</td><td>Week ${x.week}</td><td>${escapeHtml(x.leaderName||"—")}</td>
+     <td>${escapeHtml(x.status||"In Progress")}</td><td>${x.score===null||x.score===""?"—":x.score+"%"}</td>
+     <td>${confirmed}/${members.length}</td>
+     <td><button class="btn" onclick="openGroupReview('${String(x.group).replace(/'/g,"\\'")}',${x.week})">Review</button></td>
+   </tr>`;
+ }).join(""):'<tr><td colspan="7" class="muted">No group submissions yet.</td></tr>';
+}
+
+function openGroupReview(group,w){
+ const x=(allGroupWork||[]).find(z=>z.group===group&&Number(z.week)===Number(w));
+ if(!x)return;
+ const members=db.students.filter(m=>m.group===group);
+ const confirmations=(allGroupConfirmations||[]).filter(c=>c.group===group&&Number(c.week)===Number(w));
+ const history=(allGroupHistory||[]).filter(h=>h.group===group&&Number(h.week)===Number(w)).sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp));
+ const box=document.getElementById("groupReviewWorkspace");
+
+ const memberHtml=members.map(m=>{
+   const c=confirmations.find(z=>String(z.studentId)===String(m.id));
+   const adj=(c&&c.adjustment)||((c&&c.confirmed)?"Full":"Not Confirmed");
+   return `<div class="member-row">
+     <div><b>${escapeHtml(m.name)}</b><div class="muted">${escapeHtml(m.id)}</div></div>
+     <div>${c&&c.confirmed?'<span style="color:var(--green);font-weight:bold">✓ Confirmed</span>':'<span class="muted">Not confirmed</span>'}</div>
+     <select id="adj_${escapeHtml(m.id)}">
+       <option value="Full" ${adj==="Full"?"selected":""}>Full</option>
+       <option value="Partial" ${adj==="Partial"?"selected":""}>Partial</option>
+       <option value="Not Confirmed" ${adj==="Not Confirmed"?"selected":""}>Not Confirmed</option>
+     </select>
+   </div>`;
+ }).join("");
+
+ box.innerHTML=`<div class="review-card">
+   <div class="section-head"><div><b>${escapeHtml(group)} • Week ${w}</b><div class="muted">Submitted by leader: ${escapeHtml(x.leaderName||"—")} • Status: ${escapeHtml(x.status||"")}</div></div></div>
+   ${groupStatusFlow_(x.status||"In Progress")}
+   <div class="review-text">${escapeHtml(x.submissionText||"")}</div>
+
+   <div class="file-actions">
+     <button class="btn good" id="groupAiBtn" onclick="requestGroupAiFeedback('${String(group).replace(/'/g,"\\'")}',${w})">AI Feedback</button>
+   </div>
+   <div id="groupAiResult"></div>
+
+   <div class="section"><b>Member Participation</b>${memberHtml}
+     <button class="btn alt" style="margin-top:8px" onclick="saveGroupAdjustmentsUI('${String(group).replace(/'/g,"\\'")}',${w})">Save Participation Adjustments</button>
+   </div>
+
+   <div class="formrow" style="margin-top:12px;grid-template-columns:1fr 2fr">
+     <div><label><b>Group Score (0–100)</b></label><input id="groupScore" type="number" min="0" max="100" value="${x.score===null||x.score===""?"":x.score}"></div>
+     <div><label><b>Instructor Feedback</b></label><textarea id="groupFeedback">${escapeHtml(x.feedback||"")}</textarea></div>
+   </div>
+
+   <div class="file-actions">
+     <button class="btn good" onclick="saveGroupReviewUI('${String(group).replace(/'/g,"\\'")}',${w},'Reviewed')">Mark Reviewed</button>
+     <button class="btn alt" onclick="saveGroupReviewUI('${String(group).replace(/'/g,"\\'")}',${w},'Needs Revision')">Return for Revision</button>
+   </div>
+   <div class="muted">Reviewed locks the submission. Needs Revision unlocks it for the group leader.</div>
+
+   <details class="review-guide" style="margin-top:12px">
+     <summary>Submission History (${history.length})</summary>
+     ${history.length?history.map(h=>`<div class="history-item"><b>${escapeHtml(h.event)}</b> • ${escapeHtml(h.actorName||"—")}<br><span class="muted">${escapeHtml(h.details||"")} ${h.timestamp?`• ${formatLastSeen(h.timestamp)}`:""}</span></div>`).join(""):'<div class="muted">No history yet.</div>'}
+   </details>
+ </div>`;
+ box.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+async function saveGroupAdjustmentsUI(group,w){
+ const members=db.students.filter(m=>m.group===group);
+ const adjustments=members.map(m=>({studentId:String(m.id),adjustment:document.getElementById(`adj_${m.id}`)?.value||""}));
+ try{
+   await apiPost({action:"saveGroupParticipationAdjustments",pin:adminPin,group,week:Number(w),adjustments});
+   setSaveStatus("Participation adjustments saved ✓",true);
+   await refreshInstructor();
+   openGroupReview(group,w);
+ }catch(e){alert(e.message||String(e))}
+}
+
+async function requestGroupAiFeedback(group,w){
+ const x=(allGroupWork||[]).find(z=>z.group===group&&Number(z.week)===Number(w));
+ if(!x)return;
+ const btn=document.getElementById("groupAiBtn");
+ const out=document.getElementById("groupAiResult");
+ const feedback=document.getElementById("groupFeedback");
+ const g=reviewGuide(w,"assignment");
+ if(btn){btn.disabled=true;btn.textContent="Analyzing...";}
+ if(out){out.className="ai-review-box ai-loading";out.innerHTML="<b>AI is analyzing the group submission against the week rubric...</b>";}
+ try{
+   const r=await apiPost({
+     action:"aiFeedback",pin:adminPin,
+     payload:{
+       week:Number(w),
+       weekTopic:(course[w-1]&&course[w-1][0])||("Week "+w),
+       activity:"Group Work",
+       studentAnswer:String(x.submissionText||""),
+       modelAnswer:String(g.model||""),
+       expectedPoints:Array.isArray(g.expected)?g.expected:[]
+     }
+   });
+   if(!r||!r.ok)throw new Error((r&&r.error)||"AI feedback failed.");
+   if(feedback&&r.feedback)feedback.value=r.feedback;
+   if(out){
+     out.className="ai-review-box";
+     out.innerHTML=`<div class="section-head" style="margin-bottom:6px"><h4>AI Suggested Group Review</h4><span class="ai-status">${escapeHtml(r.suggestedStatus||"")}</span></div>
+       <b>Strengths</b><ul>${(r.strengths||[]).map(z=>`<li>${escapeHtml(z)}</li>`).join("")||"<li>—</li>"}</ul>
+       <b>Improvement Needed</b><ul>${(r.improvements||[]).map(z=>`<li>${escapeHtml(z)}</li>`).join("")||"<li>—</li>"}</ul>
+       <div><b>Instructor rationale:</b> ${escapeHtml(r.rationale||"—")}</div>`;
+   }
+ }catch(e){
+   if(out){out.className="ai-review-box";out.innerHTML=`<div class="notice">${escapeHtml(e.message||String(e))}</div>`;}
+ }finally{
+   if(btn){btn.disabled=false;btn.textContent="AI Feedback";}
+ }
+}
+
+async function saveGroupReviewUI(group,w,status){
+ const score=document.getElementById("groupScore")?.value ?? "";
+ const feedback=(document.getElementById("groupFeedback")?.value||"").trim();
+ try{
+   await apiPost({action:"saveGroupReview",pin:adminPin,review:{group,week:Number(w),status,score,feedback}});
+   setSaveStatus(status==="Reviewed"?"Group reviewed ✓":"Returned for revision ✓",true);
+   await refreshInstructor();
+   openGroupReview(group,w);
+ }catch(e){alert(e.message||String(e))}
 }
 
 function renderInstructor(){
- iStudents.textContent=db.students.length;renderLiveActivity();
+ iStudents.textContent=db.students.length;renderGroupLeaderManager();
+ renderGroupWorkReview();
+ renderLiveActivity();
  renderPendingReviews();const groups=[...new Set(db.students.map(s=>s.group).filter(Boolean))];iGroups.textContent=groups.length;
  const active=db.students.filter(s=>studentStarted(s.id)),vals=active.map(s=>studentFirst4Average(s.id)),avg=vals.length?Math.round(vals.reduce((a,b)=>a+b,0)/vals.length):0;iCompletion.textContent=avg+"%";
  iRisk.textContent=db.students.filter(s=>studentRiskStatus(s.id)==="At Risk").length;
