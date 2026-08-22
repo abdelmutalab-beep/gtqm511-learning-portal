@@ -99,7 +99,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 <button class="btn" onclick="showPage('register')">Student Access</button></div>
 <div class="glass"><h3>Learning Journey</h3><p>Prepare → Learn → Apply → Discuss → Assess → Reflect</p>
 <div class="progress"><div id="overallBar" class="bar" style="width:0%"></div></div><p><b id="overallPct">0%</b> overall course progress</p>
-<p style="font-size:12px;opacity:.85">Each expanded week uses the same 8-activity cycle. Every completed activity contributes 12.5% to weekly completion.</p></div>
+<p style="font-size:12px;opacity:.85">Student progress excludes In-Class Activity and Mini Case/Application because they are ungraded teaching activities.</p></div>
 </div>
 <div class="section"><div class="section-head"><h2>15-Week Learning Path</h2><span class="muted">Weeks 1–4 expanded</span></div><div id="weeks" class="weeks"></div></div>
 </section>
@@ -126,7 +126,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 <div class="card stat"><span class="muted">Quiz Average</span><strong id="sQuiz">0%</strong></div>
 <div class="card stat"><span class="muted">Group</span><strong id="sGroup">—</strong></div>
 </div>
-<div class="card section"><div class="section-head"><h3 style="margin:0">Weeks 1–4 Detailed Progress</h3><span class="muted">8 tracked activities per week</span></div><div id="studentWeekDetails"></div></div>
+<div class="card section"><div class="section-head"><h3 style="margin:0">Weeks 1–4 Detailed Progress</h3><span class="muted">Student-facing assessed/completion activities only</span></div><div id="studentWeekDetails"></div></div>
 <div class="card section"><div class="section-head"><h3 style="margin:0">Group Progress</h3><span id="studentGroupLabel" class="muted">—</span></div>
 <div class="two"><div><p class="muted">Your Progress</p><div class="progress"><div id="studentGroupBar" class="bar" style="width:0%"></div></div><p><b id="studentGroupPct">0%</b></p></div>
 <div><p class="muted">Group Average</p><div class="progress"><div id="groupAverageBar" class="bar" style="width:0%"></div></div><p><b id="groupAveragePct">—</b></p></div></div>
@@ -207,7 +207,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 <div class="section-head"><h3 style="margin:0">Pending Manual Reviews</h3><span class="muted">All submitted items requiring instructor review</span></div>
 <div id="pendingReviews"></div>
 </div>
-<div class="section card"><div class="section-head"><h3 style="margin:0">Review Student Work</h3><span class="muted">Pre-Class • Activity • Case • Assignment • Post-Class</span></div><div id="reviewWorkspace" class="muted">Choose Review beside a student.</div></div>
+<div class="section card"><div class="section-head"><h3 style="margin:0">Review Student Work</h3><span class="muted">Pre-Class • Knowledge/Assignment items • Post-Class</span></div><div id="reviewWorkspace" class="muted">Choose Review beside a student.</div></div>
 </section>
 
 <section id="week" class="page hidden">
@@ -216,7 +216,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 </main>
 
-<footer>G TQM 511 Learning Portal • v41 • Instructor Login Hardened + Panel Errors Isolated</footer>
+<footer>G TQM 511 Learning Portal • v42 • In-Class Items Removed from Students + Instructor Progress Restored</footer>
 
 <script>
 const course=[
@@ -471,27 +471,21 @@ function getProg(id,w){return ensureReviews(Object.assign(blankProg(),db.progres
 function getTaskStates(p){if(Array.isArray(p.taskStates))return[0,1,2,3].map(i=>!!p.taskStates[i]);const n=Math.max(0,Math.min(4,Number(p.tasks)||0));return[0,1,2,3].map(i=>i<n)}
 function trackedActivityCount(id,w){
  const p=getProg(id,w),st=getTaskStates(p);
- if(w<=3){
-   let n=st.filter(Boolean).length;
-   if(p.preClassReflection)n++;
-   if(p.miniCase)n++;
-   if(p.quiz!==null)n++;
-   if(p.reflection)n++;
-   return Math.min(8,n);
- }
- // From Week 4 onward, in-class activities and mini cases are teaching activities only.
- // They are hidden from students and do not count toward assessment or weekly completion.
+ // Student-facing weekly completion excludes In-Class Activity and Mini Case/Application
+ // because they are ungraded teaching activities completed during the live lecture.
  let n=0;
  if(st[0])n++;               // Guided Reading
  if(st[1])n++;               // Lecture Viewed
  if(p.preClassReflection)n++;
  if(p.quiz!==null)n++;
  if(p.reflection)n++;
- return Math.min(5,n);
+ // Weeks 1–3 retain the original short Assignment in the historical record.
+ if(w<=3 && st[3])n++;
+ return Math.min(w<=3?6:5,n);
 }
 function weekPct(id,w){
  if(w<1||w>15)return 0;
- return Math.round(trackedActivityCount(id,w)/(w<=3?8:5)*100);
+ return Math.round(trackedActivityCount(id,w)/(w<=3?6:5)*100);
 }
 function weekStatus(id,w){const pct=weekPct(id,w);return pct===100?"Completed":pct>0?"In Progress":"Not Started"}
 
@@ -664,14 +658,12 @@ function detailWeek(id,w){
  a+=activityBox("Guided Reading",st[0]);
  a+=activityBox("Lecture Viewed",st[1]);
  a+=activityBox("Pre-Class Reflection",p.preClassReflection);
- if(w<=3){
-   a+=activityBox("In-Class Activity",st[2]);
-   a+=activityBox("Mini Case / Application",p.miniCase);
- }
+ // In-Class Activity and Mini Case/Application are instructor-led teaching activities only
+ // and are intentionally not shown in the student progress view.
  a+=activityBox("Knowledge Check / Quiz",p.quiz!==null,p.quiz!==null?p.quiz+"%":"");
  if(w<=3)a+=activityBox("Assignment",st[3]);
  a+=activityBox("Post-Class Reflection",p.reflection);
- return `<div class="student-week"><div class="student-week-head"><div><b>Week ${w}: ${course[w-1][0]}</b><div class="muted">${weekStatus(id,w)} • ${trackedActivityCount(id,w)}/8 activities</div></div><strong>${pct}%</strong></div><div class="progress" style="margin-top:9px"><div class="bar" style="width:${pct}%"></div></div><div class="student-activities">${a}</div></div>`
+ return `<div class="student-week"><div class="student-week-head"><div><b>Week ${w}: ${course[w-1][0]}</b><div class="muted">${weekStatus(id,w)} • ${trackedActivityCount(id,w)}/${w<=3?6:5} student activities</div></div><strong>${pct}%</strong></div><div class="progress" style="margin-top:9px"><div class="bar" style="width:${pct}%"></div></div><div class="student-activities">${a}</div></div>`
 }
 function studentFirst4Average(id){return Math.round((weekPct(id,1)+weekPct(id,2)+weekPct(id,3)+weekPct(id,4))/4)}
 function calculateStudentGroupAverage(s){
@@ -1006,23 +998,11 @@ async function unlockInstructor(){
 
     save();
 
-    // Authentication has succeeded at this point. UI rendering must never convert it into a login failure.
+    // Rendering problems must not be mistaken for authentication failures.
     try{renderAll();}catch(renderErr){console.error("Instructor render warning:",renderErr);}
 
     adminNav.style.display="";
-    document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));
-    const instructorPage=document.getElementById("instructor");
-    if(instructorPage)instructorPage.classList.remove("hidden");
-    document.querySelectorAll(".nav[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page==="instructor"));
-    currentPageId="instructor";
-    try{
-      if(typeof renderInstructor==="function")renderInstructor();
-    }catch(renderErr){
-      console.error("Instructor dashboard warning:",renderErr);
-      const rw=document.getElementById("reviewWorkspace");
-      if(rw)rw.innerHTML='<div class="notice">Instructor access is active, but one dashboard panel could not be rendered. Press Refresh Data to retry.</div>';
-    }
-    window.scrollTo({top:0,behavior:"smooth"});
+    await showPage("instructor");
     setSaveStatus("Instructor access granted ✓",true);
 
   }catch(e){
@@ -1122,27 +1102,41 @@ function renderPendingReviews(){
 
 function renderInstructor(){
  if(!adminUnlocked)return;
- const safeRender=(name,fn)=>{
-   try{
-     if(typeof fn==="function")fn();
-     else console.warn(name+" is not available.");
-   }catch(e){
-     console.error(name+" failed:",e);
-   }
- };
+
+ // Render the core progress table FIRST so optional dashboard panels can never hide student progress.
  iStudents.textContent=(db.students||[]).length;
- safeRender("Group leader manager",typeof renderGroupLeaderManager==="function"?renderGroupLeaderManager:null);
- safeRender("Group work review",typeof renderGroupWorkReview==="function"?renderGroupWorkReview:null);
- safeRender("Live activity",typeof renderLiveActivity==="function"?renderLiveActivity:null);
- safeRender("Pending reviews",typeof renderPendingReviews==="function"?renderPendingReviews:null);
- const groups=[...new Set((db.students||[]).map(s=>s.group).filter(Boolean))];iGroups.textContent=groups.length;
- const active=db.students.filter(s=>studentStarted(s.id)),vals=active.map(s=>studentFirst4Average(s.id)),avg=vals.length?Math.round(vals.reduce((a,b)=>a+b,0)/vals.length):0;iCompletion.textContent=avg+"%";
- iRisk.textContent=db.students.filter(s=>studentRiskStatus(s.id)==="At Risk").length;
- rosterRows.innerHTML=db.students.map(s=>{const av=studentFirst4Average(s.id),status=studentRiskStatus(s.id);return `<tr><td>${s.name}</td><td>${s.id}</td><td>${s.group||"—"}</td><td>${weekPct(s.id,1)}%</td><td>${weekPct(s.id,2)}%</td><td>${weekPct(s.id,3)}%</td><td>${weekPct(s.id,4)}%</td><td>${studentStarted(s.id)?av+"%":"—"}</td><td>${status}</td><td><div class="file-actions" style="margin:0">
-<button class="btn alt" onclick="db.activeStudentId='${s.id}';save();renderAll();showPage('student')">View</button>
-<button class="btn" onclick="openStudentReview('${s.id}')">Review</button>
-<button class="btn danger" onclick="resetStudentProgress('${s.id}')">Reset</button>
-</div></td></tr>`}).join("")
+ const groups=[...new Set((db.students||[]).map(s=>s.group).filter(Boolean))];
+ iGroups.textContent=groups.length;
+
+ const active=(db.students||[]).filter(s=>studentStarted(s.id));
+ const vals=active.map(s=>studentFirst4Average(s.id));
+ const avg=vals.length?Math.round(vals.reduce((a,b)=>a+b,0)/vals.length):0;
+ iCompletion.textContent=avg+"%";
+ iRisk.textContent=(db.students||[]).filter(s=>studentRiskStatus(s.id)==="At Risk").length;
+
+ rosterRows.innerHTML=(db.students||[]).map(s=>{
+   const av=studentFirst4Average(s.id),status=studentRiskStatus(s.id);
+   return `<tr>
+     <td>${escapeHtml(s.name)}</td><td>${escapeHtml(s.id)}</td><td>${escapeHtml(s.group||"—")}</td>
+     <td>${weekPct(s.id,1)}%</td><td>${weekPct(s.id,2)}%</td><td>${weekPct(s.id,3)}%</td><td>${weekPct(s.id,4)}%</td>
+     <td>${studentStarted(s.id)?av+"%":"—"}</td><td>${escapeHtml(status)}</td>
+     <td><div class="file-actions" style="margin:0">
+       <button class="btn alt" onclick="db.activeStudentId='${String(s.id).replace(/'/g,"\\'")}';save();renderStudent();showPage('student')">View</button>
+       <button class="btn" onclick="openStudentReview('${String(s.id).replace(/'/g,"\\'")}')">Review</button>
+       <button class="btn danger" onclick="resetStudentProgress('${String(s.id).replace(/'/g,"\\'")}')">Reset</button>
+     </div></td>
+   </tr>`;
+ }).join("");
+
+ // Optional panels are isolated. A failure here cannot stop the progress table above.
+ const safe=(name,fn)=>{
+   try{ if(typeof fn==="function")fn(); }
+   catch(e){ console.error(name+" failed:",e); }
+ };
+ safe("Group leader manager",typeof renderGroupLeaderManager==="function"?renderGroupLeaderManager:null);
+ safe("Group work review",typeof renderGroupWorkReview==="function"?renderGroupWorkReview:null);
+ safe("Live activity",typeof renderLiveActivity==="function"?renderLiveActivity:null);
+ safe("Pending reviews",typeof renderPendingReviews==="function"?renderPendingReviews:null);
 }
 
 function mergeStudentProgressRows(studentId,rows){
@@ -1588,10 +1582,9 @@ function renderAll(){
 
 function openWeek(n){currentPageId="week";currentWeek=n;currentTab="overview";wkNum.textContent="Week "+n;wkTitle.textContent=course[n-1][0];renderWeekTabs();renderWeekBody();showPage("week");sendHeartbeat()}
 function renderWeekTabs(){
- let tabs=currentWeek<=3?["overview","slides","preclass","content","activity","case","quiz","assignment","reflection"]:["overview","slides","preclass","content","quiz","assignment","reflection"];
- if(adminUnlocked && currentWeek>=4 && currentWeek<=15){
-   tabs=["overview","slides","preclass","content","activity","case","quiz","assignment","reflection"];
- }
+ let tabs=adminUnlocked
+   ? ["overview","slides","preclass","content","activity","case","quiz","assignment","reflection"]
+   : ["overview","slides","preclass","content","quiz","assignment","reflection"];
  weekTabs.innerHTML=tabs.map(t=>{
    const av=activityAvailability(currentWeek,t);
    const lock=(!adminUnlocked && !av.open)?" 🔒":"";
@@ -1600,7 +1593,7 @@ function renderWeekTabs(){
 }
 function renderWeekBody(){
  const d=packs[currentWeek],s=student(),p=s?getProg(s.id,currentWeek):blankProg();
- if(!adminUnlocked && currentWeek>=4 && ["activity","case"].includes(currentTab)){
+ if(!adminUnlocked && ["activity","case"].includes(currentTab)){
    currentTab="overview";
  }
  const av=activityAvailability(currentWeek,currentTab);
