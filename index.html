@@ -216,7 +216,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 </main>
 
-<footer>G TQM 511 Learning Portal • v32 • Verified Instructor Login + Group Accountability + AI Review</footer>
+<footer>G TQM 511 Learning Portal • v33 • Stable Instructor Dashboard + Student/Group Tracking + AI Review</footer>
 
 <script>
 const course=[
@@ -969,7 +969,12 @@ async function unlockInstructor(){
     try{renderAll();}catch(renderErr){console.error("Instructor render warning:",renderErr);}
 
     adminNav.style.display="";
-    await showPage("instructor");
+    document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));
+    document.getElementById("instructor").classList.remove("hidden");
+    document.querySelectorAll(".nav[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page==="instructor"));
+    currentPageId="instructor";
+    renderInstructor();
+    window.scrollTo({top:0,behavior:"smooth"});
     setSaveStatus("Instructor access granted ✓",true);
 
   }catch(e){
@@ -1002,18 +1007,195 @@ async function refreshInstructor(){
  }
 }
 
+
+function studentStarted(id){
+  for(let w=1;w<=4;w++){
+    if(trackedActivityCount(id,w)>0) return true;
+  }
+  return false;
+}
+
+function studentRiskStatus(id){
+  if(!studentStarted(id)) return "Not Started";
+  const avg=studentFirst4Average(id);
+  return avg<50 ? "At Risk" : "On Track";
+}
+
+function renderGroups(){
+  const cards=document.getElementById("groupCards");
+  const rows=document.getElementById("groupRows");
+  if(!cards || !rows) return;
+
+  const groups=[...new Set((db.students||[]).map(s=>s.group).filter(Boolean))].sort();
+
+  if(!groups.length){
+    cards.innerHTML='<div class="card"><span class="muted">No group data loaded yet.</span></div>';
+    rows.innerHTML='<tr><td colspan="4" class="muted">No groups available.</td></tr>';
+    return;
+  }
+
+  cards.innerHTML=groups.map(g=>{
+    const members=(db.students||[]).filter(s=>s.group===g);
+    const active=members.filter(m=>studentStarted(m.id));
+    const avg=active.length
+      ? Math.round(active.reduce((sum,m)=>sum+studentFirst4Average(m.id),0)/active.length)
+      : 0;
+    const quizzes=[];
+    members.forEach(m=>{
+      for(let w=1;w<=4;w++){
+        const q=getProg(m.id,w).quiz;
+        if(q!==null && q!==undefined && q!=="") quizzes.push(Number(q));
+      }
+    });
+    const qavg=quizzes.length?Math.round(quizzes.reduce((a,b)=>a+b,0)/quizzes.length):0;
+    return `<div class="card stat">
+      <span class="muted">${escapeHtml(g)}</span>
+      <strong>${avg}%</strong>
+      <div class="progress"><div class="bar" style="width:${avg}%"></div></div>
+      <p class="muted" style="margin-bottom:0">${members.length} student${members.length===1?"":"s"} • Quiz avg. ${quizzes.length?qavg+"%":"—"}</p>
+    </div>`;
+  }).join("");
+
+  rows.innerHTML=groups.map(g=>{
+    const members=(db.students||[]).filter(s=>s.group===g);
+    const active=members.filter(m=>studentStarted(m.id));
+    const avg=active.length
+      ? Math.round(active.reduce((sum,m)=>sum+studentFirst4Average(m.id),0)/active.length)
+      : 0;
+    const quizzes=[];
+    members.forEach(m=>{
+      for(let w=1;w<=4;w++){
+        const q=getProg(m.id,w).quiz;
+        if(q!==null && q!==undefined && q!=="") quizzes.push(Number(q));
+      }
+    });
+    const qavg=quizzes.length?Math.round(quizzes.reduce((a,b)=>a+b,0)/quizzes.length):0;
+    return `<tr>
+      <td>${escapeHtml(g)}</td>
+      <td>${members.map(m=>escapeHtml(m.name)).join("<br>")||"—"}</td>
+      <td>${active.length?avg+"%":"—"}</td>
+      <td>${quizzes.length?qavg+"%":"—"}</td>
+    </tr>`;
+  }).join("");
+}
+
+function renderPendingReviews(){
+  const el=document.getElementById("pendingReviews");
+  if(!el) return;
+
+  const labels={
+    preclass:"Pre-Class Reflection",
+    activity:"In-Class Activity",
+    case:"Mini Case",
+    assignment:"Assignment",
+    reflection:"Post-Class Reflection"
+  };
+  const pending=[];
+
+  (db.students||[]).forEach(s=>{
+    for(let w=1;w<=4;w++){
+      const p=getProg(s.id,w);
+      Object.keys(labels).forEach(key=>{
+        if(!workSubmitted(p,key)) return;
+        const r=(p.reviews&&p.reviews[key])||{};
+        const status=String(r.status||"Submitted");
+        if(status==="Reviewed") return;
+        pending.push({
+          studentId:String(s.id),
+          studentName:s.name,
+          group:s.group||"",
+          week:w,
+          key,
+          label:labels[key],
+          status:status==="Not Submitted"?"Submitted":status
+        });
+      });
+    }
+  });
+
+  if(!pending.length){
+    el.innerHTML='<div class="success">No pending manual reviews ✓</div>';
+    return;
+  }
+
+  el.innerHTML=`<div class="muted" style="margin-bottom:8px">${pending.length} item${pending.length===1?"":"s"} awaiting review</div>`+
+    pending.map(x=>`<div class="review-card">
+      <div class="section-head" style="margin-bottom:0">
+        <div>
+          <b>${escapeHtml(x.studentName)}</b>
+          <div class="muted">${escapeHtml(x.studentId)} • ${escapeHtml(x.group||"—")} • Week ${x.week} • ${escapeHtml(x.label)}</div>
+          <div class="muted">Status: <b>${escapeHtml(x.status)}</b></div>
+        </div>
+        <button class="btn" onclick="openStudentReview('${x.studentId}')">Review</button>
+      </div>
+    </div>`).join("");
+}
+
+async function resetStudentProgress(id){
+  if(!adminUnlocked) return;
+  const s=(db.students||[]).find(x=>String(x.id)===String(id));
+  const label=s?s.name:String(id);
+  if(!confirm(`Reset Weeks 1–4 progress for ${label}? This cannot be undone.`)) return;
+
+  try{
+    await apiPost({action:"resetstudentprogress",pin:adminPin,studentId:String(id)});
+    Object.keys(db.progress||{}).forEach(k=>{
+      if(k.startsWith(String(id)+"_")) delete db.progress[k];
+    });
+    save();
+    renderAll();
+    setSaveStatus("Student progress reset ✓",true);
+  }catch(e){
+    alert("Reset failed: "+(e&&e.message?e.message:String(e)));
+  }
+}
+
 function renderInstructor(){
- iStudents.textContent=db.students.length;renderGroupLeaderManager();
- renderGroupWorkReview();
- renderLiveActivity();
- renderPendingReviews();const groups=[...new Set(db.students.map(s=>s.group).filter(Boolean))];iGroups.textContent=groups.length;
- const active=db.students.filter(s=>studentStarted(s.id)),vals=active.map(s=>studentFirst4Average(s.id)),avg=vals.length?Math.round(vals.reduce((a,b)=>a+b,0)/vals.length):0;iCompletion.textContent=avg+"%";
- iRisk.textContent=db.students.filter(s=>studentRiskStatus(s.id)==="At Risk").length;
- rosterRows.innerHTML=db.students.map(s=>{const av=studentFirst4Average(s.id),status=studentRiskStatus(s.id);return `<tr><td>${s.name}</td><td>${s.id}</td><td>${s.group||"—"}</td><td>${weekPct(s.id,1)}%</td><td>${weekPct(s.id,2)}%</td><td>${weekPct(s.id,3)}%</td><td>${weekPct(s.id,4)}%</td><td>${studentStarted(s.id)?av+"%":"—"}</td><td>${status}</td><td><div class="file-actions" style="margin:0">
-<button class="btn alt" onclick="db.activeStudentId='${s.id}';save();renderAll();showPage('student')">View</button>
-<button class="btn" onclick="openStudentReview('${s.id}')">Review</button>
-<button class="btn danger" onclick="resetStudentProgress('${s.id}')">Reset</button>
-</div></td></tr>`}).join("")
+  if(!adminUnlocked) return;
+
+  const safe=(name,fn)=>{
+    try{fn();}
+    catch(e){console.error(name+" failed:",e);}
+  };
+
+  iStudents.textContent=(db.students||[]).length;
+
+  safe("Group leader manager",renderGroupLeaderManager);
+  safe("Group work review",renderGroupWorkReview);
+  safe("Live activity",renderLiveActivity);
+  safe("Pending reviews",renderPendingReviews);
+
+  const groups=[...new Set((db.students||[]).map(s=>s.group).filter(Boolean))];
+  iGroups.textContent=groups.length;
+
+  const active=(db.students||[]).filter(s=>studentStarted(s.id));
+  const vals=active.map(s=>studentFirst4Average(s.id));
+  const avg=vals.length?Math.round(vals.reduce((a,b)=>a+b,0)/vals.length):0;
+  iCompletion.textContent=avg+"%";
+
+  iRisk.textContent=(db.students||[]).filter(s=>studentRiskStatus(s.id)==="At Risk").length;
+
+  rosterRows.innerHTML=(db.students||[]).map(s=>{
+    const av=studentFirst4Average(s.id);
+    const status=studentRiskStatus(s.id);
+    const riskClass=status==="At Risk"?"color:var(--red);font-weight:bold":status==="On Track"?"color:var(--green);font-weight:bold":"";
+    return `<tr>
+      <td>${escapeHtml(s.name)}</td>
+      <td>${escapeHtml(s.id)}</td>
+      <td>${escapeHtml(s.group||"—")}</td>
+      <td>${weekPct(s.id,1)}%</td>
+      <td>${weekPct(s.id,2)}%</td>
+      <td>${weekPct(s.id,3)}%</td>
+      <td>${weekPct(s.id,4)}%</td>
+      <td>${studentStarted(s.id)?av+"%":"—"}</td>
+      <td style="${riskClass}">${escapeHtml(status)}</td>
+      <td><div class="file-actions" style="margin:0">
+        <button class="btn alt" onclick="db.activeStudentId='${String(s.id).replace(/'/g,"\\'")}';save();renderAll();showPage('student')">View</button>
+        <button class="btn" onclick="openStudentReview('${String(s.id).replace(/'/g,"\\'")}')">Review</button>
+        <button class="btn danger" onclick="resetStudentProgress('${String(s.id).replace(/'/g,"\\'")}')">Reset</button>
+      </div></td>
+    </tr>`;
+  }).join("");
 }
 
 function mergeStudentProgressRows(studentId,rows){
