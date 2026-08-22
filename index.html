@@ -216,7 +216,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 </main>
 
-<footer>G TQM 511 Learning Portal • v40 • Instructor Review Fix + All Weekly Content Open + Rescheduled Lectures</footer>
+<footer>G TQM 511 Learning Portal • v41 • Instructor Login Hardened + Panel Errors Isolated</footer>
 
 <script>
 const course=[
@@ -1006,11 +1006,23 @@ async function unlockInstructor(){
 
     save();
 
-    // Rendering problems must not be mistaken for authentication failures.
+    // Authentication has succeeded at this point. UI rendering must never convert it into a login failure.
     try{renderAll();}catch(renderErr){console.error("Instructor render warning:",renderErr);}
 
     adminNav.style.display="";
-    await showPage("instructor");
+    document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));
+    const instructorPage=document.getElementById("instructor");
+    if(instructorPage)instructorPage.classList.remove("hidden");
+    document.querySelectorAll(".nav[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page==="instructor"));
+    currentPageId="instructor";
+    try{
+      if(typeof renderInstructor==="function")renderInstructor();
+    }catch(renderErr){
+      console.error("Instructor dashboard warning:",renderErr);
+      const rw=document.getElementById("reviewWorkspace");
+      if(rw)rw.innerHTML='<div class="notice">Instructor access is active, but one dashboard panel could not be rendered. Press Refresh Data to retry.</div>';
+    }
+    window.scrollTo({top:0,behavior:"smooth"});
     setSaveStatus("Instructor access granted ✓",true);
 
   }catch(e){
@@ -1109,10 +1121,21 @@ function renderPendingReviews(){
 }
 
 function renderInstructor(){
- iStudents.textContent=db.students.length;renderGroupLeaderManager();
- renderGroupWorkReview();
- renderLiveActivity();
- renderPendingReviews();const groups=[...new Set(db.students.map(s=>s.group).filter(Boolean))];iGroups.textContent=groups.length;
+ if(!adminUnlocked)return;
+ const safeRender=(name,fn)=>{
+   try{
+     if(typeof fn==="function")fn();
+     else console.warn(name+" is not available.");
+   }catch(e){
+     console.error(name+" failed:",e);
+   }
+ };
+ iStudents.textContent=(db.students||[]).length;
+ safeRender("Group leader manager",typeof renderGroupLeaderManager==="function"?renderGroupLeaderManager:null);
+ safeRender("Group work review",typeof renderGroupWorkReview==="function"?renderGroupWorkReview:null);
+ safeRender("Live activity",typeof renderLiveActivity==="function"?renderLiveActivity:null);
+ safeRender("Pending reviews",typeof renderPendingReviews==="function"?renderPendingReviews:null);
+ const groups=[...new Set((db.students||[]).map(s=>s.group).filter(Boolean))];iGroups.textContent=groups.length;
  const active=db.students.filter(s=>studentStarted(s.id)),vals=active.map(s=>studentFirst4Average(s.id)),avg=vals.length?Math.round(vals.reduce((a,b)=>a+b,0)/vals.length):0;iCompletion.textContent=avg+"%";
  iRisk.textContent=db.students.filter(s=>studentRiskStatus(s.id)==="At Risk").length;
  rosterRows.innerHTML=db.students.map(s=>{const av=studentFirst4Average(s.id),status=studentRiskStatus(s.id);return `<tr><td>${s.name}</td><td>${s.id}</td><td>${s.group||"—"}</td><td>${weekPct(s.id,1)}%</td><td>${weekPct(s.id,2)}%</td><td>${weekPct(s.id,3)}%</td><td>${weekPct(s.id,4)}%</td><td>${studentStarted(s.id)?av+"%":"—"}</td><td>${status}</td><td><div class="file-actions" style="margin:0">
@@ -1556,7 +1579,12 @@ function initAccess(){
    // Keep Instructor visible; PIN is still required on click.
  }
 }
-function renderAll(){renderWeeks();renderStudent();renderGroups();if(adminUnlocked)renderInstructor()}
+function renderAll(){
+ try{renderWeeks();}catch(e){console.error("renderWeeks failed:",e);}
+ try{renderStudent();}catch(e){console.error("renderStudent failed:",e);}
+ try{if(typeof renderGroups==="function")renderGroups();}catch(e){console.error("renderGroups failed:",e);}
+ try{if(adminUnlocked && typeof renderInstructor==="function")renderInstructor();}catch(e){console.error("renderInstructor failed:",e);}
+}
 
 function openWeek(n){currentPageId="week";currentWeek=n;currentTab="overview";wkNum.textContent="Week "+n;wkTitle.textContent=course[n-1][0];renderWeekTabs();renderWeekBody();showPage("week");sendHeartbeat()}
 function renderWeekTabs(){
