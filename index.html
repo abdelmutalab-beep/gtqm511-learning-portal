@@ -86,7 +86,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 <button class="nav" data-page="register">Register</button>
 <button class="nav" data-page="student">Student</button>
 <button class="nav" data-page="groups">Groups</button>
-<button class="nav" id="adminNav" data-page="instructor" style="display:none">Instructor</button>
+<button class="nav" id="adminNav" data-page="instructor">Instructor</button>
 <button class="nav" id="lang">العربية</button>
 </nav></div></header>
 
@@ -216,7 +216,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 </main>
 
-<footer>G TQM 511 Learning Portal • v30 • Instructor Access Fix + Group Accountability + AI Review</footer>
+<footer>G TQM 511 Learning Portal • v31 • Always-Visible Instructor Login + Group Accountability + AI Review</footer>
 
 <script>
 const course=[
@@ -564,7 +564,10 @@ async function showPage(id){
  document.querySelectorAll(".nav[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===id));
  if(id==="student")renderStudent();if(id==="groups"){renderGroups();loadMyGroupWork();}if(id==="instructor")renderInstructor();window.scrollTo({top:0,behavior:"smooth"})
 }
-document.querySelectorAll(".nav[data-page]").forEach(b=>{if(b.id!=="adminNav")b.onclick=()=>showPage(b.dataset.page)});
+document.querySelectorAll(".nav[data-page]").forEach(b=>{
+ if(b.id==="adminNav") b.onclick=()=>unlockInstructor();
+ else b.onclick=()=>showPage(b.dataset.page);
+});
 
 async function registerStudent(){
  const id=(regId.value||"").trim();if(!id){regMsg.className="notice";regMsg.textContent="Email or Student ID is required.";return}
@@ -1424,7 +1427,12 @@ async function saveReview(id,w,key,status){
    alert("Review could not be saved centrally: "+(e.message||e));
  }
 }
-function initAccess(){const p=new URLSearchParams(location.search);if(p.get("admin")==="1"){adminNav.style.display="";adminNav.onclick=()=>unlockInstructor()}}
+function initAccess(){
+ const p=new URLSearchParams(location.search);
+ if(p.get("admin")==="1"){
+   // Keep Instructor visible; PIN is still required on click.
+ }
+}
 function renderAll(){renderWeeks();renderStudent();renderGroups();if(adminUnlocked)renderInstructor()}
 
 function openWeek(n){currentPageId="week";currentWeek=n;currentTab="overview";wkNum.textContent="Week "+n;wkTitle.textContent=course[n-1][0];renderWeekTabs();renderWeekBody();showPage("week");sendHeartbeat()}
