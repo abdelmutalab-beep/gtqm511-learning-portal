@@ -216,7 +216,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 </main>
 
-<footer>G TQM 511 Learning Portal • v30 • Group Accountability + Participation Confirmation + Locked Review + History + AI</footer>
+<footer>G TQM 511 Learning Portal • v31 • Group Accountability + Participation Confirmation + Locked Review + History + AI</footer>
 
 <script>
 const course=[
@@ -1390,6 +1390,28 @@ async function saveReview(id,w,key,status){
  }
 }
 function initAccess(){const p=new URLSearchParams(location.search);if(p.get("admin")==="1"){adminNav.style.display="";adminNav.onclick=()=>unlockInstructor()}}
+function renderGroups(){
+ const cards=document.getElementById("groupCards");
+ const rows=document.getElementById("groupRows");
+ if(!cards || !rows) return;
+ const groups=[...new Set((db.groups||[]).concat((db.students||[]).map(s=>s.group)).filter(Boolean))];
+ const data=groups.map(g=>{
+   const members=(db.students||[]).filter(s=>s.group===g);
+   const avg=members.length?Math.round(members.reduce((sum,m)=>sum+studentFirst4Average(m.id),0)/members.length):0;
+   let qsum=0, qn=0;
+   members.forEach(m=>{
+     for(let w=1;w<=4;w++){
+       const q=getProg(m.id,w).quiz;
+       if(q!==null && q!==undefined && q!==""){qsum+=Number(q)||0;qn++;}
+     }
+   });
+   const qavg=qn?Math.round(qsum/qn):0;
+   return {group:g,members,avg,qavg};
+ });
+ cards.innerHTML=data.map(x=>`<div class="card stat"><span class="muted">${escapeHtml(x.group)}</span><strong>${x.avg}%</strong><div class="progress"><div class="bar" style="width:${x.avg}%"></div></div><small>${x.members.length} student${x.members.length===1?"":"s"}</small></div>`).join("");
+ rows.innerHTML=data.length?data.map(x=>`<tr><td>${escapeHtml(x.group)}</td><td>${x.members.length?x.members.map(m=>escapeHtml(m.name)).join("<br>"):"—"}</td><td>${x.avg}%</td><td>${x.qavg}%</td></tr>`).join(""):'<tr><td colspan="4" class="muted">No group data loaded yet.</td></tr>';
+}
+
 function renderAll(){renderWeeks();renderStudent();renderGroups();if(adminUnlocked)renderInstructor()}
 
 function openWeek(n){currentPageId="week";currentWeek=n;currentTab="overview";wkNum.textContent="Week "+n;wkTitle.textContent=course[n-1][0];renderWeekTabs();renderWeekBody();showPage("week");sendHeartbeat()}
