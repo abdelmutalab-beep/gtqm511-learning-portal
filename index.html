@@ -176,7 +176,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 </main>
 
-<footer>G TQM 511 Learning Portal • v51 • Final Assignment Title Updated</footer>
+<footer>G TQM 511 Learning Portal • v52 • Project Guide Available in All Weeks</footer>
 
 <script>
 const course=[
@@ -277,6 +277,22 @@ const FINAL_ASSIGNMENT={
     "Critical analysis of literature/theory",
     "Illustrations: use of examples/evidence",
     "Conclusions"
+  ],
+  milestones:[
+    ["Week 3","Select and define the workplace quality problem."],
+    ["Week 6","Identify the most relevant Organizational Behavior concepts and theories."],
+    ["Week 9","Develop the main analysis using workplace evidence and academic sources."],
+    ["Week 12","Draft the quality improvement plan and proposed indicators."],
+    ["Week 15","Finalize, review, reference and submit the complete individual project."]
+  ],
+  guidance:[
+    "Choose one real and manageable workplace quality problem rather than a broad organizational issue.",
+    "Use only the OB concepts that directly help explain the selected problem.",
+    "Move beyond description: explain why the problem occurs and how behavior influences quality performance.",
+    "Support key arguments with workplace examples, observations and relevant academic sources.",
+    "Make recommendations practical, specific and feasible.",
+    "Use Harvard referencing consistently and acknowledge all sources.",
+    "Review the official assessment criteria before final submission."
   ]
 };
 
@@ -289,7 +305,7 @@ function assessmentSchemeCard(){
       <div class="card stat"><span class="muted">Individual Final Assignment<br>Due 19 Nov 2026 • 11:59 PM</span><strong>20%</strong></div>
       <div class="card stat"><span class="muted">Final Written Exam</span><strong>60%</strong></div>
     </div>
-    <p class="muted" style="margin-bottom:0">Continuous Assessment = 40% • Final Written Exam = 60%</p>
+    <p class="muted" style="margin-bottom:0">Continuous Assessment = 40% • Final Written Exam = 60% • Project Guide is available in every week.</p>
   </div>`;
 }
 
@@ -321,6 +337,46 @@ function finalAssignmentCard(){
     <div class="success"><b>Student Declaration:</b> The submitted assignment must be the student's own work and all sources of reference must be acknowledged in full.</div>
   </div>`;
 }
+
+function projectGuideCard(){
+  return `<div class="card" style="margin-bottom:14px">
+    <div class="section-head">
+      <div>
+        <span class="pill">Individual Project</span>
+        <span class="pill">${FINAL_ASSIGNMENT.weight}</span>
+        <h3 style="margin:8px 0 4px">${FINAL_ASSIGNMENT.title}</h3>
+      </div>
+      <span class="pill">Due ${FINAL_ASSIGNMENT.deadline}</span>
+    </div>
+
+    <div class="notice"><b>Project Brief</b><br>${FINAL_ASSIGNMENT.task}</div>
+
+    <div class="two" style="margin-top:12px">
+      <div class="card"><b>Word Count</b><p class="muted">${FINAL_ASSIGNMENT.wordCount}</p></div>
+      <div class="card"><b>Referencing</b><p class="muted">${FINAL_ASSIGNMENT.referencing}</p></div>
+    </div>
+
+    <h4 style="margin-top:16px">Required Structure</h4>
+    ${FINAL_ASSIGNMENT.sections.map(s=>`<div class="topic"><h4>${s[0]}</h4><p>${s[1]}</p></div>`).join("")}
+
+    <h4 style="margin-top:16px">Project Development Milestones</h4>
+    <p class="muted">These milestones are guidance only. They are not separate assignments and carry no additional marks.</p>
+    <div class="grid">${FINAL_ASSIGNMENT.milestones.map(m=>`<div class="card"><b>${m[0]}</b><p class="muted">${m[1]}</p></div>`).join("")}</div>
+
+    <h4 style="margin-top:16px">Student Guidance</h4>
+    <ul>${FINAL_ASSIGNMENT.guidance.map(x=>`<li style="margin:7px 0">${x}</li>`).join("")}</ul>
+
+    <h4 style="margin-top:16px">How Your Assignment Will Be Assessed</h4>
+    <ol>${FINAL_ASSIGNMENT.assessmentCriteria.map(x=>`<li style="margin:7px 0">${x}</li>`).join("")}</ol>
+
+    <div class="success"><b>Student Declaration:</b> The work must be your own and all sources must be acknowledged in full.</div>
+
+    ${currentWeek===ASSESSMENT_SCHEME.finalAssignmentWeek
+      ? `<div class="notice" style="margin-top:12px"><b>Submission Week:</b> Use the Individual Final Assignment tab to submit your project.</div>`
+      : `<div class="muted" style="margin-top:12px"><b>Submission:</b> The submission tab will appear in Week 15 only.</div>`}
+  </div>`;
+}
+
 
 const COURSE_TZ="Asia/Riyadh";
 const WEEK4_LECTURE_ISO="2026-08-29T20:00:00+03:00"; // Lecture start remains Saturday 8:00 PM Makkah; slides open at 2:00 PM
@@ -1631,8 +1687,8 @@ function renderAll(){
 function openWeek(n){currentPageId="week";currentWeek=n;currentTab="overview";wkNum.textContent="Week "+n;wkTitle.textContent=course[n-1][0];renderWeekTabs();renderWeekBody();showPage("week");sendHeartbeat()}
 function renderWeekTabs(){
  let tabs=adminUnlocked
-   ? ["overview","slides","preclass","content","activity","case","reflection"]
-   : ["overview","slides","preclass","content","reflection"];
+   ? ["overview","slides","preclass","content","project","activity","case","reflection"]
+   : ["overview","slides","preclass","content","project","reflection"];
 
  if(currentWeek===ASSESSMENT_SCHEME.midtermWeek) tabs.splice(tabs.indexOf("reflection"),0,"quiz");
  if(currentWeek===ASSESSMENT_SCHEME.finalAssignmentWeek) tabs.splice(tabs.indexOf("reflection"),0,"assignment");
@@ -1640,7 +1696,7 @@ function renderWeekTabs(){
  weekTabs.innerHTML=tabs.map(t=>{
    const av=activityAvailability(currentWeek,t);
    const lock=(!adminUnlocked && !av.open)?" 🔒":"";
-   const labelMap={activity:"In-Class Activity",case:"Mini Case / Application",quiz:"Mid-Term Exam",assignment:"Individual Final Assignment"}; const label=labelMap[t]||t[0].toUpperCase()+t.slice(1); return `<button class="tab ${t===currentTab?"active":""}" onclick="currentTab='${t}';renderWeekTabs();renderWeekBody();sendHeartbeat()">${label}${lock}</button>`
+   const labelMap={project:"Project Guide",activity:"In-Class Activity",case:"Mini Case / Application",quiz:"Mid-Term Exam",assignment:"Individual Final Assignment"}; const label=labelMap[t]||t[0].toUpperCase()+t.slice(1); return `<button class="tab ${t===currentTab?"active":""}" onclick="currentTab='${t}';renderWeekTabs();renderWeekBody();sendHeartbeat()">${label}${lock}</button>`
  }).join("")
 }
 function renderWeekBody(){
@@ -1651,12 +1707,12 @@ function renderWeekBody(){
  const av=activityAvailability(currentWeek,currentTab);
  if(!adminUnlocked && !av.open && currentTab!=="overview"){lockedCard(currentTab,av);return}
  if(!d){
-   weekBody.innerHTML=`${scheduleCard(currentWeek)}${assessmentSchemeCard()}${currentWeek===ASSESSMENT_SCHEME.finalAssignmentWeek?finalAssignmentCard():""}<div class="card"><h3>${course[currentWeek-1][0]}</h3><p>${course[currentWeek-1][1]}</p><div class="notice">Detailed weekly learning content for this week will be added progressively. The approved Major Assignment roadmap is already active.</div></div>`;
+   weekBody.innerHTML=`${scheduleCard(currentWeek)}${assessmentSchemeCard()}${projectGuideCard()}<div class="card"><h3>${course[currentWeek-1][0]}</h3><p>${course[currentWeek-1][1]}</p><div class="notice">Detailed weekly learning content for this week will be added progressively. The approved Major Assignment roadmap is already active.</div></div>`;
    return
  }
  if(currentTab==="overview"){
    const st=getTaskStates(p);
-   weekBody.innerHTML=`${scheduleCard(currentWeek)}${assessmentSchemeCard()}${currentWeek===ASSESSMENT_SCHEME.finalAssignmentWeek?finalAssignmentCard():""}<div class="layout"><div class="card"><h3>Learning Outcomes</h3><ol>${d.objectives.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol></div><div class="card"><h3>Weekly Activities</h3>
+   weekBody.innerHTML=`${scheduleCard(currentWeek)}${assessmentSchemeCard()}${projectGuideCard()}<div class="layout"><div class="card"><h3>Learning Outcomes</h3><ol>${d.objectives.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol></div><div class="card"><h3>Weekly Activities</h3>
 <div class="task">Pre-Class Reflection: <b>${p.preClassReflection?"Completed ✓":"Pending"}</b></div>
 <div class="task">Post-Class Reflection: <b>${p.reflection?"Completed ✓":"Pending"}</b></div>
 ${currentWeek===ASSESSMENT_SCHEME.midtermWeek?`<div class="task">Mid-Term Exam (12%): <b>${p.quiz!==null?"Completed ✓":"Pending"}</b></div>`:""}
@@ -1670,6 +1726,7 @@ ${currentWeek===ASSESSMENT_SCHEME.finalAssignmentWeek?`<div class="task">Individ
  }
  if(currentTab==="preclass")weekBody.innerHTML=`<div class="card"><h3>Pre-Class Reflection</h3><p>Write one short observation, question, or workplace example related to this week’s topic.</p><textarea id="preClassText" placeholder="Your pre-class reflection...">${p.preClassText||""}</textarea><div class="file-actions"><button class="btn good" onclick="savePreClassReflection()">Save Pre-Class Reflection</button></div><p class="muted">${p.preClassReflection?"Completed ✓":"Not yet completed"}</p>${reviewPanelStudent(p.reviews.preclass)}</div>`;
  if(currentTab==="content")weekBody.innerHTML=`<div class="card"><h3>Core Learning Content</h3>${d.topics.map(t=>`<div class="topic"><h4>${t[0]}</h4><p>${t[1]}</p></div>`).join("")}<div class="file-actions"><button class="btn good" onclick="markGuidedReading()">Mark Guided Reading Completed</button></div></div>`;
+ if(currentTab==="project")weekBody.innerHTML=projectGuideCard();
  if(currentTab==="activity")weekBody.innerHTML=`<div class="card"><h3>In-Class Activity — Completed during class</h3><div class="notice"><b>In-class only:</b> Available only from 8:00 PM to 10:00 PM (Makkah time) on the scheduled lecture day.</div><p>${d.activity}</p><p class="muted">Complete and submit this activity during the live class only.</p><textarea id="activityText" placeholder="Write your activity response...">${p.activityText||""}</textarea><div class="file-actions"><button class="btn good" onclick="submitActivity()">Submit Activity</button></div>${reviewPanelStudent(p.reviews.activity)}</div>`;
  if(currentTab==="case")weekBody.innerHTML=`<div class="card"><h3>Mini Case / Application — Completed during class</h3><div class="notice"><b>In-class only:</b> Available only from 8:00 PM to 10:00 PM (Makkah time) on the scheduled lecture day.</div><h4>${d.caseTitle}</h4><p>${d.caseText}</p><ol>${d.caseQuestions.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol><p class="muted">Write your case analysis below. Your instructor can review it and return feedback.</p><textarea id="caseText" placeholder="Write your case analysis...">${p.caseText||""}</textarea><div class="file-actions"><button class="btn good" onclick="submitCase()">Submit Mini Case</button></div>${reviewPanelStudent(p.reviews.case)}</div>`;
  if(currentTab==="quiz")renderQuiz(d);
