@@ -1,0 +1,1810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>G TQM 511 Learning Portal</title>
+<style>
+:root{--navy:#10233f;--blue:#2457c5;--green:#14805e;--red:#b42318;--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#667085;--line:#e5e7eb;--soft:#eef4ff}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+header{background:var(--navy);color:#fff;position:sticky;top:0;z-index:10}
+.top{max-width:1250px;margin:auto;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand b{font-size:20px}.brand small{display:block;opacity:.85;margin-top:3px}
+nav{display:flex;gap:7px;flex-wrap:wrap}
+button{font:inherit}.nav,.btn{border:0;border-radius:9px;padding:9px 12px;cursor:pointer}
+.nav{background:#203b65;color:#fff}.nav.active{background:#fff;color:#13233d;font-weight:bold}
+.btn{background:var(--blue);color:#fff;text-decoration:none;display:inline-block}
+.btn.alt{background:#eef2f7;color:#172033}.btn.good{background:var(--green)}.btn.danger{background:var(--red)}
+.btn:disabled{opacity:.6;cursor:not-allowed}
+main{max-width:1250px;margin:22px auto;padding:0 16px}.hidden{display:none!important}
+.hero{background:linear-gradient(135deg,#173566,#285dc9);color:#fff;padding:28px;border-radius:18px;display:grid;grid-template-columns:1.5fr 1fr;gap:20px}
+.hero h1{font-size:34px;margin:6px 0 10px}
+.glass{background:#ffffff18;border:1px solid #ffffff2b;border-radius:14px;padding:17px}
+.pill{display:inline-block;padding:5px 9px;border-radius:99px;background:var(--soft);color:var(--blue);font-size:12px;margin:2px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.weeks{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+.card h3{margin-top:0}.week{cursor:pointer;transition:.15s}.week:hover{transform:translateY(-2px);box-shadow:0 8px 24px #17203312}
+.muted{color:var(--muted)}.section{margin-top:24px}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+.stat strong{display:block;font-size:28px;margin-top:5px}
+.progress{height:8px;background:#edf0f5;border-radius:10px;overflow:hidden}.bar{height:100%;background:var(--green)}
+.layout{display:grid;grid-template-columns:2fr 1fr;gap:14px}.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+table{width:100%;border-collapse:collapse}th,td{padding:9px;border-bottom:1px solid var(--line);text-align:left;font-size:13px;vertical-align:top}th{background:#f2f4f7}
+input,select,textarea{width:100%;padding:10px;border:1px solid #cfd5df;border-radius:8px;background:#fff}
+textarea{min-height:110px;resize:vertical}
+.formrow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.task{display:flex;align-items:flex-start;gap:8px;padding:10px 0}.task input{width:auto;margin-top:3px}
+.topic{padding:12px 0;border-bottom:1px solid var(--line)}.topic:last-child{border-bottom:0}
+.notice{padding:12px;border-radius:10px;background:#fff8e7;border:1px solid #f4d18d;color:#704300}
+.success{padding:12px;border-radius:10px;background:#ecfdf3;border:1px solid #abefc6;color:#067647}
+.error{padding:12px;border-radius:10px;background:#fef3f2;border:1px solid #fecdca;color:#b42318}
+.quiz label{display:block;padding:9px;border:1px solid var(--line);border-radius:8px;margin:7px 0;cursor:pointer}
+.weeknav{display:flex;gap:8px;flex-wrap:wrap}.tab{padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;cursor:pointer}.tab.active{background:var(--soft);color:var(--blue);border-color:#b9cdfb}
+.slide-frame{width:100%;height:68vh;min-height:480px;border:1px solid var(--line);border-radius:12px;background:#fff}
+.file-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.student-week{border:1px solid var(--line);border-radius:12px;padding:15px;margin:14px 0;background:#fff}
+.student-week-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.student-activities{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.student-activity{border:1px solid var(--line);border-radius:9px;padding:10px;background:#fafbfc}
+.activity-done{color:var(--green);font-weight:bold}.activity-pending{color:var(--muted);font-weight:bold}
+.rtl{direction:rtl;text-align:right}.rtl th,.rtl td{text-align:right}
+footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);font-size:12px}.review-card{border:1px solid var(--line);border-radius:10px;padding:12px;margin:10px 0;background:#fafbfc}.review-text{white-space:pre-wrap;background:#fff;border:1px solid var(--line);padding:10px;border-radius:8px;margin:8px 0;max-height:220px;overflow:auto}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.weeks{grid-template-columns:1fr 1fr}.layout,.hero,.two,.formrow{grid-template-columns:1fr}.student-activities{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.grid,.weeks,.student-activities{grid-template-columns:1fr}.hero h1{font-size:27px}}
+
+.review-guide{margin-top:10px;border:1px solid var(--line);border-radius:10px;background:#f8fafc;padding:10px}
+.review-guide summary{cursor:pointer;font-weight:bold;color:var(--blue)}
+.review-guide h4{margin:10px 0 5px}
+.review-guide ul{margin:6px 0 8px 20px;padding:0}
+.rubric-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.rubric-cell{border:1px solid var(--line);border-radius:8px;padding:9px;background:#fff;font-size:12px}
+@media(max-width:700px){.rubric-grid{grid-template-columns:1fr}}
+
+
+.ai-review-box{margin-top:10px;border:1px solid #b9cdfb;border-radius:10px;background:#f3f7ff;padding:11px}
+.ai-review-box h4{margin:0 0 7px}
+.ai-review-box ul{margin:5px 0 8px 20px;padding:0}
+.ai-status{display:inline-block;padding:4px 8px;border-radius:99px;background:var(--soft);color:var(--blue);font-size:12px;font-weight:bold}
+.ai-loading{opacity:.7}
+
+
+.group-status-flow{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.group-step{padding:5px 8px;border:1px solid var(--line);border-radius:99px;font-size:12px;background:#fff}
+.group-step.active{background:var(--soft);color:var(--blue);border-color:#b9cdfb;font-weight:bold}
+.member-row{display:grid;grid-template-columns:1.7fr .8fr 1fr;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.history-item{padding:7px 0;border-bottom:1px solid var(--line);font-size:12px}
+@media(max-width:700px){.member-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><div class="top">
+<div class="brand"><b>G TQM 511</b><small>Organizational Behavior and Quality • <span id="syncStatus">Connecting...</span> <span id="saveStatus" style="margin-left:12px"></span></small></div>
+<nav>
+<button class="nav active" data-page="home">Home</button>
+<button class="nav" data-page="register">Register</button>
+<button class="nav" data-page="student">Student</button>
+<button class="nav" id="adminNav" data-page="instructor">Instructor</button>
+<button class="nav" id="lang">العربية</button>
+</nav></div></header>
+
+<main>
+<section id="home" class="page">
+<div class="hero">
+<div><span class="pill">PGD TQM</span><span class="pill">15 Weeks</span><span class="pill">Central tracking</span>
+<h1>Organizational Behavior and Quality</h1>
+<p id="heroText">A practical learning portal linking individual, group and organizational behavior to quality performance, service, engagement, leadership and continuous improvement.</p>
+<button class="btn" onclick="showPage('register')">Student Access</button></div>
+<div class="glass"><h3>Learning Journey</h3><p>Prepare → Learn → Reflect → Mid-Term → Apply → Final Exam</p>
+<div class="progress"><div id="overallBar" class="bar" style="width:0%"></div></div><p><b id="overallPct">0%</b> overall course progress</p>
+<p style="font-size:12px;opacity:.85">Weekly assessed activities are limited to Pre-Class Reflection and Post-Class Reflection. Mid-Term Exam = 12%, Individual Final Assignment = 20%, Final Written Exam = 60%.</p></div>
+</div>
+<div class="section"><div class="section-head"><h2>15-Week Learning Path</h2><span class="muted">Weeks 1–4 expanded</span></div><div id="weeks" class="weeks"></div></div>
+</section>
+
+<section id="register" class="page hidden">
+<div class="section-head"><h2>Student Access</h2><span class="muted">Use your registered email address or Student ID</span></div>
+<div class="card"><div class="formrow" style="grid-template-columns:2fr 1fr">
+<div><label>Email or Student ID</label><input id="regId" placeholder="Enter your registered email or Student ID" autocomplete="email"></div>
+<div style="display:flex;align-items:end"><button class="btn good" style="width:100%" onclick="registerStudent()">Enter Course</button></div>
+</div><p id="regMsg"></p></div>
+</section>
+
+<section id="student" class="page hidden">
+<div class="section-head">
+<div><h2 style="margin-bottom:4px">Student Progress</h2><span id="studentName" class="muted">No student registered</span></div>
+<div class="file-actions" style="margin:0">
+  <button id="refreshProgressBtn" class="btn alt" onclick="refreshStudentProgress()">Refresh Progress</button>
+</div>
+</div>
+<p id="studentRefreshMsg" class="muted" style="margin-top:-4px"></p>
+<div class="grid">
+<div class="card stat"><span class="muted">Overall Course Progress</span><strong id="sProgress">0%</strong><div class="progress"><div id="studentOverallBar" class="bar" style="width:0%"></div></div></div>
+<div class="card stat"><span class="muted">Weeks 1–4 Progress</span><strong id="sFirst4">0%</strong></div>
+<div class="card stat"><span class="muted">Mid-Term Exam</span><strong id="sQuiz">—</strong></div>
+
+</div>
+<div class="card section"><div class="section-head"><h3 style="margin:0">Weeks 1–4 Reflection Progress</h3><span class="muted">Pre-Class + Post-Class Reflection only</span></div><div id="studentWeekDetails"></div></div>
+<div class="card section" style="overflow:auto"><h3>15-Week Course Progress</h3><table><thead><tr><th>Week</th><th>Topic</th><th>Status</th><th>Progress</th><th>Mid-Term</th><th>Post-Class Reflection</th></tr></thead><tbody id="studentRows"></tbody></table></div>
+</section>
+
+<section id="instructor" class="page hidden">
+<div class="section-head"><div><h2 style="margin-bottom:4px">Instructor Dashboard</h2><span class="muted">Central cohort overview for Weeks 1–4</span></div>
+<button class="btn alt" onclick="refreshInstructor()">Refresh Data</button></div>
+<div class="grid">
+<div class="card stat"><span class="muted">Registered Students</span><strong id="iStudents">0</strong></div>
+
+<div class="card stat"><span class="muted">Active Students Avg.</span><strong id="iCompletion">0%</strong></div>
+<div class="card stat"><span class="muted">At-Risk Students</span><strong id="iRisk">0</strong></div>
+</div>
+<div class="section card" style="overflow:auto"><h3>Student Tracking</h3>
+<table><thead><tr><th>Name</th><th>ID</th><th>W1</th><th>W2</th><th>W3</th><th>W4</th><th>W1–4 Avg.</th><th>Risk</th><th>Action</th></tr></thead><tbody id="rosterRows"></tbody></table></div>
+
+<div class="section card">
+  <div class="section-head">
+    <div>
+      <h3 style="margin:0">Live Students</h3>
+      <span class="muted">Online = seen within 1 minute • Recently Active = within 3 minutes</span>
+    </div>
+    <span class="pill"><b id="onlineNowCount">0</b> online now</span>
+  </div>
+  <div class="grid" style="margin-bottom:14px">
+    <div class="card stat"><span class="muted">Online Now</span><strong id="liveOnline">0</strong></div>
+    <div class="card stat"><span class="muted">Recently Active</span><strong id="liveRecent">0</strong></div>
+    <div class="card stat"><span class="muted">Offline</span><strong id="liveOffline">0</strong></div>
+    <div class="card stat"><span class="muted">Tracked Students</span><strong id="liveTracked">0</strong></div>
+  </div>
+  <div style="overflow:auto">
+    <table>
+      <thead><tr><th>Student</th><th>ID</th><th>Current Page</th><th>Last Seen</th><th>Status</th></tr></thead>
+      <tbody id="liveRows"></tbody>
+    </table>
+  </div>
+</div>
+
+<div class="section card">
+<div class="section-head"><h3 style="margin:0">Pending Manual Reviews</h3><span class="muted">All submitted items requiring instructor review</span></div>
+<div id="pendingReviews"></div>
+</div>
+<div class="section card"><div class="section-head"><h3 style="margin:0">Review Student Work</h3><span class="muted">Pre-Class • Assignment • Post-Class</span></div><div id="reviewWorkspace" class="muted">Choose Review beside a student.</div></div>
+</section>
+
+<section id="week" class="page hidden">
+<div class="section-head"><div><span class="muted" id="wkNum"></span><h2 id="wkTitle" style="margin:3px 0"></h2></div><button class="btn alt" onclick="showPage('home')">← Course</button></div>
+<div id="weekTabs" class="weeknav"></div><div id="weekBody" class="section"></div>
+</section>
+</main>
+
+<footer>G TQM 511 Learning Portal • v47 • Assessment Scheme on Every Week + Group System Removed</footer>
+
+<script>
+const course=[
+["Introduction to Organizational Behavior and Quality","OB foundations and their connection to quality performance."],
+["Diversity in Organizations","Diversity, inclusion, bias and quality decisions."],
+["Attitudes, Job Satisfaction and Quality Performance","Attitudes, satisfaction, engagement and their influence on quality behavior and performance."],
+["Emotions and Moods","Emotions, moods and workplace behavior."],
+["Personality and Values","Personality, values and person–job fit."],
+["Perception and Individual Decision Making","Perception, bias and decision quality."],
+["Motivation, Engagement and Quality Performance","Motivation and discretionary quality effort."],
+["Learning and Organizational Learning","Learning, feedback and prevention of recurrence."],
+["Foundations of Group Behavior","Roles, norms, cohesion and group quality behavior."],
+["Understanding Work Teams and Quality Teams","Team effectiveness and improvement teams."],
+["Communication and Quality Performance","Communication, feedback and error reduction."],
+["Leadership for Quality and Organizational Excellence","Leadership and quality commitment."],
+["Organizational Culture and Quality","Culture, socialization and quality behavior."],
+["Human Resource Practices and Quality Performance","Selection, training, appraisal and rewards."],
+["Organizational Change, Resistance, Stress and Continuous Quality Improvement","Change, resistance, stress and continuous improvement."]
+];
+
+const packs={
+1:{
+objectives:["Define organizational behavior and explain why interpersonal skills matter.","Differentiate planning, organizing, leading and controlling.","Use evidence-based management rather than intuition alone.","Apply individual, group and organizational levels of analysis.","Connect OB to quality, service and organizational effectiveness."],
+topics:[["What is Organizational Behavior?","OB studies the impact of individuals, groups and structure on behavior within organizations and applies that knowledge to improve organizational effectiveness."],["Management and quality","Managers achieve results through people. Planning, organizing, leading and controlling all shape process reliability and service quality."],["Evidence-based management","Systematic evidence helps managers reduce bias and choose actions based on data, context and professional judgement."],["OB levels","Quality problems may originate at individual, group or organizational level; effective diagnosis considers all three."]],
+activity:"Three-Level Diagnosis: classify causes of a service-quality problem as individual, group or organizational.",
+caseTitle:"Mini Case: Reporting Errors Without Fear",
+caseText:"A logistics company rewards teams reporting zero errors. Error reports fall, but complaints and rework rise. Employees learn that reporting problems attracts blame.",
+caseQuestions:["What attitudes or perceptions may explain the behavior?","What group norms reinforce under-reporting?","How should recognition be redesigned?"],
+quiz:[["Which statement best defines organizational behavior?",["Financial performance","Individuals, groups and structure in organizations","Production technology","Marketing behavior"],1],["Which management function includes motivating and resolving conflict?",["Planning","Organizing","Leading","Controlling"],2],["Evidence-based management relies mainly on:",["Habit","Scientific evidence and contextual judgement","Seniority","Informal opinion"],1]],
+assignment:"Select a real quality-related problem and prepare a short OB–Quality diagnostic note."
+},
+2:{
+objectives:["Define workplace diversity and distinguish surface-level from deep-level diversity.","Explain stereotypes, bias, discrimination and exclusion.","Relate ability and person–job fit to performance without stereotyping.","Explain how inclusion improves participation and decision quality.","Apply diversity principles to quality teams and customer service."],
+topics:[["Diversity","Diversity includes visible and less visible differences that may influence identities, experience and interaction."],["Inclusion","Representation alone is not enough; inclusion determines whether people are respected, heard and able to contribute."],["Bias and quality","Bias can create defects in human decisions just as process variation creates defects in operations."],["Diversity and teams","Diverse teams can improve problem solving when supported by psychological safety, clear goals and inclusive communication."]],
+activity:"Bias-Proofing a Quality Decision: design transparent criteria for selecting an improvement team.",
+caseTitle:"Mini Case: The Improvement Meeting Where Only Some Voices Count",
+caseText:"A cross-functional team looks diverse on paper, but junior staff rarely speak and decisions are made before frontline evidence is discussed.",
+caseQuestions:["Is the problem diversity, inclusion, or both?","What processes suppress useful information?","How can meetings increase employee voice?"],
+quiz:[["Surface-level diversity refers to:",["Values and personality","Readily observable demographic differences","Motivation only","Knowledge only"],1],["A generalized belief about a group is a:",["Stereotype","Job involvement","Role clarity","Control"],0],["Inclusive teams may improve quality because:",["They eliminate disagreement","They allow more relevant information to enter decisions","They make data unnecessary","They guarantee consensus"],1]],
+assignment:"Review one workplace process and analyze how diversity and inclusion affect decision quality."
+},
+3:{
+objectives:["Explain cognitive, affective and behavioral components of attitudes.","Differentiate job satisfaction, commitment, support and engagement.","Analyze how satisfaction affects quality performance and withdrawal.","Interpret practical indicators of dissatisfaction.","Recommend actions that strengthen quality-supportive attitudes."],
+topics:[["What Are Attitudes?","Attitudes are evaluative statements or judgments about objects, people or events. The three components are cognitive, affective and behavioral."],["Cognitive Dissonance","Dissonance occurs when attitudes and behavior conflict, such as valuing quality while skipping verification to save time."],["Major Job Attitudes","Job satisfaction, job involvement, organizational commitment, perceived organizational support and employee engagement can act as early signals of quality behavior."],["Measuring Job Satisfaction","Global and facet-based measures are useful; facet measures are more diagnostic for supervision, workload, recognition and work conditions."],["Exit–Voice–Loyalty–Neglect","Dissatisfied employees may leave, speak constructively, wait loyally, or reduce effort and attention."],["Attitude–Quality Chain","Fairness and support → satisfaction and engagement → quality behavior → customer and process outcomes."]],
+activity:"Diagnose Attitudes Behind Quality Problems: link attitude issue → behavior → quality outcome → intervention → indicator.",
+caseTitle:"Mini Case: The Silent Quality Team",
+caseText:"A quality team meets weekly, but few members speak. Employees believe management has already decided and are tired of initiatives that create work without recognition.",
+caseQuestions:["Which job attitudes are likely present?","Which dissatisfaction response is most visible?","What is the quality risk of silence?","What should the team leader change immediately?"],
+quiz:[["Attitudes include cognitive, affective and ______ components.",["technical","behavioral","financial","structural"],1],["Which job attitude reflects enthusiasm and involvement in work?",["Employee engagement","Absenteeism","Formalization","Surface-level diversity"],0],["Doing only the minimum because of dissatisfaction is:",["Voice","Loyalty","Neglect","Job involvement"],2],["Why is employee voice important for quality improvement?",["It replaces data","It surfaces problems and improvement ideas","It eliminates conflict","It prevents all errors"],1]],
+assignment:"Write 500–700 words analyzing a workplace quality problem through the lens of employee attitudes and job satisfaction."
+},
+4:{
+objectives:["Differentiate emotions from moods and explain their workplace relevance.","Explain the functions of emotions and the role of emotional labor.","Analyze how affect influences judgment, service quality and safety behavior.","Identify sources of workplace emotions and mood contagion.","Apply emotional intelligence and regulation strategies to quality-sensitive situations."],
+topics:[["Emotions and Moods","Emotions are intense, short-lived responses to specific events, while moods are usually less intense, more diffuse and longer-lasting."],["Why Emotions Matter for Quality","Affective states can shape vigilance, communication, patience and decision quality."],["Emotional Labor","Surface acting changes outward display; deep acting attempts to change the underlying feeling."],["Affective Events Theory","Workplace events generate emotional reactions that influence job attitudes and behavior."],["Emotional Intelligence","Recognizing and managing emotions supports conflict handling, teamwork and service recovery."],["Emotion Regulation and Mood Contagion","People regulate emotions through reappraisal, suppression and other strategies, while emotions can spread through teams."]],
+activity:"Emotion-to-Quality Mapping: choose a work event, identify the emotion or mood, likely behavior, quality risk, and one regulation or leadership response.",
+caseTitle:"Mini Case: The Frustrated Service Desk",
+caseText:"A customer service unit faces repeated system delays. Employees are frustrated and begin speaking sharply to customers. Team members copy each other's tone, complaints increase, and staff start skipping verification steps to clear the queue faster.",
+caseQuestions:["Which emotions and moods are visible?","How is mood contagion affecting the team?","What quality risks arise from emotional spillover?","What should the supervisor do immediately?"],
+quiz:[["Which statement best distinguishes emotions from moods?",["Emotions are always positive","Emotions are usually more intense and linked to a specific event","Moods are always short-lived","Moods never affect behavior"],1],["Changing only the outward emotional display is called:",["Deep acting","Surface acting","Reappraisal","Cognitive dissonance"],1],["Affective Events Theory suggests that:",["Work events can trigger emotions that influence attitudes and behavior","Emotions have no role in performance","Only personality affects mood","Quality is unrelated to affect"],0],["One quality benefit of emotional intelligence is:",["Eliminating all conflict","Improving regulation, communication and service recovery","Replacing procedures","Avoiding customer feedback"],1],["Mood contagion means:",["A mood spreads through interaction among people","Employees stop communicating","Only managers influence emotion","Moods are fixed traits"],0]],
+assignment:"Write 500–700 words analyzing one work situation where emotions or moods affected service quality, safety, teamwork or decision quality."
+}
+};
+
+
+
+
+const ASSESSMENT_SCHEME={
+  reflections:8,
+  midterm:12,
+  individualFinalAssignment:20,
+  finalWrittenExam:60,
+  midtermWeek:8,
+  finalAssignmentWeek:15
+};
+
+const FINAL_ASSIGNMENT={
+  title:"Individual Final Assignment",
+  mode:"Individual",
+  weight:"20%",
+  dueWeek:15,
+  description:"Prepare one integrated individual assignment that applies Organizational Behavior concepts to a real quality-related workplace problem.",
+  requirements:[
+    "Define one real quality-related workplace problem.",
+    "Diagnose the problem using relevant individual, group and organizational behavior concepts from the course.",
+    "Explain how the identified behavioral factors influence quality performance.",
+    "Recommend practical and feasible improvement actions.",
+    "Propose clear indicators to monitor improvement."
+  ],
+  output:"Individual submission • recommended length: 2–4 pages or up to 8 slides."
+};
+
+function assessmentSchemeCard(){
+  return `<div class="card" style="margin-bottom:14px">
+    <div class="section-head"><h3 style="margin:0">Course Assessment Scheme</h3><span class="pill">Applies to all weeks</span></div>
+    <div class="grid">
+      <div class="card stat"><span class="muted">Pre + Post Reflections</span><strong>8%</strong></div>
+      <div class="card stat"><span class="muted">Mid-Term Exam</span><strong>12%</strong></div>
+      <div class="card stat"><span class="muted">Individual Final Assignment</span><strong>20%</strong></div>
+      <div class="card stat"><span class="muted">Final Written Exam</span><strong>60%</strong></div>
+    </div>
+    <p class="muted" style="margin-bottom:0">Continuous Assessment = 40% • Final Written Exam = 60%</p>
+  </div>`;
+}
+
+function finalAssignmentCard(){
+  return `<div class="card" style="margin-bottom:14px">
+    <div class="section-head">
+      <div><span class="pill">Individual</span><span class="pill">20%</span>
+      <h3 style="margin:8px 0 4px">${FINAL_ASSIGNMENT.title}</h3></div>
+      <span class="pill">Due before the end of Week 15</span>
+    </div>
+    <p>${FINAL_ASSIGNMENT.description}</p>
+    <ol>${FINAL_ASSIGNMENT.requirements.map(x=>`<li style="margin:6px 0">${x}</li>`).join("")}</ol>
+    <p class="muted"><b>Expected output:</b> ${FINAL_ASSIGNMENT.output}</p>
+  </div>`;
+}
+
+const COURSE_TZ="Asia/Riyadh";
+const WEEK4_LECTURE_ISO="2026-08-29T20:00:00+03:00"; // Lecture start remains Saturday 8:00 PM Makkah; slides open at 2:00 PM
+
+function addDays(date,days){const d=new Date(date.getTime());d.setUTCDate(d.getUTCDate()+days);return d}
+function addMinutes(date,mins){return new Date(date.getTime()+mins*60000)}
+function weekSchedule(w){
+ if(w<4)return null;
+ const lecture=addDays(new Date(WEEK4_LECTURE_ISO),(w-4)*7);
+
+ // Content opens Wednesday 8:00 PM Makkah = 72 hours before lecture.
+ const guidedOpen=addDays(lecture,-3);
+
+ // Pre-class reflection opens Friday 8:00 PM = 24 hours before lecture.
+ const preclassOpen=addDays(lecture,-1);
+
+ // Final reminder window begins Saturday 4:00 PM = 4 hours before lecture.
+ const preclassReminder=addMinutes(lecture,-240);
+
+ // Pre-class closes Saturday 7:45 PM = 15 minutes before lecture.
+ const preclassClose=addMinutes(lecture,-15);
+
+ // Slides open on the lecture day at 2:00 PM Makkah (UTC+3).
+ const slidesOpen=new Date(lecture.getTime());
+ slidesOpen.setUTCHours(11,0,0,0);
+
+ // In-Class Activity / Mini Case are available only during the live lecture (8:00–10:00 PM Makkah).
+ const lectureOpen=lecture;
+ const lectureClose=addMinutes(lecture,120);
+
+ // Post-class reflection opens at lecture end, Saturday 10:00 PM.
+ const postclassOpen=addMinutes(lecture,120);
+
+ // Mid-Term Exam window (used only in Week 8) opens 10:05 PM for 30 minutes.
+ const quizOpen=addMinutes(lecture,125);
+ const quizClose=addMinutes(quizOpen,30);
+
+ // Individual Final Assignment submission window (used only in Week 15) opens 10:30 PM.
+ const assignmentOpen=addMinutes(lecture,150);
+
+ // Assignment due Thursday 12:00 PM Makkah.
+ const due=addDays(lecture,5);
+ due.setUTCHours(9,0,0,0); // 12:00 PM Makkah (UTC+3)
+
+ // Short late window closes Thursday 6:00 PM Makkah.
+ const lateUntil=addDays(lecture,5);
+ lateUntil.setUTCHours(15,0,0,0); // 6:00 PM Makkah
+
+ // Post-class reflection closes Thursday 12:00 PM Makkah.
+ const postclassClose=addDays(lecture,5);
+ postclassClose.setUTCHours(9,0,0,0);
+
+ return {
+   lecture,guidedOpen,preclassOpen,preclassReminder,preclassClose,
+   slidesOpen,lectureOpen,lectureClose,postclassOpen,postclassClose,
+   quizOpen,quizClose,assignmentOpen,due,lateUntil
+ };
+}
+function fmtRiyadh(d){
+ return new Intl.DateTimeFormat("en-GB",{timeZone:COURSE_TZ,weekday:"short",day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit",hour12:true}).format(d)+" (Makkah)";
+}
+function nowMs(){return Date.now()}
+function activityAvailability(w,tab){
+ // Instructor bypass: once the instructor dashboard is unlocked,
+ // all weeks and activities remain fully accessible regardless of schedule.
+ if(adminUnlocked)return {open:true,label:"Instructor access • no time restriction",instructor:true};
+
+ if(w<4)return {open:true,label:"Available"};
+ const s=weekSchedule(w),now=nowMs();
+
+ if(tab==="overview")return {open:true,label:"Schedule available"};
+
+ if(tab==="content"){
+   // Weekly learning content is always open for all weeks.
+   return {open:true,label:"Available"};
+ }
+
+ if(tab==="preclass"){
+   if(now<s.preclassOpen.getTime())
+     return {open:false,label:`Opens ${fmtRiyadh(s.preclassOpen)}`};
+
+   if(now>=s.preclassClose.getTime())
+     return {open:false,label:`Closed ${fmtRiyadh(s.preclassClose)} • 15 minutes before lecture`};
+
+   if(now>=s.preclassReminder.getTime())
+     return {open:true,label:`Final pre-class window • due by ${fmtRiyadh(s.preclassClose)}`,urgent:true};
+
+   return {open:true,label:`Open • due by ${fmtRiyadh(s.preclassClose)}`};
+ }
+
+ if(tab==="slides"){
+   return now>=s.slidesOpen.getTime()
+     ? {open:true,label:"Available"}
+     : {open:false,label:`Opens ${fmtRiyadh(s.slidesOpen)}`};
+ }
+
+ if(["activity","case"].includes(tab)){
+   if(now<s.lectureOpen.getTime()) return {open:false,label:`Opens only during class at ${fmtRiyadh(s.lectureOpen)}`};
+   if(now>=s.lectureClose.getTime()) return {open:false,label:`Closed when class ended at ${fmtRiyadh(s.lectureClose)}`};
+   return {open:true,label:`In-class only • available until ${fmtRiyadh(s.lectureClose)}`};
+ }
+
+ if(tab==="quiz"){
+   if(w!==ASSESSMENT_SCHEME.midtermWeek)
+     return {open:false,label:"No weekly Knowledge Check • Mid-Term Exam is in Week 8"};
+   if(now<s.quizOpen.getTime())
+     return {open:false,label:`Mid-Term Exam opens ${fmtRiyadh(s.quizOpen)}`};
+   if(now>=s.quizClose.getTime())
+     return {open:false,label:`Mid-Term Exam closed ${fmtRiyadh(s.quizClose)}`};
+   return {open:true,label:`Mid-Term Exam open until ${fmtRiyadh(s.quizClose)}`};
+ }
+
+ if(tab==="assignment"){
+   if(w!==ASSESSMENT_SCHEME.finalAssignmentWeek)
+     return {open:false,label:"Individual Final Assignment is submitted in Week 15 only"};
+   if(now<s.assignmentOpen.getTime())
+     return {open:false,label:`Submission opens ${fmtRiyadh(s.assignmentOpen)}`};
+   if(now<=s.due.getTime())
+     return {open:true,label:`Due ${fmtRiyadh(s.due)}`,late:false};
+   if(now<=s.lateUntil.getTime())
+     return {open:true,label:`Late submission • closes ${fmtRiyadh(s.lateUntil)}`,late:true};
+   return {open:false,label:`Submission closed ${fmtRiyadh(s.lateUntil)}`};
+ }
+
+ if(tab==="reflection"){
+   if(now<s.postclassOpen.getTime())
+     return {open:false,label:`Opens ${fmtRiyadh(s.postclassOpen)}`};
+   if(now>s.postclassClose.getTime())
+     return {open:false,label:`Closed ${fmtRiyadh(s.postclassClose)}`};
+   return {open:true,label:`Open until ${fmtRiyadh(s.postclassClose)}`};
+ }
+
+ return {open:true,label:"Available"};
+}
+function scheduleCard(w){
+ if(w<4)return "";
+ const s=weekSchedule(w);
+ const accessNote=adminUnlocked
+   ? `<div class="success" style="margin-bottom:10px"><b>Instructor access:</b> Time restrictions are bypassed for teaching, review and preparation.</div>`
+   : `<div class="notice" style="margin-bottom:10px"><b>Student access:</b> The opening and closing times below are enforced.</div>`;
+ return `<div class="card" style="margin-bottom:14px"><h3>Week ${w} Schedule • Makkah Time</h3>${accessNote}
+ <div class="two">
+  <div><b>Guided Reading / Core Content</b><p class="muted">Opens: ${fmtRiyadh(s.guidedOpen)}<br>Remains available after opening.</p></div>
+  <div><b>Pre-Class Reflection</b><p class="muted">Opens: ${fmtRiyadh(s.preclassOpen)}<br>Final reminder window: ${fmtRiyadh(s.preclassReminder)}<br>Closes: ${fmtRiyadh(s.preclassClose)}</p></div>
+  ${adminUnlocked?`<div><b>Instructor In-Class Activity</b><p class="muted">${fmtRiyadh(s.lecture)} → ${fmtRiyadh(s.lectureClose)}<br>Teaching activity only • not visible to students • not assessed.</p></div><div><b>Instructor Mini Case / Application</b><p class="muted">${fmtRiyadh(s.lecture)} → ${fmtRiyadh(s.lectureClose)}<br>Teaching activity only • not visible to students • not assessed.</p></div>`:""}
+  <div><b>Post-Class Reflection</b><p class="muted">Opens: ${fmtRiyadh(s.postclassOpen)}<br>Closes: ${fmtRiyadh(s.postclassClose)}</p></div>
+  ${w===ASSESSMENT_SCHEME.midtermWeek?`<div><b>Mid-Term Exam • 12%</b><p class="muted">${fmtRiyadh(s.quizOpen)} → ${fmtRiyadh(s.quizClose)} • one attempt</p></div>`:""}
+  ${w===ASSESSMENT_SCHEME.finalAssignmentWeek?`<div><b>Individual Final Assignment • 20%</b><p class="muted">Submit before the end of Week 15 • Due: ${fmtRiyadh(s.due)}</p></div>`:""}
+ </div></div>`;
+}
+function lockedCard(tab,av){
+ weekBody.innerHTML=`${scheduleCard(currentWeek)}<div class="card"><h3>${tab[0].toUpperCase()+tab.slice(1)}</h3><div class="notice"><b>Not available now.</b><br>${av.label}</div></div>`;
+}
+
+const API_URL="https://script.google.com/macros/s/AKfycbxnbCjhDwhYbhQ9WT3yeVqHqzxE3T39f129hGCfA0jbUrwlLihRUr9zxt3NBcBgZVKl/exec";
+let centralOnline=false;
+let db=JSON.parse(localStorage.getItem("gtqm511_v3")||"null")||{students:[],groups:["Group A","Group B","Group C","Group D"],activeStudentId:"",progress:{}};
+if(!db.progress)db.progress={}; if(!db.students)db.students=[]; if(!db.groups)db.groups=["Group A","Group B","Group C","Group D"];
+let currentWeek=1,currentTab="overview",adminUnlocked=false,adminPin="",liveActivity=[],heartbeatTimer=null,currentPageId="home",groupLeader=null,groupWork=[],groupConfirmations=[],groupHistory=[],allGroupLeaders=[],allGroupWork=[],allGroupConfirmations=[],allGroupHistory=[];
+
+function save(){localStorage.setItem("gtqm511_v3",JSON.stringify(db))}
+function student(){return db.students.find(s=>s.id===db.activeStudentId)||null}
+function pkey(id,w){return id+"_"+w}
+function blankProg(){return{tasks:0,taskStates:[false,false,false,false],quiz:null,reflection:false,reflectionText:"",preClassReflection:false,preClassText:"",miniCase:false,activityText:"",caseText:"",assignmentText:"",assignmentPdfUrl:"",assignmentPdfName:"",reviews:{preclass:{status:"Submitted",feedback:""},activity:{status:"Submitted",feedback:""},case:{status:"Submitted",feedback:""},assignment:{status:"Submitted",feedback:""},reflection:{status:"Submitted",feedback:""}}}}
+const META_PREFIX="GTQM511_META::";
+function encodeReflectionPayload(p){
+ return META_PREFIX+JSON.stringify({post:p.reflectionText||"",pre:p.preClassText||"",preDone:Boolean(p.preClassReflection),mini:Boolean(p.miniCase),activityText:p.activityText||"",caseText:p.caseText||"",assignmentText:p.assignmentText||"",assignmentPdfUrl:p.assignmentPdfUrl||"",assignmentPdfName:p.assignmentPdfName||"",reviews:p.reviews||{}})
+}
+function decodeReflectionPayload(raw){
+ const s=String(raw||"");
+ if(!s.startsWith(META_PREFIX))return{post:s,pre:"",preDone:false,mini:false,activityText:"",caseText:"",assignmentText:"",assignmentPdfUrl:"",assignmentPdfName:"",reviews:{}};
+ try{const x=JSON.parse(s.slice(META_PREFIX.length));return{post:x.post||"",pre:x.pre||"",preDone:Boolean(x.preDone),mini:Boolean(x.mini),activityText:x.activityText||"",caseText:x.caseText||"",assignmentText:x.assignmentText||"",assignmentPdfUrl:x.assignmentPdfUrl||"",assignmentPdfName:x.assignmentPdfName||"",reviews:x.reviews||{}}}catch(e){return{post:"",pre:"",preDone:false,mini:false,activityText:"",caseText:"",assignmentText:"",assignmentPdfUrl:"",assignmentPdfName:"",reviews:{}}}
+}
+function ensureReviews(p){
+ const base={preclass:{status:"Not Submitted",feedback:""},activity:{status:"Not Submitted",feedback:""},case:{status:"Not Submitted",feedback:""},assignment:{status:"Not Submitted",feedback:""},reflection:{status:"Not Submitted",feedback:""}};
+ p.reviews=Object.assign({},base,p.reviews||{});Object.keys(base).forEach(k=>p.reviews[k]=Object.assign({},base[k],p.reviews[k]||{}));return p
+}
+function getProg(id,w){return ensureReviews(Object.assign(blankProg(),db.progress[pkey(id,w)]||{}))}
+function getTaskStates(p){if(Array.isArray(p.taskStates))return[0,1,2,3].map(i=>!!p.taskStates[i]);const n=Math.max(0,Math.min(4,Number(p.tasks)||0));return[0,1,2,3].map(i=>i<n)}
+function trackedActivityCount(id,w){
+ const p=getProg(id,w);
+ let n=0;
+ if(p.preClassReflection)n++;
+ if(p.reflection)n++;
+ return Math.min(2,n);
+}
+function weekPct(id,w){
+ if(w<1||w>15)return 0;
+ return Math.round(trackedActivityCount(id,w)/2*100);
+}
+function weekStatus(id,w){const pct=weekPct(id,w);return pct===100?"Completed":pct>0?"In Progress":"Not Started"}
+
+async function apiGet(params={}){const u=new URL(API_URL);Object.entries(params).forEach(([k,v])=>u.searchParams.set(k,v));const r=await fetch(u,{cache:"no-store"});if(!r.ok)throw new Error("GET failed");const d=await r.json();if(d&&d.ok===false)throw new Error(d.error||"API error");return d}
+async function apiPost(payload){const r=await fetch(API_URL,{method:"POST",body:JSON.stringify(payload)});if(!r.ok)throw new Error("POST failed");const d=await r.json();if(d&&d.ok===false)throw new Error(d.error||"API error");return d}
+function updateSyncStatus(){syncStatus.textContent=centralOnline?"Central database connected ✓":"Connecting...";syncStatus.style.color=centralOnline?"#abefc6":"#f4d18d"}
+function setSaveStatus(msg,ok=true){saveStatus.textContent=msg||"";saveStatus.style.color=ok?"#abefc6":"#ffb4b4";if(msg)setTimeout(()=>{if(saveStatus.textContent===msg)saveStatus.textContent=""},3000)}
+async function checkCentral(){try{await apiGet({});centralOnline=true}catch(e){centralOnline=false}updateSyncStatus()}
+
+function applyProgressRows(rows){
+ db.progress={};
+ (rows||[]).forEach(x=>{
+   const st=Array.isArray(x.taskStates)?x.taskStates.map(Boolean):[false,false,false,false];
+   const meta=decodeReflectionPayload(x.reflectionText||"");
+   db.progress[pkey(String(x.studentId),Number(x.week))]=ensureReviews({tasks:st.filter(Boolean).length,taskStates:st,quiz:x.quiz===null||x.quiz===undefined||x.quiz===""?null:Number(x.quiz),reflection:Boolean(x.reflection),reflectionText:meta.post,preClassReflection:meta.preDone,preClassText:meta.pre,miniCase:meta.mini,activityText:meta.activityText||"",caseText:meta.caseText||"",assignmentText:meta.assignmentText||"",assignmentPdfUrl:meta.assignmentPdfUrl||"",assignmentPdfName:meta.assignmentPdfName||"",reviews:meta.reviews||{}});
+ });
+}
+
+function currentPageLabel(){
+ if(currentPageId==="week") return `Week ${currentWeek} • ${currentTab}`;
+ if(currentPageId==="student") return "Student Progress";
+ if(currentPageId==="register") return "Register";
+ if(currentPageId==="instructor") return "Instructor";
+ return "Home";
+}
+async function sendHeartbeat(){
+ const s=student();
+ if(!s || !s.id || adminUnlocked) return;
+ try{ await apiPost({action:"heartbeat",studentId:String(s.id),page:currentPageLabel()}); }catch(e){}
+}
+function startHeartbeat(){
+ if(heartbeatTimer) clearInterval(heartbeatTimer);
+ sendHeartbeat();
+ heartbeatTimer=setInterval(sendHeartbeat,20000);
+}
+function formatLastSeen(x){
+ if(!x) return "—";
+ const d=new Date(x);
+ if(Number.isNaN(d.getTime())) return String(x);
+ return d.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit",second:"2-digit"});
+}
+function renderLiveActivity(){
+ const tbody=document.getElementById("liveRows");
+ if(!tbody) return;
+ const list=Array.isArray(liveActivity)?liveActivity:[];
+ const rank={Online:0,"Recently Active":1,Offline:2};
+ const sorted=[...list].sort((a,b)=>(rank[a.status]??9)-(rank[b.status]??9)||(a.ageSeconds||0)-(b.ageSeconds||0));
+ const online=sorted.filter(x=>x.status==="Online").length;
+ const recent=sorted.filter(x=>x.status==="Recently Active").length;
+ const offline=sorted.filter(x=>x.status==="Offline").length;
+ document.getElementById("onlineNowCount").textContent=online;
+ document.getElementById("liveOnline").textContent=online;
+ document.getElementById("liveRecent").textContent=recent;
+ document.getElementById("liveOffline").textContent=offline;
+ document.getElementById("liveTracked").textContent=sorted.length;
+ tbody.innerHTML=sorted.length ? sorted.map(x=>{
+   const statusHtml=x.status==="Online"
+     ? '<span style="color:var(--green);font-weight:bold">● Online</span>'
+     : x.status==="Recently Active"
+       ? '<span style="color:var(--amber);font-weight:bold">● Recently Active</span>'
+       : '<span class="muted">○ Offline</span>';
+   return `<tr>
+     <td>${escapeHtml(x.name||"—")}</td>
+     <td>${escapeHtml(x.studentId||"—")}</td>
+     
+     <td>${escapeHtml(x.currentPage||"—")}</td>
+     <td>${formatLastSeen(x.lastSeen)}</td>
+     <td>${statusHtml}</td>
+   </tr>`;
+ }).join("") : '<tr><td colspan="6" class="muted">No student activity has been recorded yet.</td></tr>';
+}
+
+async function loadStudentById(id){
+ const sResp=await apiGet({action:"student",identifier:id});if(!sResp.student)return null;
+ const pResp=await apiGet({action:"progress",studentId:String(sResp.student.id)});const s=sResp.student;
+ db.students=[{name:s.name,id:String(s.id),email:s.email||"",group:s.group||""}];db.activeStudentId=String(s.id);
+ applyProgressRows(pResp.progress||[]);save();renderAll();startHeartbeat();return s
+}
+async function pushProgress(id,w){
+ const q=getProg(id,w),st=getTaskStates(q);setSaveStatus("Saving...",true);
+ try{
+   await apiPost({action:"saveProgress",progress:{studentId:String(id),week:Number(w),taskStates:st,quiz:q.quiz,reflection:Boolean(q.reflection),reflectionText:encodeReflectionPayload(q),preClassReflection:Boolean(q.preClassReflection),preClassText:q.preClassText||"",miniCase:Boolean(q.miniCase),total:weekPct(id,w)}});
+   centralOnline=true;updateSyncStatus();setSaveStatus("Saved ✓",true);save();renderStudent();if(adminUnlocked)renderInstructor();return true
+ }catch(e){
+   setSaveStatus("Save failed ✕",false);return false
+ }
+}
+
+function renderWeeks(){
+ weeks.innerHTML="";
+ course.forEach((w,i)=>{const n=i+1,s=student(),pct=s?weekPct(s.id,n):0,e=document.createElement("div");e.className="card week";
+ const sInfo=n>=4?weekSchedule(n):null;
+ const access=n>=4?activityAvailability(n,"content"):null;
+ e.innerHTML=`<small style="color:var(--blue);font-weight:bold">WEEK ${n}</small><h3>${w[0]}</h3><p class="muted">${w[1]}</p><div class="progress"><div class="bar" style="width:${pct}%"></div></div><small>${pct}% complete</small>${n<=4?'<p><span class="pill">Full content</span></p>':''}${n>=4?`<p><span class="pill">${adminUnlocked?"Instructor access":(access.open?"Scheduled":"🔒 "+access.label)}</span></p>`:""}`;
+ e.onclick=()=>openWeek(n);weeks.appendChild(e)});overall()
+}
+function overall(){const s=student();let sum=0;if(s)for(let i=1;i<=15;i++)sum+=weekPct(s.id,i);const pct=s?Math.round(sum/15):0;overallPct.textContent=pct+"%";overallBar.style.width=pct+"%"}
+async function showPage(id){
+ if(id==="instructor"&&!adminUnlocked){await unlockInstructor();return}
+ document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));document.getElementById(id).classList.remove("hidden");
+ document.querySelectorAll(".nav[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===id));
+ if(id==="student")renderStudent();if(id==="instructor")renderInstructor();window.scrollTo({top:0,behavior:"smooth"})
+}
+document.querySelectorAll(".nav[data-page]").forEach(b=>{
+ if(b.id==="adminNav") b.onclick=()=>unlockInstructor();
+ else b.onclick=()=>showPage(b.dataset.page);
+});
+
+async function registerStudent(){
+ const id=(regId.value||"").trim();if(!id){regMsg.className="notice";regMsg.textContent="Email or Student ID is required.";return}
+ regMsg.className="muted";regMsg.textContent="Checking your account...";
+ try{const s=await loadStudentById(id);if(!s){regMsg.className="notice";regMsg.textContent="This email or Student ID is not registered.";return}
+ regMsg.className="success";regMsg.textContent=`Welcome ${s.name}. Your course record is ready.`;setTimeout(()=>showPage("student"),300)}
+ catch(e){regMsg.className="notice";regMsg.textContent="This email or Student ID is not registered, or the central service is unavailable."}
+}
+
+async function refreshStudentProgress(){
+ const s=student();
+ const btn=document.getElementById("refreshProgressBtn");
+ const msg=document.getElementById("studentRefreshMsg");
+
+ if(!s){
+   if(msg){msg.className="notice";msg.textContent="Please register first."}
+   return;
+ }
+
+ if(btn){btn.disabled=true;btn.textContent="Refreshing..."}
+ if(msg){msg.className="muted";msg.textContent="Loading your latest progress..."}
+
+ try{
+   const pResp=await apiGet({action:"progress",studentId:String(s.id)});
+   mergeStudentProgressRows(s.id,pResp.progress||[]);
+   renderAll();
+
+   const msg2=document.getElementById("studentRefreshMsg");
+   if(msg2){
+     msg2.className="success";
+     msg2.textContent="Progress updated ✓";
+   }
+ }catch(e){
+   const msg2=document.getElementById("studentRefreshMsg");
+   if(msg2){
+     msg2.className="error";
+     msg2.textContent="Could not refresh progress. Please check the connection and try again.";
+   }
+ }finally{
+   const btn2=document.getElementById("refreshProgressBtn");
+   if(btn2){
+     btn2.disabled=false;
+     btn2.textContent="Refresh Progress";
+   }
+ }
+}
+
+function renderStudent(){
+ const s=student();studentName.textContent=s?`${s.name} • ${s.id}`:"No student registered";
+ if(!s){sProgress.textContent=sFirst4.textContent=sQuiz.textContent="0%";studentOverallBar.style.width=studentGroupBar.style.width="0%";studentGroupPct.textContent="0%";studentWeekDetails.innerHTML=studentRows.innerHTML="";return}
+ let sum=0,first4=0,rows="";
+ const midterm=getProg(s.id,ASSESSMENT_SCHEME.midtermWeek);
+ for(let i=1;i<=15;i++){
+   const p=getProg(s.id,i),pct=weekPct(s.id,i);
+   sum+=pct;if(i<=4)first4+=pct;
+   rows+=`<tr><td>Week ${i}</td><td>${course[i-1][0]}</td><td>${weekStatus(s.id,i)}</td><td><div class="progress" style="min-width:90px"><div class="bar" style="width:${pct}%"></div></div><small>${pct}%</small></td><td>${i===ASSESSMENT_SCHEME.midtermWeek?(p.quiz!==null?p.quiz+"%":"Pending"):"—"}</td><td>${p.reflection?"✓":"—"}</td></tr>`;
+ }
+ const overallPctVal=Math.round(sum/15),first4avg=Math.round(first4/4);
+ sProgress.textContent=overallPctVal+"%";sFirst4.textContent=first4avg+"%";sQuiz.textContent=midterm.quiz!==null?midterm.quiz+"%":"—";
+ studentOverallBar.style.width=studentGroupBar.style.width=overallPctVal+"%";studentGroupPct.textContent=overallPctVal+"%";studentRows.innerHTML=rows;
+ studentWeekDetails.innerHTML=[1,2,3,4].map(w=>detailWeek(s.id,w)).join("")
+}
+function activityBox(name,done,text){return `<div class="student-activity"><b>${name}</b><div class="${done?'activity-done':'activity-pending'}">${done?(text||"Completed ✓"):"Pending"}</div></div>`}
+function detailWeek(id,w){
+ const p=getProg(id,w),pct=weekPct(id,w);
+ let a="";
+ a+=activityBox("Pre-Class Reflection",p.preClassReflection);
+ a+=activityBox("Post-Class Reflection",p.reflection);
+ return `<div class="student-week"><div class="student-week-head"><div><b>Week ${w}: ${course[w-1][0]}</b><div class="muted">${weekStatus(id,w)} • ${trackedActivityCount(id,w)}/2 reflections</div></div><strong>${pct}%</strong></div><div class="progress" style="margin-top:9px"><div class="bar" style="width:${pct}%"></div></div><div class="student-activities">${a}</div></div>`;
+}
+function studentFirst4Average(id){return Math.round((weekPct(id,1)+weekPct(id,2)+weekPct(id,3)+weekPct(id,4))/4)}
+
+function studentStarted(id){
+  for(let w=1;w<=15;w++){
+    const p=getProg(id,w),st=getTaskStates(p);
+    if(st.some(Boolean) || p.preClassReflection || p.quiz!==null || p.reflection ||
+       String(p.preClassText||"").trim() || String(p.reflectionText||"").trim() ||
+       String(p.assignmentText||"").trim() || p.assignmentPdfUrl){
+      return true;
+    }
+  }
+  return false;
+}
+
+function studentRiskStatus(id){
+  if(!studentStarted(id))return "Not Started";
+  const avg=studentFirst4Average(id);
+  if(avg<50)return "At Risk";
+  if(avg<75)return "Monitor";
+  return "On Track";
+}
+
+function calculateStudentGroupAverage(s){
+ const members=db.students.filter(x=>x.group===s.group);
+ if(!s.group||members.length<2){groupAveragePct.textContent="—";groupAverageBar.style.width="0%";groupNote.textContent="Open the Instructor Dashboard to load the full cohort, then return here for group comparison.";return}
+ const avg=Math.round(members.reduce((a,m)=>a+studentFirst4Average(m.id),0)/members.length);groupAveragePct.textContent=avg+"%";groupAverageBar.style.width=avg+"%";groupNote.textContent=`Group average based on ${members.length} centrally loaded students.`
+}
+
+async function loadMyGroupWork(){
+ const s=student();
+ if(!s || !s.id){
+   groupLeader=null;groupWork=[];
+   renderMyGroupWork();
+   return;
+ }
+ try{
+   const r=await apiGet({action:"groupstatus",studentId:String(s.id)});
+   groupLeader=r.leader||null;
+   groupWork=Array.isArray(r.work)?r.work:[];
+   groupConfirmations=Array.isArray(r.confirmations)?r.confirmations:[];
+   groupHistory=Array.isArray(r.history)?r.history:[];
+   renderMyGroupWork();
+ }catch(e){
+   groupWorkBody.innerHTML=`<div class="notice">${escapeHtml(e.message||String(e))}</div>`;
+ }
+}
+
+function groupWorkForWeek_(w){
+ return (groupWork||[]).find(x=>Number(x.week)===Number(w))||null;
+}
+
+
+function groupConfirmFor_(w,id){
+ return (groupConfirmations||[]).find(x=>Number(x.week)===Number(w)&&String(x.studentId)===String(id))||null;
+}
+function groupHistoryFor_(w){
+ return (groupHistory||[]).filter(x=>Number(x.week)===Number(w)).sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp));
+}
+function groupStatusFlow_(status){
+ const steps=["Not Started","In Progress","Submitted","Needs Revision","Resubmitted","Reviewed"];
+ return `<div class="group-status-flow">${steps.map(s=>`<span class="group-step ${s===status?"active":""}">${s}</span>`).join("")}</div>`;
+}
+
+function renderMyGroupWork(){
+ const s=student();
+ const ident=document.getElementById("groupWorkIdentity");
+ const body=document.getElementById("groupWorkBody");
+ if(!ident || !body)return;
+
+ if(!s){
+   ident.textContent="Sign in as a student to view group work.";
+   body.innerHTML='<div class="muted">Group work becomes visible after student sign-in.</div>';
+   return;
+ }
+
+ const isLeader=groupLeader && String(groupLeader.studentId)===String(s.id);
+ ident.textContent=`${s.group||"—"} • Leader: ${groupLeader?groupLeader.name:"Not assigned yet"}${isLeader?" • You are the group leader":""}`;
+
+ let cards="";
+ for(let w=1;w<=15;w++){
+   const work=groupWorkForWeek_(w);
+   const status=work?(work.status||"In Progress"):"Not Started";
+   const score=work && work.score!==null && work.score!==undefined && work.score!=="" ? `${work.score}%` : "—";
+   const feedback=work&&work.feedback?escapeHtml(work.feedback):"No instructor feedback yet.";
+   const text=work&&work.submissionText?escapeHtml(work.submissionText):"";
+   const locked=!!(work&&work.locked);
+   const conf=groupConfirmFor_(w,s.id);
+   const canConfirm=!!work && ["Submitted","Resubmitted","Reviewed","Needs Revision"].includes(status);
+   const members=db.students.filter(m=>m.group===s.group);
+   const confirmedCount=members.filter(m=>groupConfirmFor_(w,m.id)?.confirmed).length;
+   const hist=groupHistoryFor_(w);
+
+   cards+=`<div class="student-week">
+     <div class="student-week-head">
+       <div><b>Week ${w}: ${escapeHtml(course[w-1][0])}</b><div class="muted">Group status: ${escapeHtml(status)} • Result: ${score}</div></div>
+       ${isLeader?'<span class="pill">Group Leader</span>':'<span class="pill">Member View</span>'}
+     </div>
+
+     ${groupStatusFlow_(status)}
+
+     ${isLeader?`
+       <label style="display:block;margin-top:10px"><b>Group Submission</b></label>
+       <textarea id="groupText_${w}" ${locked?"disabled":""} placeholder="Enter the agreed group response here...">${text}</textarea>
+       <div class="file-actions">
+         <button class="btn alt" ${locked?"disabled":""} onclick="saveMyGroupWork(${w},'draft')">Save Draft</button>
+         <button class="btn good" ${locked?"disabled":""} onclick="saveMyGroupWork(${w},'submit')">${status==="Needs Revision"?"Resubmit Group Work":"Submit Final"}</button>
+       </div>
+       ${locked?'<div class="notice">Submission is locked while awaiting/completing instructor review. Editing reopens only when the instructor selects Needs Revision.</div>':""}
+     `:`
+       <div class="review-text" style="margin-top:10px">${text||"<i>No group submission has been recorded yet.</i>"}</div>
+       <div class="muted" style="margin-top:7px">Only ${groupLeader?escapeHtml(groupLeader.name):"the assigned group leader"} can submit or edit this work.</div>
+     `}
+
+     <div class="review-guide" style="margin-top:10px">
+       <b>Participation Confirmation</b>
+       <div class="muted">${confirmedCount} of ${members.length} members confirmed participation.</div>
+       ${canConfirm?(
+         conf&&conf.confirmed
+           ? `<div class="success" style="margin-top:7px">✓ You confirmed your participation${conf.adjustment?` • Instructor adjustment: <b>${escapeHtml(conf.adjustment)}</b>`:""}.</div>`
+           : `<button class="btn good" style="margin-top:8px" onclick="confirmMyParticipation(${w})">I Participated — Confirm</button>`
+       ):'<div class="muted" style="margin-top:7px">Confirmation opens after the leader submits the group work.</div>'}
+     </div>
+
+     <div class="${status==="Reviewed"?"success":"review-guide"}" style="margin-top:10px">
+       <b>Instructor Result</b><br>
+       Status: <b>${escapeHtml(status)}</b> • Group Score: <b>${score}</b><br>
+       <span>${feedback}</span>
+       ${conf&&conf.adjustment?`<div style="margin-top:5px"><b>Your participation:</b> ${escapeHtml(conf.adjustment)}</div>`:""}
+     </div>
+
+     <details class="review-guide" style="margin-top:10px">
+       <summary>Submission History (${hist.length})</summary>
+       ${hist.length?hist.map(h=>`<div class="history-item"><b>${escapeHtml(h.event)}</b> • ${escapeHtml(h.actorName||"—")}<br><span class="muted">${escapeHtml(h.details||"")} ${h.timestamp?`• ${formatLastSeen(h.timestamp)}`:""}</span></div>`).join(""):'<div class="muted">No history yet.</div>'}
+     </details>
+   </div>`;
+ }
+ body.innerHTML=cards;
+}
+
+async function saveMyGroupWork(w,mode){
+ const s=student();if(!s)return;
+ const el=document.getElementById(`groupText_${w}`);
+ const text=el?(el.value||"").trim():"";
+ if(!text){alert("Please enter the group work before saving.");return}
+ if(mode==="submit" && !confirm("Submit this group work for instructor review? Editing will be locked until it is returned for revision."))return;
+ try{
+   const r=await apiPost({action:"saveGroupWork",studentId:String(s.id),week:Number(w),submissionText:text,mode});
+   if(!r || !r.ok)throw new Error((r&&r.error)||"Could not save group work.");
+   setSaveStatus(mode==="draft"?"Draft saved ✓":"Group work submitted ✓",true);
+   await loadMyGroupWork();
+ }catch(e){alert(e.message||String(e))}
+}
+
+async function confirmMyParticipation(w){
+ const s=student();if(!s)return;
+ if(!confirm("Confirm that you participated in this group work?"))return;
+ try{
+   const r=await apiPost({action:"confirmGroupParticipation",studentId:String(s.id),week:Number(w)});
+   if(!r || !r.ok)throw new Error((r&&r.error)||"Could not confirm participation.");
+   setSaveStatus("Participation confirmed ✓",true);
+   await loadMyGroupWork();
+ }catch(e){alert(e.message||String(e))}
+}
+
+function renderGroupLeaderManager(){
+ const el=document.getElementById("groupLeaderManager");
+ if(!el)return;
+ const groups=[...new Set(db.students.map(s=>s.group).filter(Boolean))].sort();
+ el.innerHTML=groups.map(g=>{
+   const members=db.students.filter(s=>s.group===g);
+   const leader=(allGroupLeaders||[]).find(x=>x.group===g);
+   return `<div class="card">
+     <b>${escapeHtml(g)}</b>
+     <div class="muted" style="margin:5px 0 8px">Current leader: ${leader?escapeHtml(leader.name):"Not assigned"}</div>
+     <select id="leader_${g.replace(/\W/g,"_")}">
+       <option value="">Select group leader</option>
+       ${members.map(m=>`<option value="${escapeHtml(m.id)}" ${leader&&String(leader.studentId)===String(m.id)?"selected":""}>${escapeHtml(m.name)} • ${escapeHtml(m.id)}</option>`).join("")}
+     </select>
+     <button class="btn good" style="margin-top:8px" onclick="setGroupLeaderUI('${g.replace(/'/g,"\\'")}','leader_${g.replace(/\W/g,"_")}')">Set Leader</button>
+   </div>`;
+ }).join("");
+}
+
+async function setGroupLeaderUI(group,selectId){
+ const sel=document.getElementById(selectId);
+ if(!sel || !sel.value){alert("Select a student first.");return}
+ try{
+   await apiPost({action:"setGroupLeader",pin:adminPin,group:group,studentId:sel.value});
+   setSaveStatus("Group leader updated ✓",true);
+   await refreshInstructor();
+ }catch(e){alert(e.message||String(e))}
+}
+
+
+function renderGroupWorkReview(){
+ const rows=document.getElementById("groupWorkReviewRows");
+ if(!rows)return;
+ const items=[...(allGroupWork||[])].sort((a,b)=>String(a.group).localeCompare(String(b.group))||Number(a.week)-Number(b.week));
+ rows.innerHTML=items.length?items.map(x=>{
+   const members=db.students.filter(m=>m.group===x.group);
+   const confirmed=members.filter(m=>(allGroupConfirmations||[]).some(c=>c.group===x.group&&Number(c.week)===Number(x.week)&&String(c.studentId)===String(m.id)&&c.confirmed)).length;
+   return `<tr>
+     <td>${escapeHtml(x.group)}</td><td>Week ${x.week}</td><td>${escapeHtml(x.leaderName||"—")}</td>
+     <td>${escapeHtml(x.status||"In Progress")}</td><td>${x.score===null||x.score===""?"—":x.score+"%"}</td>
+     <td>${confirmed}/${members.length}</td>
+     <td><button class="btn" onclick="openGroupReview('${String(x.group).replace(/'/g,"\\'")}',${x.week})">Review</button></td>
+   </tr>`;
+ }).join(""):'<tr><td colspan="7" class="muted">No group submissions yet.</td></tr>';
+}
+
+function openGroupReview(group,w){
+ const x=(allGroupWork||[]).find(z=>z.group===group&&Number(z.week)===Number(w));
+ if(!x)return;
+ const members=db.students.filter(m=>m.group===group);
+ const confirmations=(allGroupConfirmations||[]).filter(c=>c.group===group&&Number(c.week)===Number(w));
+ const history=(allGroupHistory||[]).filter(h=>h.group===group&&Number(h.week)===Number(w)).sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp));
+ const box=document.getElementById("groupReviewWorkspace");
+
+ const memberHtml=members.map(m=>{
+   const c=confirmations.find(z=>String(z.studentId)===String(m.id));
+   const adj=(c&&c.adjustment)||((c&&c.confirmed)?"Full":"Not Confirmed");
+   return `<div class="member-row">
+     <div><b>${escapeHtml(m.name)}</b><div class="muted">${escapeHtml(m.id)}</div></div>
+     <div>${c&&c.confirmed?'<span style="color:var(--green);font-weight:bold">✓ Confirmed</span>':'<span class="muted">Not confirmed</span>'}</div>
+     <select id="adj_${escapeHtml(m.id)}">
+       <option value="Full" ${adj==="Full"?"selected":""}>Full</option>
+       <option value="Partial" ${adj==="Partial"?"selected":""}>Partial</option>
+       <option value="Not Confirmed" ${adj==="Not Confirmed"?"selected":""}>Not Confirmed</option>
+     </select>
+   </div>`;
+ }).join("");
+
+ box.innerHTML=`<div class="review-card">
+   <div class="section-head"><div><b>${escapeHtml(group)} • Week ${w}</b><div class="muted">Submitted by leader: ${escapeHtml(x.leaderName||"—")} • Status: ${escapeHtml(x.status||"")}</div></div></div>
+   ${groupStatusFlow_(x.status||"In Progress")}
+   <div class="review-text">${escapeHtml(x.submissionText||"")}</div>
+
+   <div class="file-actions">
+     <button class="btn good" id="groupAiBtn" onclick="requestGroupAiFeedback('${String(group).replace(/'/g,"\\'")}',${w})">AI Feedback</button>
+   </div>
+   <div id="groupAiResult"></div>
+
+   <div class="section"><b>Member Participation</b>${memberHtml}
+     <button class="btn alt" style="margin-top:8px" onclick="saveGroupAdjustmentsUI('${String(group).replace(/'/g,"\\'")}',${w})">Save Participation Adjustments</button>
+   </div>
+
+   <div class="formrow" style="margin-top:12px;grid-template-columns:1fr 2fr">
+     <div><label><b>Group Score (0–100)</b></label><input id="groupScore" type="number" min="0" max="100" value="${x.score===null||x.score===""?"":x.score}"></div>
+     <div><label><b>Instructor Feedback</b></label><textarea id="groupFeedback">${escapeHtml(x.feedback||"")}</textarea></div>
+   </div>
+
+   <div class="file-actions">
+     <button class="btn good" onclick="saveGroupReviewUI('${String(group).replace(/'/g,"\\'")}',${w},'Reviewed')">Mark Reviewed</button>
+     <button class="btn alt" onclick="saveGroupReviewUI('${String(group).replace(/'/g,"\\'")}',${w},'Needs Revision')">Return for Revision</button>
+   </div>
+   <div class="muted">Reviewed locks the submission. Needs Revision unlocks it for the group leader.</div>
+
+   <details class="review-guide" style="margin-top:12px">
+     <summary>Submission History (${history.length})</summary>
+     ${history.length?history.map(h=>`<div class="history-item"><b>${escapeHtml(h.event)}</b> • ${escapeHtml(h.actorName||"—")}<br><span class="muted">${escapeHtml(h.details||"")} ${h.timestamp?`• ${formatLastSeen(h.timestamp)}`:""}</span></div>`).join(""):'<div class="muted">No history yet.</div>'}
+   </details>
+ </div>`;
+ box.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+async function saveGroupAdjustmentsUI(group,w){
+ const members=db.students.filter(m=>m.group===group);
+ const adjustments=members.map(m=>({studentId:String(m.id),adjustment:document.getElementById(`adj_${m.id}`)?.value||""}));
+ try{
+   await apiPost({action:"saveGroupParticipationAdjustments",pin:adminPin,group,week:Number(w),adjustments});
+   setSaveStatus("Participation adjustments saved ✓",true);
+   await refreshInstructor();
+   openGroupReview(group,w);
+ }catch(e){alert(e.message||String(e))}
+}
+
+async function requestGroupAiFeedback(group,w){
+ const x=(allGroupWork||[]).find(z=>z.group===group&&Number(z.week)===Number(w));
+ if(!x)return;
+ const btn=document.getElementById("groupAiBtn");
+ const out=document.getElementById("groupAiResult");
+ const feedback=document.getElementById("groupFeedback");
+ const g=reviewGuide(w,"assignment");
+ if(btn){btn.disabled=true;btn.textContent="Analyzing...";}
+ if(out){out.className="ai-review-box ai-loading";out.innerHTML="<b>AI is analyzing the group submission against the week rubric...</b>";}
+ try{
+   const r=await apiPost({
+     action:"aiFeedback",pin:adminPin,
+     payload:{
+       week:Number(w),
+       weekTopic:(course[w-1]&&course[w-1][0])||("Week "+w),
+       activity:"Group Work",
+       studentAnswer:String(x.submissionText||""),
+       modelAnswer:String(g.model||""),
+       expectedPoints:Array.isArray(g.expected)?g.expected:[]
+     }
+   });
+   if(!r||!r.ok)throw new Error((r&&r.error)||"AI feedback failed.");
+   if(feedback&&r.feedback)feedback.value=r.feedback;
+   if(out){
+     out.className="ai-review-box";
+     out.innerHTML=`<div class="section-head" style="margin-bottom:6px"><h4>AI Suggested Group Review</h4><span class="ai-status">${escapeHtml(r.suggestedStatus||"")}</span></div>
+       <b>Strengths</b><ul>${(r.strengths||[]).map(z=>`<li>${escapeHtml(z)}</li>`).join("")||"<li>—</li>"}</ul>
+       <b>Improvement Needed</b><ul>${(r.improvements||[]).map(z=>`<li>${escapeHtml(z)}</li>`).join("")||"<li>—</li>"}</ul>
+       <div><b>Instructor rationale:</b> ${escapeHtml(r.rationale||"—")}</div>`;
+   }
+ }catch(e){
+   if(out){out.className="ai-review-box";out.innerHTML=`<div class="notice">${escapeHtml(e.message||String(e))}</div>`;}
+ }finally{
+   if(btn){btn.disabled=false;btn.textContent="AI Feedback";}
+ }
+}
+
+async function saveGroupReviewUI(group,w,status){
+ const score=document.getElementById("groupScore")?.value ?? "";
+ const feedback=(document.getElementById("groupFeedback")?.value||"").trim();
+ try{
+   await apiPost({action:"saveGroupReview",pin:adminPin,review:{group,week:Number(w),status,score,feedback}});
+   setSaveStatus(status==="Reviewed"?"Group reviewed ✓":"Returned for revision ✓",true);
+   await refreshInstructor();
+   openGroupReview(group,w);
+ }catch(e){alert(e.message||String(e))}
+}
+
+
+async function unlockInstructor(){
+  if(adminUnlocked){showPage("instructor");return}
+
+  const entered=prompt("Instructor PIN:");
+  const pin=String(entered==null?"":entered).trim();
+  if(!pin)return;
+
+  try{
+    // Verify the PIN explicitly before loading the full dashboard.
+    await apiPost({action:"admincheck",pin});
+
+    // Load the secured instructor snapshot.
+    const snap=await apiPost({action:"adminsnapshot",pin});
+
+    adminPin=pin;
+    adminUnlocked=true;
+
+    db.students=(snap.students||[]).map(s=>({
+      name:s.name,id:String(s.id),email:s.email||"",group:s.group||""
+    }));
+    applyProgressRows(snap.progress||[]);
+    liveActivity=Array.isArray(snap.activity)?snap.activity:[];
+
+    save();
+
+    // Rendering problems must not be mistaken for authentication failures.
+    try{renderAll();}catch(renderErr){console.error("Instructor render warning:",renderErr);}
+
+    adminNav.style.display="";
+    document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));
+    const instructorPage=document.getElementById("instructor");
+    if(instructorPage)instructorPage.classList.remove("hidden");
+    document.querySelectorAll(".nav[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page==="instructor"));
+    currentPageId="instructor";
+
+    try{
+      renderInstructor();
+    }catch(renderErr){
+      console.error("Instructor dashboard render warning:",renderErr);
+    }
+
+    window.scrollTo({top:0,behavior:"smooth"});
+    setSaveStatus("Instructor access granted ✓",true);
+
+  }catch(e){
+    // Only authentication/data-loading errors reach this block.
+    adminUnlocked=false;
+    adminPin="";
+    console.error("Instructor unlock failed:",e);
+    alert("Instructor access failed: "+(e&&e.message?e.message:String(e)));
+  }
+}
+
+async function refreshInstructor(){
+ if(!adminUnlocked)return;
+ try{
+   const snap=await apiPost({action:"adminsnapshot",pin:adminPin});
+   db.students=(snap.students||[]).map(s=>({
+     name:s.name,id:String(s.id),email:s.email||"",group:s.group||""
+   }));
+   applyProgressRows(snap.progress||[]);
+   liveActivity=snap.activity||[];
+   allGroupLeaders=snap.groupLeaders||[];
+   allGroupWork=snap.groupWork||[];
+   allGroupConfirmations=snap.groupConfirmations||[];
+   allGroupHistory=snap.groupHistory||[];
+   save();
+   try{renderAll();}catch(renderErr){console.error("Instructor refresh render warning:",renderErr);}
+   try{renderInstructor();}catch(renderErr){console.error("Instructor table render warning:",renderErr);}
+   setSaveStatus("Instructor data refreshed ✓",true);
+ }catch(e){
+   console.error("Instructor refresh failed:",e);
+   alert("Could not refresh instructor data: "+(e&&e.message?e.message:String(e)));
+ }
+}
+
+
+function renderPendingReviews(){
+  const el=document.getElementById("pendingReviews");
+  if(!el)return;
+
+  const labels={
+    preclass:"Pre-Class Reflection",
+    activity:"In-Class Activity",
+    case:"Mini Case / Application",
+    assignment:"Individual Final Assignment",
+    reflection:"Post-Class Reflection"
+  };
+  const pending=[];
+
+  (db.students||[]).forEach(s=>{
+    for(let w=1;w<=15;w++){
+      const p=getProg(s.id,w);
+
+      Object.keys(labels).forEach(key=>{
+        // From Week 4 onward, Activity and Mini Case are teaching-only,
+        // hidden from students and do not require manual review.
+        if(key==="activity" || key==="case") return;
+
+        // From Week 4 onward, Major Assignment review applies only
+        // in the final submission weeks: 6, 9, 12 and 15.
+        if(key==="assignment" && w!==ASSESSMENT_SCHEME.finalAssignmentWeek) return;
+
+        if(!workSubmitted(p,key)) return;
+
+        const r=(p.reviews&&p.reviews[key])||{};
+        const status=String(r.status||"Submitted");
+        if(status==="Reviewed") return;
+
+        pending.push({
+          studentId:String(s.id),
+          studentName:s.name||"",
+          group:s.group||"",
+          week:w,
+          key,
+          label: key==="assignment" ? "Individual Final Assignment" : labels[key],
+          status: status==="Not Submitted" ? "Submitted" : status
+        });
+      });
+    }
+  });
+
+  if(!pending.length){
+    el.innerHTML='<div class="success">No pending manual reviews ✓</div>';
+    return;
+  }
+
+  el.innerHTML=
+    `<div class="muted" style="margin-bottom:8px">${pending.length} item${pending.length===1?"":"s"} awaiting review</div>`+
+    pending.map(x=>`<div class="review-card">
+      <div class="section-head" style="margin-bottom:0">
+        <div>
+          <b>${escapeHtml(x.studentName)}</b>
+          <div class="muted">${escapeHtml(x.studentId)} • ${escapeHtml(x.group||"—")} • Week ${x.week} • ${escapeHtml(x.label)}</div>
+          <div class="muted">Status: <b>${escapeHtml(x.status)}</b></div>
+        </div>
+        <button class="btn" onclick="openStudentReview('${String(x.studentId).replace(/'/g,"\\'")}')">Review</button>
+      </div>
+    </div>`).join("");
+}
+
+function renderInstructor(){
+ if(!adminUnlocked)return;
+
+ // Render the core progress table FIRST so optional dashboard panels can never hide student progress.
+ iStudents.textContent=(db.students||[]).length;
+
+ const active=(db.students||[]).filter(s=>studentStarted(s.id));
+ const vals=active.map(s=>studentFirst4Average(s.id));
+ const avg=vals.length?Math.round(vals.reduce((a,b)=>a+b,0)/vals.length):0;
+ iCompletion.textContent=avg+"%";
+ iRisk.textContent=(db.students||[]).filter(s=>studentRiskStatus(s.id)==="At Risk").length;
+
+ rosterRows.innerHTML=(db.students||[]).length ? (db.students||[]).map(s=>{
+   const av=studentFirst4Average(s.id),status=studentRiskStatus(s.id);
+   return `<tr>
+     <td>${escapeHtml(s.name)}</td><td>${escapeHtml(s.id)}</td>
+     <td>${weekPct(s.id,1)}%</td><td>${weekPct(s.id,2)}%</td><td>${weekPct(s.id,3)}%</td><td>${weekPct(s.id,4)}%</td>
+     <td>${studentStarted(s.id)?av+"%":"—"}</td><td>${escapeHtml(status)}</td>
+     <td><div class="file-actions" style="margin:0">
+       <button class="btn alt" onclick="db.activeStudentId='${String(s.id).replace(/'/g,"\\'")}';save();renderStudent();showPage('student')">View</button>
+       <button class="btn" onclick="openStudentReview('${String(s.id).replace(/'/g,"\\'")}')">Review</button>
+       <button class="btn danger" onclick="resetStudentProgress('${String(s.id).replace(/'/g,"\\'")}')">Reset</button>
+     </div></td>
+   </tr>`;
+ }).join("") : '<tr><td colspan="10" class="muted">No student records were returned by the instructor snapshot.</td></tr>';
+
+ // Optional panels are isolated. A failure here cannot stop the progress table above.
+ const safe=(name,fn)=>{
+   try{ if(typeof fn==="function")fn(); }
+   catch(e){ console.error(name+" failed:",e); }
+ };
+ safe("Live activity",typeof renderLiveActivity==="function"?renderLiveActivity:null);
+ safe("Pending reviews",typeof renderPendingReviews==="function"?renderPendingReviews:null);
+}
+
+function mergeStudentProgressRows(studentId,rows){
+ Object.keys(db.progress||{}).forEach(k=>{
+   if(k.startsWith(String(studentId)+"_"))delete db.progress[k];
+ });
+ (rows||[]).forEach(x=>{
+   const st=Array.isArray(x.taskStates)?x.taskStates.map(Boolean):[false,false,false,false];
+   const meta=decodeReflectionPayload(x.reflectionText||"");
+   db.progress[pkey(String(x.studentId),Number(x.week))]=ensureReviews({
+     tasks:st.filter(Boolean).length,
+     taskStates:st,
+     quiz:x.quiz===null||x.quiz===undefined||x.quiz===""?null:Number(x.quiz),
+     reflection:Boolean(x.reflection),
+     reflectionText:meta.post,
+     preClassReflection:meta.preDone,
+     preClassText:meta.pre,
+     miniCase:meta.mini,
+     activityText:meta.activityText||"",
+     caseText:meta.caseText||"",
+     assignmentText:meta.assignmentText||"",
+     assignmentPdfUrl:meta.assignmentPdfUrl||"",
+     assignmentPdfName:meta.assignmentPdfName||"",
+     reviews:meta.reviews||{}
+   });
+ });
+ save();
+}
+
+function workTextFor(p,key){if(key==="preclass")return p.preClassText||"";if(key==="activity")return p.activityText||"";if(key==="case")return p.caseText||"";if(key==="assignment")return p.assignmentText||"";if(key==="reflection")return p.reflectionText||"";return""}
+function workSubmitted(p,key){
+ if(key==="preclass")return !!p.preClassReflection || !!String(p.preClassText||"").trim();
+ if(key==="activity")return !!getTaskStates(p)[2] || !!String(p.activityText||"").trim();
+ if(key==="case")return !!p.miniCase || !!String(p.caseText||"").trim();
+ if(key==="assignment")return !!getTaskStates(p)[3] || !!String(p.assignmentText||"").trim() || !!p.assignmentPdfUrl;
+ if(key==="reflection")return !!p.reflection || !!String(p.reflectionText||"").trim();
+ return false
+}
+function escapeHtml(str){return String(str||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]))}
+
+const reviewGuides={
+  1:{
+    preclass:{
+      expected:["Identify an Organizational Behavior issue or observation.","Connect the issue to quality, service, errors, teamwork or performance.","Use a real workplace example or a clear question."],
+      model:"A strong response identifies one behavior-related workplace issue, explains why it matters, and links it to a quality outcome such as errors, delays, customer satisfaction, safety or improvement.",
+      keywords:["behavior","quality","employee","team","communication","performance","error","service"]
+    },
+    activity:{
+      expected:["State one real service/quality problem.","Separate causes into individual, group and organizational levels.","Show how the causes influence the quality outcome.","Suggest at least one practical control or improvement."],
+      model:"Example structure: Quality problem → individual causes (skills, motivation, perception) → group causes (communication, teamwork, norms) → organizational causes (systems, structure, leadership) → quality impact → targeted improvement actions.",
+      keywords:["individual","group","organizational","quality","training","communication","team","system"]
+    },
+    case:{
+      expected:["Recognize the effect of fear or psychological safety on reporting.","Explain how silence can hide defects or process risks.","Recommend leader and system actions that encourage reporting and learning."],
+      model:"A strong diagnosis explains that fear reduces employee voice and error reporting. The quality response should include a non-punitive reporting climate, clear escalation routes, leader support and use of reports for corrective action and learning.",
+      keywords:["fear","report","voice","error","quality","leader","support","corrective"]
+    },
+    assignment:{
+      expected:["Select a real quality-related problem.","Diagnose behavioral causes at individual, group and/or organizational level.","Explain the effect on quality performance.","Recommend specific, feasible actions.","Use clear evidence or workplace observations."],
+      model:"Model structure: define the quality problem; identify behavioral causes; explain the mechanism linking behavior to the quality result; propose targeted interventions; specify how improvement would be monitored.",
+      keywords:["quality","problem","individual","group","organizational","behavior","recommend","improve"]
+    },
+    reflection:{
+      expected:["Name one concept learned this week.","Explain specifically how it will be applied at work.","State the expected quality benefit."],
+      model:"Example: I will use clearer communication and active listening when coordinating work. I will confirm important messages and responsibilities to reduce misunderstandings, rework and service errors.",
+      keywords:["apply","communication","quality","work","improve","error","team","behavior"]
+    }
+  },
+  2:{
+    preclass:{
+      expected:["Identify a diversity, inclusion or bias issue in the workplace.","Explain how it may influence decisions, participation or quality.","Use a relevant workplace example or question."],
+      model:"A strong response identifies a diversity or inclusion issue and explains its possible effect on decision quality, employee voice, teamwork, fairness or customer outcomes.",
+      keywords:["diversity","inclusion","bias","decision","team","quality","fair","voice"]
+    },
+    activity:{
+      expected:["Define the improvement-team selection decision.","Use transparent job-relevant selection criteria.","Reduce similarity, favoritism and stereotype bias.","Ensure diverse expertise and meaningful participation."],
+      model:"A strong design uses published, job-relevant criteria such as process knowledge, improvement skills and stakeholder representation, applies the same criteria to all candidates, documents the decision and checks the team for diversity of relevant perspectives.",
+      keywords:["criteria","transparent","bias","selection","diversity","team","fair","skills"]
+    },
+    case:{
+      expected:["Recognize unequal participation and exclusion.","Explain how missing voices reduce information and decision quality.","Recommend facilitation practices that ensure inclusion and psychological safety."],
+      model:"The case should be diagnosed as an inclusion and voice problem. The leader should structure turn-taking, invite quieter members, use objective evidence, challenge dismissive behavior and ensure decisions reflect relevant perspectives.",
+      keywords:["voice","include","participation","decision","leader","team","bias","quality"]
+    },
+    assignment:{
+      expected:["Choose one workplace process.","Identify where diversity and inclusion affect the process.","Analyze benefits and risks for decision quality.","Recommend practical inclusion controls.","Link recommendations to measurable quality outcomes."],
+      model:"Model structure: process selected → diversity/inclusion touchpoints → possible bias or exclusion → effect on information and decisions → controls such as transparent criteria, inclusive meetings and structured review → quality indicators.",
+      keywords:["process","diversity","inclusion","bias","decision","quality","criteria","recommend"]
+    },
+    reflection:{
+      expected:["State one diversity/inclusion concept.","Describe one practical behavior you will use.","Explain how it improves fairness or quality decisions."],
+      model:"Example: I will deliberately seek input from team members with different roles before making an improvement decision. This can reduce blind spots and improve the quality of the final decision.",
+      keywords:["apply","diversity","include","input","decision","quality","team","bias"]
+    }
+  },
+  3:{
+    preclass:{
+      expected:["Identify an attitude or job-satisfaction issue.","Connect it to employee behavior.","Explain a possible quality-performance consequence."],
+      model:"A strong observation links an attitude such as satisfaction, commitment or engagement to a behavior such as voice, effort, withdrawal or neglect, and then to a quality consequence.",
+      keywords:["attitude","satisfaction","engagement","commitment","behavior","quality","voice","performance"]
+    },
+    activity:{
+      expected:["Identify the attitude issue.","Link attitude → behavior → quality outcome.","Recommend an intervention.","Specify one indicator to monitor."],
+      model:"Example: low job satisfaction → neglect/low voice → missed defects and rework → supervisor listening and recognition → monitor defect reporting, absenteeism and engagement.",
+      keywords:["attitude","behavior","quality","intervention","indicator","satisfaction","voice","neglect"]
+    },
+    case:{
+      expected:["Recognize silence/low voice as an attitude and climate signal.","Explain risks to continuous improvement.","Distinguish exit, voice, loyalty and neglect where relevant.","Recommend actions that rebuild trust and participation."],
+      model:"A strong response explains that silence may reflect dissatisfaction, low psychological safety or learned futility. This can hide quality problems. Managers should respond to employee voice, close feedback loops and track participation and improvement indicators.",
+      keywords:["voice","silence","satisfaction","quality","improvement","trust","employee","feedback"]
+    },
+    assignment:{
+      expected:["Define a workplace quality problem.","Analyze relevant attitudes/job satisfaction.","Explain resulting employee behavior.","Link the behavior to quality performance.","Recommend evidence-based managerial actions and indicators."],
+      model:"Model structure: problem → attitude/satisfaction diagnosis → employee response (voice, exit, loyalty or neglect) → quality consequence → managerial intervention → indicator for follow-up.",
+      keywords:["satisfaction","attitude","behavior","quality","voice","neglect","intervention","indicator"]
+    },
+    reflection:{
+      expected:["Identify one attitude/satisfaction concept.","Describe how you will apply it.","State the expected effect on employee or quality performance."],
+      model:"Example: I will pay closer attention to signs of dissatisfaction and encourage employee voice during quality discussions, because early concerns can reveal process problems before they become defects.",
+      keywords:["apply","satisfaction","voice","quality","employee","improve","attitude","work"]
+    }
+  },
+  4:{
+    preclass:{
+      expected:["Identify an emotion or mood relevant to work.","Explain its likely influence on behavior or judgment.","Connect it to service, safety or quality."],
+      model:"A strong response identifies a specific emotion or mood, its trigger, the behavior it may influence and the resulting quality or service implication.",
+      keywords:["emotion","mood","quality","service","stress","behavior","decision","work"]
+    },
+    activity:{
+      expected:["State the work event.","Identify the emotion or mood.","Describe the likely behavior.","Identify the quality risk.","Propose an individual or managerial control."],
+      model:"Example: repeated system delay → frustration → rushing/sharp communication → skipped verification and complaints → pause protocol, workload support and recovery script.",
+      keywords:["event","emotion","mood","behavior","risk","quality","control","response"]
+    },
+    case:{
+      expected:["Identify frustration and negative mood.","Explain mood contagion within the team.","Identify quality risks such as skipped verification.","Recommend immediate supervisor action and process-level improvement."],
+      model:"The supervisor should stabilize the interaction immediately, reinforce verification controls, redistribute workload if possible and use calm communication. Longer-term action should address the recurring system delays and support emotion regulation and service recovery.",
+      keywords:["frustration","mood","contagion","verification","quality","supervisor","delay","control"]
+    },
+    assignment:{
+      expected:["Describe one real work situation involving emotions or moods.","Explain effects on service, safety, teamwork or decision quality.","Distinguish individual and system factors.","Recommend individual and managerial controls.","Use quality indicators to judge improvement."],
+      model:"Model structure: event → emotion/mood → affected behavior/judgment → quality consequence → individual regulation strategy → managerial/process control → indicator such as complaints, errors, rework, near misses or recovery time.",
+      keywords:["emotion","mood","behavior","quality","service","safety","control","indicator"]
+    },
+    reflection:{
+      expected:["Identify one concept such as emotional labor, regulation, EI or mood contagion.","Explain how you will use it.","Link it to a concrete quality benefit."],
+      model:"Example: I will use reappraisal and a short pause before responding to difficult service situations so that frustration does not affect communication or verification accuracy.",
+      keywords:["apply","emotion","regulation","quality","communication","service","reappraisal","work"]
+    }
+  }
+};
+
+function reviewGuide(w,key){
+ return (reviewGuides[w]&&reviewGuides[w][key]) || {expected:["Address the task directly.","Use a relevant workplace example.","Connect the response to quality performance."],model:"A complete response should answer the task, provide relevant reasoning and link the discussion to quality.",keywords:["quality","work","improve"]};
+}
+function wordCount_(s){return String(s||"").trim()?String(s||"").trim().split(/\s+/).length:0}
+
+function activityLabel_(key){
+ const x={preclass:"Pre-Class Reflection",activity:"In-Class Activity",case:"Mini Case",assignment:"Individual Final Assignment",reflection:"Post-Class Reflection"};
+ return x[key]||key;
+}
+async function requestAiFeedback(id,w,key){
+ if(!adminUnlocked)return;
+ const p=getProg(id,w);
+ const answer=workTextFor(p,key);
+ const box=document.getElementById(`fb_${id}_${w}_${key}`);
+ const result=document.getElementById(`ai_${id}_${w}_${key}`);
+ const btn=document.getElementById(`aibtn_${id}_${w}_${key}`);
+ const g=reviewGuide(w,key);
+
+ if(!String(answer||"").trim()){
+   if(result) result.innerHTML='<div class="notice">AI analysis requires text from the student. If the work is only a PDF, review it manually for now.</div>';
+   return;
+ }
+
+ if(btn){btn.disabled=true;btn.textContent="Analyzing...";}
+ if(result){
+   result.className="ai-review-box ai-loading";
+   result.innerHTML="<b>AI is comparing this answer with the model answer and rubric...</b>";
+ }
+
+ try{
+   const r=await apiPost({
+     action:"aiFeedback",
+     pin:adminPin,
+     payload:{
+       week:Number(w),
+       weekTopic:(course[w-1]&&course[w-1][0])||("Week "+w),
+       activity:activityLabel_(key),
+       studentAnswer:String(answer),
+       modelAnswer:String(g.model||""),
+       expectedPoints:Array.isArray(g.expected)?g.expected:[]
+     }
+   });
+
+   if(!r || !r.ok) throw new Error((r&&r.error)||"AI feedback failed.");
+
+   const strengths=Array.isArray(r.strengths)?r.strengths:[];
+   const improvements=Array.isArray(r.improvements)?r.improvements:[];
+   if(box && r.feedback) box.value=r.feedback;
+
+   if(result){
+     result.className="ai-review-box";
+     result.innerHTML=`
+       <div class="section-head" style="margin-bottom:6px">
+         <h4>AI Suggested Review</h4>
+         <span class="ai-status">${escapeHtml(r.suggestedStatus||"")}</span>
+       </div>
+       <b>Strengths</b>
+       <ul>${strengths.length?strengths.map(x=>`<li>${escapeHtml(x)}</li>`).join(""):"<li>—</li>"}</ul>
+       <b>Improvement Needed</b>
+       <ul>${improvements.length?improvements.map(x=>`<li>${escapeHtml(x)}</li>`).join(""):"<li>—</li>"}</ul>
+       <div><b>Instructor rationale:</b> ${escapeHtml(r.rationale||"—")}</div>
+       <div class="muted" style="margin-top:7px">The feedback paragraph has been copied into Instructor Feedback. Edit it before approval if needed.</div>
+     `;
+   }
+ }catch(e){
+   if(result){
+     result.className="ai-review-box";
+     result.innerHTML=`<div class="notice">${escapeHtml(e.message||String(e))}</div>`;
+   }
+ }finally{
+   if(btn){btn.disabled=false;btn.textContent="AI Feedback";}
+ }
+}
+
+function feedbackVariantIndex_(id,w,key,n){
+ const s=String(id)+"|"+String(w)+"|"+String(key);
+ let h=0;
+ for(let i=0;i<s.length;i++)h=((h<<5)-h)+s.charCodeAt(i)|0;
+ return Math.abs(h)%n;
+}
+function suggestFeedback(id,w,key){
+ const p=getProg(id,w),txt=workTextFor(p,key),g=reviewGuide(w,key),box=document.getElementById(`fb_${id}_${w}_${key}`);
+ if(!box)return;
+
+ if(!String(txt||"").trim()){
+   const pdfVariants=[
+     "The submitted PDF is available for review. Please check it against the rubric, particularly the accuracy of the weekly concept, the link to quality performance, and the practicality of the proposed actions.",
+     "I can see that the assignment was submitted as a PDF. In the manual review, focus on whether the analysis moves beyond description to explain how the behavioral factor influences the quality outcome and whether the recommendations are feasible.",
+     "The PDF submission has been recorded. Review it against the expected points, with particular attention to evidence, application to the workplace, and the clarity of the concept–behavior–quality connection."
+   ];
+   const noTextVariants=[
+     "The submission is recorded, but there is not enough text in the portal for a content-based comment. Please review the uploaded work manually against the displayed rubric.",
+     "A submission is present, but the portal does not contain sufficient written content to generate a reliable tailored comment. Use the model answer and rubric for the final review.",
+     "The system confirms a submission, although there is too little accessible text for a meaningful automated suggestion. A manual rubric-based review is recommended."
+   ];
+   const arr=(key==="assignment" && p.assignmentPdfUrl)?pdfVariants:noTextVariants;
+   box.value=arr[feedbackVariantIndex_(id,w,key,arr.length)];
+   return;
+ }
+
+ const lower=String(txt).toLowerCase();
+ const hits=(g.keywords||[]).filter(k=>lower.includes(String(k).toLowerCase()));
+ const ratio=(g.keywords||[]).length ? hits.length/g.keywords.length : 0;
+ const wc=wordCount_(txt);
+ const missing=(g.keywords||[]).filter(k=>!hits.includes(k)).slice(0,2);
+ let level=ratio>=0.5?"strong":ratio<0.25?"revision":"developing";
+
+ const strong=[
+   "A well-focused response. You identify the relevant concept and connect it meaningfully to quality practice. Strengthen the analysis by making the causal pathway even clearer: what triggers the behavior, how it affects the process, and which indicator would show improvement.",
+   "This is a solid application of the week’s concept to a workplace context. The quality connection is clear. For an even stronger answer, add one specific measure or observable outcome that could be used to verify whether the proposed action works.",
+   "Good analytical direction. The response demonstrates understanding and a practical quality link. Consider sharpening the explanation of why the behavior produces the stated outcome and distinguishing immediate action from longer-term process improvement.",
+   "The response is relevant and applied rather than purely descriptive. You connect the behavioral issue to quality performance effectively. A useful next step would be to support the recommendation with a concrete workplace indicator or example."
+ ];
+ const developing=[
+   "A relevant start with some correct application. The response would be stronger if the link between the concept, employee behavior, and the resulting quality outcome were stated more explicitly. Add one concrete workplace example and one practical control.",
+   "You have identified an appropriate idea, but the analysis needs one more step. Explain how the concept changes behavior and how that behavior affects service, errors, safety, or another quality result. Then state a specific improvement action.",
+   "The main direction is appropriate. To develop the answer, move from describing the situation to explaining the mechanism: why does this behavior occur, what quality consequence follows, and what action should management or the employee take?",
+   "There is a useful foundation here. Strengthen it by using a more specific example and by linking the recommendation directly to a measurable quality outcome rather than leaving the improvement at a general level."
+ ];
+ const revision=[
+   "The response shows an initial attempt, but the required concept-to-quality connection is not yet clear. Rework the answer around a specific workplace situation, identify the relevant behavioral concept, explain its effect on quality, and finish with a practical recommendation.",
+   "More development is required. The answer is currently too general to demonstrate the expected analysis. Identify the key concept from this week, apply it to one concrete work example, and explain the resulting service or quality impact.",
+   "The response needs revision to address the task more directly. Focus on one clear workplace problem and show the sequence from concept → behavior → quality consequence → improvement action.",
+   "The answer would benefit from a clearer structure and stronger application. Avoid broad statements; use a specific example, explain the behavioral mechanism, and connect the recommendation to a quality result."
+ ];
+
+ let arr=level==="strong"?strong:level==="revision"?revision:developing;
+ let msg=arr[feedbackVariantIndex_(id,w,key,arr.length)];
+
+ if(hits.length){
+   const shown=hits.slice(0,2).join(" and ");
+   const evidenceVariants=[
+     ` Your discussion of ${shown} gives the response a useful anchor.`,
+     ` The references to ${shown} are relevant and can be developed further.`,
+     ` The way you bring in ${shown} supports the analysis.`
+   ];
+   msg+=evidenceVariants[feedbackVariantIndex_(id+"e",w,key,evidenceVariants.length)];
+ }
+ if(missing.length && level!=="strong"){
+   msg+=` Consider making the connection to ${missing.join(" and ")} more explicit where it fits the task.`;
+ }
+ if(key==="assignment"){
+   if(wc<250){
+     const shortVariants=[
+       " The written response also appears short for an analytical assignment; expand the reasoning, evidence, and recommendations.",
+       " The assignment would benefit from greater depth. Add supporting explanation and develop the recommendations beyond brief statements.",
+       " The current length suggests the analysis may be underdeveloped; expand the causes, quality consequences, and proposed controls."
+     ];
+     msg+=shortVariants[feedbackVariantIndex_(id+"s",w,key,shortVariants.length)];
+   }else if(wc>=500 && wc<=750){
+     const lengthVariants=[
+       " The response length is appropriate for the requested analytical task.",
+       " The amount of detail is broadly appropriate for the assignment length.",
+       " The response is within a suitable range for this analytical assignment."
+     ];
+     msg+=lengthVariants[feedbackVariantIndex_(id+"l",w,key,lengthVariants.length)];
+   }
+ }
+ box.value=msg;
+}
+function guideHtml(w,key){
+ const g=reviewGuide(w,key);
+ return `<details class="review-guide">
+   <summary>Model Answer + Rubric</summary>
+   <h4>Expected Points</h4>
+   <ul>${g.expected.map(x=>`<li>${escapeHtml(x)}</li>`).join("")}</ul>
+   <h4>Model / Expected Answer</h4>
+   <div class="review-text">${escapeHtml(g.model)}</div>
+   <h4>Quick Rubric</h4>
+   <div class="rubric-grid">
+     <div class="rubric-cell"><b>Meets Expectations</b><br>Addresses the task, applies the week concept correctly, links it to quality, and gives a relevant example/action.</div>
+     <div class="rubric-cell"><b>Partially Meets</b><br>Relevant idea is present but the explanation, application, quality link, or recommendation is incomplete.</div>
+     <div class="rubric-cell"><b>Needs Revision</b><br>Response is unclear, off-task, too general, or does not demonstrate the required concept-to-quality connection.</div>
+   </div>
+ </details>`;
+}
+
+async function openStudentReview(id){
+ if(!adminUnlocked)return;
+ const s=db.students.find(x=>String(x.id)===String(id));if(!s)return;
+
+ reviewWorkspace.innerHTML=`<div class="muted">Loading latest submissions for ${escapeHtml(s.name)}...</div>`;
+ reviewWorkspace.scrollIntoView({behavior:"smooth",block:"start"});
+
+ try{
+   const fresh=await apiGet({action:"progress",studentId:String(id)});
+   mergeStudentProgressRows(id,fresh.progress||[]);
+ }catch(e){
+   reviewWorkspace.innerHTML=`<div class="notice">Could not refresh the latest central record. Showing the last loaded data.</div>`;
+ }
+
+ const labels={
+   preclass:"Pre-Class Reflection",
+   activity:"In-Class Activity",
+   case:"Mini Case",
+   assignment:"Individual Final Assignment",
+   reflection:"Post-Class Reflection"
+ };
+ let cards="";
+
+ for(let w=1;w<=4;w++){
+   const p=getProg(id,w);
+   let inner="";
+
+   Object.keys(labels).forEach(key=>{
+     const submitted=workSubmitted(p,key);
+     const txt=workTextFor(p,key);
+     const r=p.reviews[key]||{status:"Not Submitted",feedback:""};
+     const status=submitted ? (r.status && r.status!=="Not Submitted" ? r.status : "Submitted") : "Not Submitted";
+     const hasPdf=key==="assignment" && !!p.assignmentPdfUrl;
+
+     inner+=`<div class="review-card">
+       <b>Week ${w} • ${labels[key]}</b>
+       <div class="muted">${submitted?"Submission received":"Not submitted"} • Review status: <b style="color:${status==="Reviewed"?"var(--green)":status==="Needs Revision"?"var(--amber)":"inherit"}">${status}</b></div>
+
+       ${submitted?`
+         ${txt?`<div class="review-text">${escapeHtml(txt)}</div>`:""}
+         ${hasPdf?`<div class="success" style="margin-top:8px">
+           <b>Submitted PDF:</b>
+           <a href="${p.assignmentPdfUrl}" target="_blank" rel="noopener">${escapeHtml(p.assignmentPdfName||"Open submitted PDF")}</a>
+         </div>`:""}
+         ${!txt&&!hasPdf?`<div class="review-text"><i>Submission recorded, but no text or PDF link is stored.</i></div>`:""}
+
+         ${guideHtml(w,key)}
+
+         <div class="file-actions">
+           <button class="btn good" id="aibtn_${id}_${w}_${key}" onclick="requestAiFeedback('${id}',${w},'${key}')">AI Feedback</button>
+           <button class="btn alt" onclick="suggestFeedback('${id}',${w},'${key}')">Rule-Based Suggestion</button>
+         </div>
+         <div id="ai_${id}_${w}_${key}"></div>
+
+         <label style="display:block;margin-top:10px"><b>Instructor Feedback</b></label>
+         <textarea id="fb_${id}_${w}_${key}" placeholder="Write feedback for the student...">${escapeHtml(r.feedback||"")}</textarea>
+
+         <div class="file-actions">
+           <button class="btn good" onclick="saveReview('${id}',${w},'${key}','Reviewed')">Mark Reviewed</button>
+           <button class="btn alt" onclick="saveReview('${id}',${w},'${key}','Needs Revision')">Needs Revision</button>
+         </div>
+       `:`<div class="muted" style="margin-top:8px">No student submission is currently stored for this item.</div>`}
+     </div>`;
+   });
+
+   cards+=`<div class="student-week">
+     <h3>Week ${w}: ${course[w-1][0]}</h3>
+     ${inner}
+   </div>`;
+ }
+
+ reviewWorkspace.innerHTML=`<div class="section-head">
+   <div><b>${escapeHtml(s.name)}</b><div class="muted">${escapeHtml(s.id)} • ${escapeHtml(s.group||"—")}</div><div class="muted" style="margin-top:4px">Model answers and rubric are built in. AI Feedback analyzes the student's actual text against them; Rule-Based Suggestion remains available as a no-API fallback. Final approval always remains with the instructor.</div></div>
+   <div class="file-actions" style="margin:0">
+     <button class="btn" onclick="openStudentReview('${id}')">Refresh Submissions</button>
+     <button class="btn alt" onclick="reviewWorkspace.innerHTML='Choose Review beside a student.'">Close Review</button>
+   </div>
+ </div>${cards}`;
+
+ reviewWorkspace.scrollIntoView({behavior:"smooth",block:"start"});
+}
+async function saveReview(id,w,key,status){
+ if(!adminUnlocked)return;
+ const p=getProg(id,w),el=document.getElementById(`fb_${id}_${w}_${key}`);
+ ensureReviews(p);
+ const feedback=el?(el.value||"").trim():"";
+ try{
+   await apiPost({
+     action:"saveReview",
+     pin:adminPin,
+     review:{studentId:String(id),week:Number(w),key,status,feedback}
+   });
+   p.reviews[key]={status,feedback,reviewedAt:new Date().toISOString()};
+   db.progress[pkey(id,w)]=p;
+   save();
+   setSaveStatus(status==="Reviewed"?"Marked Reviewed ✓":"Revision requested ✓",true);
+   renderPendingReviews();
+   await openStudentReview(id);
+ }catch(e){
+   alert("Review could not be saved centrally: "+(e.message||e));
+ }
+}
+function initAccess(){
+ const p=new URLSearchParams(location.search);
+ if(p.get("admin")==="1"){
+   // Keep Instructor visible; PIN is still required on click.
+ }
+}
+function renderAll(){
+ try{renderWeeks();}catch(e){console.error("renderWeeks failed:",e);}
+ try{renderStudent();}catch(e){console.error("renderStudent failed:",e);}
+ try{if(adminUnlocked && typeof renderInstructor==="function")renderInstructor();}catch(e){console.error("renderInstructor failed:",e);}
+}
+
+function openWeek(n){currentPageId="week";currentWeek=n;currentTab="overview";wkNum.textContent="Week "+n;wkTitle.textContent=course[n-1][0];renderWeekTabs();renderWeekBody();showPage("week");sendHeartbeat()}
+function renderWeekTabs(){
+ let tabs=adminUnlocked
+   ? ["overview","slides","preclass","content","activity","case","reflection"]
+   : ["overview","slides","preclass","content","reflection"];
+
+ if(currentWeek===ASSESSMENT_SCHEME.midtermWeek) tabs.splice(tabs.indexOf("reflection"),0,"quiz");
+ if(currentWeek===ASSESSMENT_SCHEME.finalAssignmentWeek) tabs.splice(tabs.indexOf("reflection"),0,"assignment");
+
+ weekTabs.innerHTML=tabs.map(t=>{
+   const av=activityAvailability(currentWeek,t);
+   const lock=(!adminUnlocked && !av.open)?" 🔒":"";
+   const labelMap={activity:"In-Class Activity",case:"Mini Case / Application",quiz:"Mid-Term Exam",assignment:"Individual Final Assignment"}; const label=labelMap[t]||t[0].toUpperCase()+t.slice(1); return `<button class="tab ${t===currentTab?"active":""}" onclick="currentTab='${t}';renderWeekTabs();renderWeekBody();sendHeartbeat()">${label}${lock}</button>`
+ }).join("")
+}
+function renderWeekBody(){
+ const d=packs[currentWeek],s=student(),p=s?getProg(s.id,currentWeek):blankProg();
+ if(!adminUnlocked && ["activity","case"].includes(currentTab)){ currentTab="overview"; }
+ if(currentWeek!==ASSESSMENT_SCHEME.finalAssignmentWeek && currentTab==="assignment"){ currentTab="overview"; }
+ if(currentWeek!==ASSESSMENT_SCHEME.midtermWeek && currentTab==="quiz"){ currentTab="overview"; }
+ const av=activityAvailability(currentWeek,currentTab);
+ if(!adminUnlocked && !av.open && currentTab!=="overview"){lockedCard(currentTab,av);return}
+ if(!d){
+   weekBody.innerHTML=`${scheduleCard(currentWeek)}${assessmentSchemeCard()}${currentWeek===ASSESSMENT_SCHEME.finalAssignmentWeek?finalAssignmentCard():""}<div class="card"><h3>${course[currentWeek-1][0]}</h3><p>${course[currentWeek-1][1]}</p><div class="notice">Detailed weekly learning content for this week will be added progressively. The approved Major Assignment roadmap is already active.</div></div>`;
+   return
+ }
+ if(currentTab==="overview"){
+   const st=getTaskStates(p);
+   weekBody.innerHTML=`${scheduleCard(currentWeek)}${assessmentSchemeCard()}${currentWeek===ASSESSMENT_SCHEME.finalAssignmentWeek?finalAssignmentCard():""}<div class="layout"><div class="card"><h3>Learning Outcomes</h3><ol>${d.objectives.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol></div><div class="card"><h3>Weekly Activities</h3>
+<div class="task">Pre-Class Reflection: <b>${p.preClassReflection?"Completed ✓":"Pending"}</b></div>
+<div class="task">Post-Class Reflection: <b>${p.reflection?"Completed ✓":"Pending"}</b></div>
+${currentWeek===ASSESSMENT_SCHEME.midtermWeek?`<div class="task">Mid-Term Exam (12%): <b>${p.quiz!==null?"Completed ✓":"Pending"}</b></div>`:""}
+${currentWeek===ASSESSMENT_SCHEME.finalAssignmentWeek?`<div class="task">Individual Final Assignment (20%): <b>${p.assignmentText||p.assignmentPdfUrl?"Submitted ✓":"Pending"}</b></div>`:""}
+<div class="success">Weekly recurring activities are limited to Pre-Class Reflection and Post-Class Reflection only.</div>
+</div></div></div>`
+ }
+ if(currentTab==="slides"){
+   const pdf=`Week${currentWeek}_Lecture.pdf`,ppt=`Week${currentWeek}_Lecture.pptx`;
+   weekBody.innerHTML=`<div class="card"><h3>Week ${currentWeek} Lecture Slides</h3><div class="file-actions"><a class="btn" href="${pdf}" target="_blank" onclick="markLectureViewed()">Open PDF</a><a class="btn alt" href="${ppt}" onclick="markLectureViewed()">Open PowerPoint</a></div><iframe class="slide-frame" src="${pdf}#view=FitH" onload="markLectureViewed()"></iframe></div>`
+ }
+ if(currentTab==="preclass")weekBody.innerHTML=`<div class="card"><h3>Pre-Class Reflection</h3><p>Write one short observation, question, or workplace example related to this week’s topic.</p><textarea id="preClassText" placeholder="Your pre-class reflection...">${p.preClassText||""}</textarea><div class="file-actions"><button class="btn good" onclick="savePreClassReflection()">Save Pre-Class Reflection</button></div><p class="muted">${p.preClassReflection?"Completed ✓":"Not yet completed"}</p>${reviewPanelStudent(p.reviews.preclass)}</div>`;
+ if(currentTab==="content")weekBody.innerHTML=`<div class="card"><h3>Core Learning Content</h3>${d.topics.map(t=>`<div class="topic"><h4>${t[0]}</h4><p>${t[1]}</p></div>`).join("")}<div class="file-actions"><button class="btn good" onclick="markGuidedReading()">Mark Guided Reading Completed</button></div></div>`;
+ if(currentTab==="activity")weekBody.innerHTML=`<div class="card"><h3>In-Class Activity — Completed during class</h3><div class="notice"><b>In-class only:</b> Available only from 8:00 PM to 10:00 PM (Makkah time) on the scheduled lecture day.</div><p>${d.activity}</p><p class="muted">Complete and submit this activity during the live class only.</p><textarea id="activityText" placeholder="Write your activity response...">${p.activityText||""}</textarea><div class="file-actions"><button class="btn good" onclick="submitActivity()">Submit Activity</button></div>${reviewPanelStudent(p.reviews.activity)}</div>`;
+ if(currentTab==="case")weekBody.innerHTML=`<div class="card"><h3>Mini Case / Application — Completed during class</h3><div class="notice"><b>In-class only:</b> Available only from 8:00 PM to 10:00 PM (Makkah time) on the scheduled lecture day.</div><h4>${d.caseTitle}</h4><p>${d.caseText}</p><ol>${d.caseQuestions.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol><p class="muted">Write your case analysis below. Your instructor can review it and return feedback.</p><textarea id="caseText" placeholder="Write your case analysis...">${p.caseText||""}</textarea><div class="file-actions"><button class="btn good" onclick="submitCase()">Submit Mini Case</button></div>${reviewPanelStudent(p.reviews.case)}</div>`;
+ if(currentTab==="quiz")renderQuiz(d);
+ if(currentTab==="assignment"){
+   if(currentWeek!==ASSESSMENT_SCHEME.finalAssignmentWeek){
+     currentTab="overview";renderWeekTabs();return renderWeekBody();
+   }
+   weekBody.innerHTML=`${scheduleCard(currentWeek)}${finalAssignmentCard()}<div class="card"><h3>Submit Individual Final Assignment • 20%</h3>
+   <div class="${activityAvailability(currentWeek,"assignment").late?"notice":"success"}">${activityAvailability(currentWeek,"assignment").label}</div>
+   <p class="muted">Submit one individual assignment. You may write your answer below, upload a PDF, or submit both.</p>
+   <label><b>Written response</b></label>
+   <textarea id="assignmentText" placeholder="Write or paste your individual final assignment here...">${p.assignmentText||""}</textarea>
+   <div style="margin-top:14px"><label><b>PDF file</b></label><input id="assignmentPdf" type="file" accept="application/pdf,.pdf"></div>
+   ${p.assignmentPdfUrl?`<div class="success" style="margin-top:12px"><b>Uploaded PDF:</b> <a href="${p.assignmentPdfUrl}" target="_blank" rel="noopener">${p.assignmentPdfName||"Open PDF"}</a></div>`:""}
+   <div class="file-actions"><button id="assignmentSubmitBtn" class="btn good" onclick="submitAssignment()">Submit Individual Final Assignment</button></div>
+   <p id="assignmentMsg" class="muted"></p>${reviewPanelStudent(p.reviews.assignment)}</div>`;
+ }
+ if(currentTab==="reflection")weekBody.innerHTML=`<div class="card"><h3>Post-Class Reflection</h3><p>Write one concept you will apply in your work or quality practice, and explain how.</p><textarea id="reflectionText" placeholder="Your reflection...">${p.reflectionText||""}</textarea><div class="file-actions"><button class="btn good" onclick="saveReflection()">Save Reflection</button></div><p class="muted">${p.reflection?"Completed ✓":"Not yet completed"}</p>${reviewPanelStudent(p.reviews.reflection)}</div>`
+}
+function reviewPanelStudent(r){if(!r)return"";const status=r.status||"Submitted",fb=(r.feedback||"").trim(),cls=status==="Reviewed"?"success":status==="Needs Revision"?"notice":"muted";return `<div class="${cls}" style="margin-top:12px"><b>Instructor review:</b> ${status}${fb?`<br><b>Feedback:</b> ${fb}`:""}</div>`}
+function setReviewSubmitted(p,key){ensureReviews(p);p.reviews[key]={status:"Submitted",feedback:""}}
+async function submitActivity(){
+ if(adminUnlocked){alert("Instructor mode is view-only for student submissions.");return}const s=student();if(!s){alert("Please register first.");return}const text=(activityText.value||"").trim();if(!text){alert("Please write your activity response before submitting.");return}const p=getProg(s.id,currentWeek),st=getTaskStates(p);p.activityText=text;st[2]=true;p.taskStates=st;p.tasks=st.filter(Boolean).length;setReviewSubmitted(p,"activity");db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();const ok=await pushProgress(s.id,currentWeek);alert(ok?"Activity submitted and saved ✓":"Activity saved locally, but central saving failed.")}
+async function submitCase(){
+ if(adminUnlocked){alert("Instructor mode is view-only for student submissions.");return}const s=student();if(!s){alert("Please register first.");return}const text=(caseText.value||"").trim();if(!text){alert("Please write your case analysis before submitting.");return}const p=getProg(s.id,currentWeek);p.caseText=text;p.miniCase=true;setReviewSubmitted(p,"case");db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();const ok=await pushProgress(s.id,currentWeek);alert(ok?"Mini Case submitted and saved ✓":"Mini Case saved locally, but central saving failed.")}
+function readFileAsDataURL(file){
+ return new Promise((resolve,reject)=>{
+   const reader=new FileReader();
+   reader.onload=()=>resolve(String(reader.result||""));
+   reader.onerror=()=>reject(new Error("Could not read file"));
+   reader.readAsDataURL(file);
+ });
+}
+async function uploadAssignmentPdf(file,studentId,week){
+ if(!file)return null;
+ if(file.type!=="application/pdf" && !file.name.toLowerCase().endsWith(".pdf"))throw new Error("Only PDF files are allowed.");
+ const max=10*1024*1024;
+ if(file.size>max)throw new Error("PDF is larger than 10 MB.");
+ const dataUrl=await readFileAsDataURL(file);
+ const base64=dataUrl.split(",")[1]||"";
+ const resp=await apiPost({
+   action:"uploadAssignmentPdf",
+   studentId:String(studentId),
+   week:Number(week),
+   fileName:file.name,
+   mimeType:"application/pdf",
+   base64
+ });
+ if(!resp || !resp.url)throw new Error(resp&&resp.error?resp.error:"PDF upload failed");
+ return {url:resp.url,name:resp.name||file.name};
+}
+async function submitAssignment(){
+ if(adminUnlocked){alert("Instructor mode is view-only for student submissions.");return}
+ const s=student();if(!s){alert("Please register first.");return}
+ const av=activityAvailability(currentWeek,"assignment");
+ if(!av.open){alert(av.label);renderWeekTabs();renderWeekBody();return}
+ const text=(assignmentText.value||"").trim();
+ const fileInput=document.getElementById("assignmentPdf");
+ const file=fileInput&&fileInput.files?fileInput.files[0]:null;
+ const p=getProg(s.id,currentWeek);
+
+ if(!text && !file && !p.assignmentPdfUrl){
+   assignmentMsg.className="error";
+   assignmentMsg.textContent="Please write an answer or choose a PDF file before submitting.";
+   return;
+ }
+
+ const btn=document.getElementById("assignmentSubmitBtn");
+ btn.disabled=true;btn.textContent=file?"Uploading PDF...":"Submitting Mid-Term Exam...";
+ assignmentMsg.className="muted";assignmentMsg.textContent=file?"Uploading your PDF...":"Saving your assignment...";
+
+ try{
+   if(file){
+     const uploaded=await uploadAssignmentPdf(file,s.id,currentWeek);
+     p.assignmentPdfUrl=uploaded.url;
+     p.assignmentPdfName=uploaded.name;
+   }
+   p.assignmentText=text;
+   const st=getTaskStates(p);st[3]=true;p.taskStates=st;p.tasks=st.filter(Boolean).length;
+   setReviewSubmitted(p,"assignment");
+   db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();
+   const ok=await pushProgress(s.id,currentWeek);
+   if(!ok)throw new Error("Assignment metadata could not be saved centrally.");
+   assignmentMsg.className="success";
+   assignmentMsg.textContent="Assignment submitted and saved ✓";
+   btn.textContent="Submitted ✓";
+   setTimeout(()=>renderWeekBody(),700);
+ }catch(e){
+   assignmentMsg.className="error";
+   assignmentMsg.textContent=e.message||"Assignment upload failed. Please try again.";
+   btn.disabled=false;btn.textContent="Retry Submit";
+ }
+}
+async function setTask(i,checked){
+ if(adminUnlocked){return}
+ const s=student();if(!s){alert("Please register/select a student first.");renderWeekBody();return}
+ const p=getProg(s.id,currentWeek),st=getTaskStates(p);st[i]=checked;p.taskStates=st;p.tasks=st.filter(Boolean).length;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();
+ const ok=await pushProgress(s.id,currentWeek);if(!ok)alert("The activity was saved on this device, but could not be saved centrally. Please check the connection and try again.")
+}
+async function markGuidedReading(){const av=activityAvailability(currentWeek,"content");if(!av.open){alert(av.label);return}await setTask(0,true)}
+async function markLectureViewed(){
+ if(adminUnlocked)return;
+ const av=activityAvailability(currentWeek,"slides");
+ if(!av.open)return;
+ if(student() && !getTaskStates(getProg(student().id,currentWeek))[1]) await setTask(1,true)
+}
+async function markActivityCompleted(){const av=activityAvailability(currentWeek,"activity");if(!av.open){alert(av.label);return}await setTask(2,true)}
+async function markAssignmentCompleted(){await setTask(3,true)}
+async function markMiniCaseCompleted(){const s=student();if(!s){alert("Please register first.");return}const p=getProg(s.id,currentWeek);p.miniCase=true;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();const ok=await pushProgress(s.id,currentWeek);if(!ok)alert("Mini Case completion could not be saved centrally.")}
+async function savePreClassReflection(){
+ if(adminUnlocked){alert("Instructor mode is view-only for student submissions.");return}const s=student();if(!s){alert("Please register first.");return}const av=activityAvailability(currentWeek,"preclass");if(!av.open){alert(av.label);renderWeekTabs();renderWeekBody();return}const text=(preClassText.value||"").trim();if(!text){alert("Please write your pre-class reflection.");return}const p=getProg(s.id,currentWeek);p.preClassReflection=true;p.preClassText=text;setReviewSubmitted(p,"preclass");db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();const ok=await pushProgress(s.id,currentWeek);if(!ok)alert("Reflection could not be saved centrally.")}
+function renderQuiz(d){
+ const p=student()?getProg(student().id,currentWeek):blankProg();
+ if(currentWeek>=4 && p.quiz!==null){
+   weekBody.innerHTML=`${scheduleCard(currentWeek)}<div class="card quiz"><h3>Mid-Term Exam • 12%</h3><div class="success"><b>Quiz completed.</b><br>Score: ${p.quiz}%<br>Only one attempt is allowed.</div></div>`;
+   return;
+ }
+ weekBody.innerHTML=`${scheduleCard(currentWeek)}<div class="card quiz"><h3>Mid-Term Exam • 12%</h3><div class="notice">Answer all questions before submitting. This is the single Mid-Term Exam for the course. Your score contributes 12% to the final course grade.</div>${d.quiz.map((q,qi)=>`<div class="topic"><p><b>${qi+1}. ${q[0]}</b></p>${q[1].map((a,ai)=>`<label><input style="width:auto" type="radio" name="q${qi}" value="${ai}"> ${a}</label>`).join("")}</div>`).join("")}<div class="file-actions"><button id="submitQuizBtn" class="btn" onclick="gradeCurrentQuiz()">Submit Mid-Term Exam</button></div><p id="quizMsg" class="${p.quiz!==null?'success':'muted'}">${p.quiz!==null?`Previous score: ${p.quiz}%`:""}</p></div>`
+}
+async function gradeCurrentQuiz(){
+ if(adminUnlocked){alert("Instructor mode is view-only for student submissions.");return}
+ const s=student();if(!s){alert("Please register first.");return}
+ const av=activityAvailability(currentWeek,"quiz");
+ if(!av.open){alert(av.label);renderWeekTabs();renderWeekBody();return}
+ const existing=getProg(s.id,currentWeek);
+ if(currentWeek>=4 && existing.quiz!==null){alert("Only one Mid-Term Exam attempt is allowed.");return}
+ const d=packs[currentWeek],answers=[];let firstMissing=-1;
+ d.quiz.forEach((q,qi)=>{const x=document.querySelector(`input[name=q${qi}]:checked`);answers.push(x);if(!x&&firstMissing<0)firstMissing=qi});
+ if(firstMissing>=0){quizMsg.className="error";quizMsg.textContent=`Please answer all questions before submitting. Question ${firstMissing+1} is unanswered.`;document.querySelectorAll(".topic")[firstMissing]?.scrollIntoView({behavior:"smooth",block:"center"});return}
+ let correct=0;answers.forEach((x,qi)=>{if(+x.value===d.quiz[qi][2])correct++});
+ const score=Math.round(correct/d.quiz.length*100),p=getProg(s.id,currentWeek),btn=document.getElementById("submitQuizBtn");
+ btn.disabled=true;btn.textContent="Submitting Mid-Term Exam...";quizMsg.className="muted";quizMsg.textContent="Saving your Mid-Term Exam...";
+ p.quiz=score;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();
+ const ok=await pushProgress(s.id,currentWeek);
+ if(ok){quizMsg.className="success";quizMsg.textContent=`Submitted and saved ✓ Score: ${score}% (${correct}/${d.quiz.length})`;btn.textContent="Submitted ✓"}
+ else{quizMsg.className="error";quizMsg.textContent=`Score calculated: ${score}%, but central saving failed. Please check the connection and press Submit Mid-Term Exam again.`;btn.disabled=false;btn.textContent="Retry Submit"}
+}
+async function saveReflection(){
+ if(adminUnlocked){alert("Instructor mode is view-only for student submissions.");return}const s=student();if(!s){alert("Please register first.");return}const av=activityAvailability(currentWeek,"reflection");if(!av.open){alert(av.label);renderWeekTabs();renderWeekBody();return}const text=(reflectionText.value||"").trim();if(!text){alert("Please write your reflection.");return}const p=getProg(s.id,currentWeek);p.reflection=true;p.reflectionText=text;setReviewSubmitted(p,"reflection");db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();const ok=await pushProgress(s.id,currentWeek);if(!ok)alert("Reflection could not be saved centrally.")}
+
+lang.onclick=()=>{const ar=document.body.classList.toggle("rtl");document.documentElement.dir=ar?"rtl":"ltr";lang.textContent=ar?"English":"العربية";heroText.textContent=ar?"بوابة تعلم تطبيقية تربط السلوك التنظيمي بأداء الجودة والخدمة والمشاركة والتحسين المستمر.":"A practical learning portal linking individual, group and organizational behavior to quality performance, service, engagement, leadership and continuous improvement."};
+
+db.activeStudentId="";db.students=[];db.progress={};save();renderAll();updateSyncStatus();checkCentral();initAccess();
+
+if(student() && student().id && !adminUnlocked){
+  startHeartbeat();
+}
+document.addEventListener("visibilitychange",()=>{
+  if(!document.hidden && student() && student().id && !adminUnlocked){
+    sendHeartbeat();
+  }
+});
+window.addEventListener("focus",()=>{
+  if(student() && student().id && !adminUnlocked){
+    sendHeartbeat();
+  }
+});
+
+
+setInterval(()=>{
+ if(adminUnlocked && currentPageId==="instructor") refreshInstructor();
+},20000);
+
+</script>
+</body>
+</html>
