@@ -97,9 +97,9 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 <h1>Organizational Behavior and Quality</h1>
 <p id="heroText">A practical learning portal linking individual, group and organizational behavior to quality performance, service, engagement, leadership and continuous improvement.</p>
 <button class="btn" onclick="showPage('register')">Student Access</button></div>
-<div class="glass"><h3>Learning Journey</h3><p>Prepare → Learn → Apply → Discuss → Assess → Reflect</p>
+<div class="glass"><h3>Learning Journey</h3><p>Prepare → Learn → Reflect → Mid-Term → Apply → Final Exam</p>
 <div class="progress"><div id="overallBar" class="bar" style="width:0%"></div></div><p><b id="overallPct">0%</b> overall course progress</p>
-<p style="font-size:12px;opacity:.85">In-Class Activity and Mini Case/Application are teaching-only activities and are excluded from student progress and assessment.</p></div>
+<p style="font-size:12px;opacity:.85">Weekly assessed activities are limited to Pre-Class Reflection and Post-Class Reflection. Mid-Term Exam = 12%, Individual Final Assignment = 20%, Final Written Exam = 60%.</p></div>
 </div>
 <div class="section"><div class="section-head"><h2>15-Week Learning Path</h2><span class="muted">Weeks 1–4 expanded</span></div><div id="weeks" class="weeks"></div></div>
 </section>
@@ -123,22 +123,22 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 <div class="grid">
 <div class="card stat"><span class="muted">Overall Course Progress</span><strong id="sProgress">0%</strong><div class="progress"><div id="studentOverallBar" class="bar" style="width:0%"></div></div></div>
 <div class="card stat"><span class="muted">Weeks 1–4 Progress</span><strong id="sFirst4">0%</strong></div>
-<div class="card stat"><span class="muted">Quiz Average</span><strong id="sQuiz">0%</strong></div>
+<div class="card stat"><span class="muted">Mid-Term Exam</span><strong id="sQuiz">—</strong></div>
 <div class="card stat"><span class="muted">Group</span><strong id="sGroup">—</strong></div>
 </div>
-<div class="card section"><div class="section-head"><h3 style="margin:0">Weeks 1–4 Detailed Progress</h3><span class="muted">Student-facing assessed/completion activities only</span></div><div id="studentWeekDetails"></div></div>
+<div class="card section"><div class="section-head"><h3 style="margin:0">Weeks 1–4 Reflection Progress</h3><span class="muted">Pre-Class + Post-Class Reflection only</span></div><div id="studentWeekDetails"></div></div>
 <div class="card section"><div class="section-head"><h3 style="margin:0">Group Progress</h3><span id="studentGroupLabel" class="muted">—</span></div>
 <div class="two"><div><p class="muted">Your Progress</p><div class="progress"><div id="studentGroupBar" class="bar" style="width:0%"></div></div><p><b id="studentGroupPct">0%</b></p></div>
 <div><p class="muted">Group Average</p><div class="progress"><div id="groupAverageBar" class="bar" style="width:0%"></div></div><p><b id="groupAveragePct">—</b></p></div></div>
 <p id="groupNote" class="muted" style="font-size:12px"></p></div>
-<div class="card section" style="overflow:auto"><h3>15-Week Course Progress</h3><table><thead><tr><th>Week</th><th>Topic</th><th>Status</th><th>Progress</th><th>Quiz</th><th>Reflection</th></tr></thead><tbody id="studentRows"></tbody></table></div>
+<div class="card section" style="overflow:auto"><h3>15-Week Course Progress</h3><table><thead><tr><th>Week</th><th>Topic</th><th>Status</th><th>Progress</th><th>Mid-Term</th><th>Post-Class Reflection</th></tr></thead><tbody id="studentRows"></tbody></table></div>
 </section>
 
 <section id="groups" class="page hidden">
 <div class="section-head"><h2>Group Dashboard</h2><span class="muted">Based on centrally loaded data</span></div>
 <div id="groupCards" class="grid"></div>
 
-<div id="studentGroupWorkPanel" class="card section">
+<div id="studentGroupWorkPanel" class="card section hidden">
   <div class="section-head">
     <div><h3 style="margin:0">Group Work</h3><span id="groupWorkIdentity" class="muted">Sign in as a student to view group work.</span></div>
     <button class="btn alt" onclick="loadMyGroupWork()">Refresh Group Work</button>
@@ -168,7 +168,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
   <div id="groupLeaderManager" class="grid"></div>
 </div>
 
-<div class="section card">
+<div class="section card hidden">
   <div class="section-head">
     <div><h3 style="margin:0">Group Work Review</h3><span class="muted">Leader submits once; members confirm participation; instructor reviews once. Result, feedback and participation adjustment are visible to every member.</span></div>
   </div>
@@ -216,7 +216,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 </main>
 
-<footer>G TQM 511 Learning Portal • v45 • Major Assignments Only in Weeks 6, 9, 12, 15</footer>
+<footer>G TQM 511 Learning Portal • v46 • Reflections + Mid-Term + One Individual Final Assignment</footer>
 
 <script>
 const course=[
@@ -282,18 +282,56 @@ assignment:"Write 500–700 words analyzing one work situation where emotions or
 
 
 
-const majorAssignments=[
-{id:"MA1",start:4,due:6,mode:"Individual",title:"Individual Behavior and Quality Diagnosis",weeks:"Weeks 4–6",topics:"Emotions & Moods → Personality & Values → Perception & Decision Making",requirements:["Define the quality-related problem.","Identify relevant individual-behavior factors.","Explain how they influence quality performance.","Recommend practical actions.","Identify one measure to monitor improvement."],output:"1–2 pages or up to 5 slides."},
-{id:"MA2",start:7,due:9,mode:"Group",title:"Employee Motivation and Group Quality Improvement",weeks:"Weeks 7–9",topics:"Motivation & Engagement → Learning & Organizational Learning → Group Behavior",requirements:["Describe the performance/quality problem.","Diagnose motivation factors.","Identify learning or capability gaps.","Analyze group influences.","Develop a short improvement plan.","Select 2–3 performance indicators."],output:"Group Assignment."},
-{id:"MA3",start:10,due:12,mode:"Group",title:"Quality Team Performance Improvement Project",weeks:"Weeks 10–12",topics:"Work Teams & Quality Teams → Communication → Leadership",requirements:["Identify a team-related quality problem.","Assess team effectiveness.","Diagnose communication barriers.","Analyze the leadership approach.","Propose specific interventions.","Define indicators of improved team performance."],output:"Short report or 5–7 slides."},
-{id:"MA4",start:13,due:15,mode:"Group",title:"Organizational Quality Improvement Project",weeks:"Weeks 13–15",topics:"Organizational Culture → HR Practices → Change, Resistance & Stress",requirements:["Select a real organizational quality challenge.","Diagnose relevant cultural factors.","Examine HR practices affecting the problem.","Identify resistance/change factors.","Recommend an integrated improvement intervention.","Develop a simple implementation plan.","Establish KPIs for monitoring results."],output:"Final Group Project."}
-];
-function majorForWeek(w){return majorAssignments.find(m=>w>=m.start&&w<=m.due)||null}
-function isMajorDueWeek(w){const m=majorForWeek(w);return !!m&&w===m.due}
-function majorCard(w){
- const m=majorForWeek(w); if(!m)return "";
- const due=isMajorDueWeek(w);
- return `<div class="card" style="margin-bottom:14px"><div class="section-head"><div><span class="pill">${m.id}</span> <span class="pill">${m.mode}</span><h3 style="margin:8px 0 4px">${m.title}</h3><div class="muted">${m.weeks} • ${m.topics}</div></div><span class="pill">${due?"Final Submission Week":"Development Week"}</span></div><ol>${m.requirements.map(x=>`<li style="margin:6px 0">${x}</li>`).join("")}</ol><p class="muted"><b>Expected output:</b> ${m.output}</p><div class="${due?"success":"notice"}"><b>${due?"Submission is due this week.":"No separate weekly assignment is due this week."}</b> ${due?"Submit the integrated Major Assignment here.":`Continue developing ${m.id}; final submission is in Week ${m.due}.`}</div></div>`;
+
+const ASSESSMENT_SCHEME={
+  reflections:8,
+  midterm:12,
+  individualFinalAssignment:20,
+  finalWrittenExam:60,
+  midtermWeek:8,
+  finalAssignmentWeek:15
+};
+
+const FINAL_ASSIGNMENT={
+  title:"Individual Final Assignment",
+  mode:"Individual",
+  weight:"20%",
+  dueWeek:15,
+  description:"Prepare one integrated individual assignment that applies Organizational Behavior concepts to a real quality-related workplace problem.",
+  requirements:[
+    "Define one real quality-related workplace problem.",
+    "Diagnose the problem using relevant individual, group and organizational behavior concepts from the course.",
+    "Explain how the identified behavioral factors influence quality performance.",
+    "Recommend practical and feasible improvement actions.",
+    "Propose clear indicators to monitor improvement."
+  ],
+  output:"Individual submission • recommended length: 2–4 pages or up to 8 slides."
+};
+
+function assessmentSchemeCard(){
+  return `<div class="card" style="margin-bottom:14px">
+    <div class="section-head"><h3 style="margin:0">Course Assessment Scheme</h3><span class="pill">100%</span></div>
+    <div class="grid">
+      <div class="card stat"><span class="muted">Pre + Post Reflections</span><strong>8%</strong></div>
+      <div class="card stat"><span class="muted">Mid-Term Exam</span><strong>12%</strong></div>
+      <div class="card stat"><span class="muted">Individual Final Assignment</span><strong>20%</strong></div>
+      <div class="card stat"><span class="muted">Final Written Exam</span><strong>60%</strong></div>
+    </div>
+    <p class="muted" style="margin-bottom:0">Continuous Assessment = 40% • Final Written Exam = 60%</p>
+  </div>`;
+}
+
+function finalAssignmentCard(){
+  return `<div class="card" style="margin-bottom:14px">
+    <div class="section-head">
+      <div><span class="pill">Individual</span><span class="pill">20%</span>
+      <h3 style="margin:8px 0 4px">${FINAL_ASSIGNMENT.title}</h3></div>
+      <span class="pill">Due before the end of Week 15</span>
+    </div>
+    <p>${FINAL_ASSIGNMENT.description}</p>
+    <ol>${FINAL_ASSIGNMENT.requirements.map(x=>`<li style="margin:6px 0">${x}</li>`).join("")}</ol>
+    <p class="muted"><b>Expected output:</b> ${FINAL_ASSIGNMENT.output}</p>
+  </div>`;
 }
 
 const COURSE_TZ="Asia/Riyadh";
@@ -328,11 +366,11 @@ function weekSchedule(w){
  // Post-class reflection opens at lecture end, Saturday 10:00 PM.
  const postclassOpen=addMinutes(lecture,120);
 
- // Quiz opens 10:05 PM for 30 minutes.
+ // Mid-Term Exam window (used only in Week 8) opens 10:05 PM for 30 minutes.
  const quizOpen=addMinutes(lecture,125);
  const quizClose=addMinutes(quizOpen,30);
 
- // Assignment opens 10:30 PM.
+ // Individual Final Assignment submission window (used only in Week 15) opens 10:30 PM.
  const assignmentOpen=addMinutes(lecture,150);
 
  // Assignment due Thursday 12:00 PM Makkah.
@@ -398,18 +436,20 @@ function activityAvailability(w,tab){
  }
 
  if(tab==="quiz"){
+   if(w!==ASSESSMENT_SCHEME.midtermWeek)
+     return {open:false,label:"No weekly Knowledge Check • Mid-Term Exam is in Week 8"};
    if(now<s.quizOpen.getTime())
-     return {open:false,label:`Opens ${fmtRiyadh(s.quizOpen)}`};
+     return {open:false,label:`Mid-Term Exam opens ${fmtRiyadh(s.quizOpen)}`};
    if(now>=s.quizClose.getTime())
-     return {open:false,label:`Closed ${fmtRiyadh(s.quizClose)}`};
-   return {open:true,label:`Open until ${fmtRiyadh(s.quizClose)}`};
+     return {open:false,label:`Mid-Term Exam closed ${fmtRiyadh(s.quizClose)}`};
+   return {open:true,label:`Mid-Term Exam open until ${fmtRiyadh(s.quizClose)}`};
  }
 
  if(tab==="assignment"){
-   if(![6,9,12,15].includes(w))
-     return {open:false,label:"No Major Assignment scheduled this week"};
+   if(w!==ASSESSMENT_SCHEME.finalAssignmentWeek)
+     return {open:false,label:"Individual Final Assignment is submitted in Week 15 only"};
    if(now<s.assignmentOpen.getTime())
-     return {open:false,label:`Opens ${fmtRiyadh(s.assignmentOpen)}`};
+     return {open:false,label:`Submission opens ${fmtRiyadh(s.assignmentOpen)}`};
    if(now<=s.due.getTime())
      return {open:true,label:`Due ${fmtRiyadh(s.due)}`,late:false};
    if(now<=s.lateUntil.getTime())
@@ -439,8 +479,8 @@ function scheduleCard(w){
   <div><b>Pre-Class Reflection</b><p class="muted">Opens: ${fmtRiyadh(s.preclassOpen)}<br>Final reminder window: ${fmtRiyadh(s.preclassReminder)}<br>Closes: ${fmtRiyadh(s.preclassClose)}</p></div>
   ${adminUnlocked?`<div><b>Instructor In-Class Activity</b><p class="muted">${fmtRiyadh(s.lecture)} → ${fmtRiyadh(s.lectureClose)}<br>Teaching activity only • not visible to students • not assessed.</p></div><div><b>Instructor Mini Case / Application</b><p class="muted">${fmtRiyadh(s.lecture)} → ${fmtRiyadh(s.lectureClose)}<br>Teaching activity only • not visible to students • not assessed.</p></div>`:""}
   <div><b>Post-Class Reflection</b><p class="muted">Opens: ${fmtRiyadh(s.postclassOpen)}<br>Closes: ${fmtRiyadh(s.postclassClose)}</p></div>
-  <div><b>Quiz</b><p class="muted">${fmtRiyadh(s.quizOpen)} → ${fmtRiyadh(s.quizClose)} • 30 minutes • one attempt</p></div>
-  ${isMajorDueWeek(w)?`<div><b>Major Assignment</b><p class="muted">${majorForWeek(w).id} final submission week • Due: ${fmtRiyadh(s.due)}</p></div>`:""}
+  ${w===ASSESSMENT_SCHEME.midtermWeek?`<div><b>Mid-Term Exam • 12%</b><p class="muted">${fmtRiyadh(s.quizOpen)} → ${fmtRiyadh(s.quizClose)} • one attempt</p></div>`:""}
+  ${w===ASSESSMENT_SCHEME.finalAssignmentWeek?`<div><b>Individual Final Assignment • 20%</b><p class="muted">Submit before the end of Week 15 • Due: ${fmtRiyadh(s.due)}</p></div>`:""}
  </div></div>`;
 }
 function lockedCard(tab,av){
@@ -473,22 +513,15 @@ function ensureReviews(p){
 function getProg(id,w){return ensureReviews(Object.assign(blankProg(),db.progress[pkey(id,w)]||{}))}
 function getTaskStates(p){if(Array.isArray(p.taskStates))return[0,1,2,3].map(i=>!!p.taskStates[i]);const n=Math.max(0,Math.min(4,Number(p.tasks)||0));return[0,1,2,3].map(i=>i<n)}
 function trackedActivityCount(id,w){
- const p=getProg(id,w),st=getTaskStates(p);
- // In-Class Activity and Mini Case/Application are teaching-only.
- // They are excluded from student progress and assessment in ALL weeks.
+ const p=getProg(id,w);
  let n=0;
- if(st[0])n++;               // Guided Reading
- if(st[1])n++;               // Lecture Viewed
  if(p.preClassReflection)n++;
- if(p.quiz!==null)n++;
  if(p.reflection)n++;
- // Keep only the original short Assignment for Weeks 1–3.
- if(w<=3 && st[3])n++;
- return Math.min(w<=3?6:5,n);
+ return Math.min(2,n);
 }
 function weekPct(id,w){
  if(w<1||w>15)return 0;
- return Math.round(trackedActivityCount(id,w)/(w<=3?6:5)*100);
+ return Math.round(trackedActivityCount(id,w)/2*100);
 }
 function weekStatus(id,w){const pct=weekPct(id,w);return pct===100?"Completed":pct>0?"In Progress":"Not Started"}
 
@@ -647,26 +680,25 @@ async function refreshStudentProgress(){
 function renderStudent(){
  const s=student();studentName.textContent=s?`${s.name} • ${s.id}`:"No student registered";sGroup.textContent=s?(s.group||"—"):"—";studentGroupLabel.textContent=s?(s.group||"—"):"—";
  if(!s){sProgress.textContent=sFirst4.textContent=sQuiz.textContent="0%";studentOverallBar.style.width=studentGroupBar.style.width="0%";studentGroupPct.textContent="0%";studentWeekDetails.innerHTML=studentRows.innerHTML="";return}
- let sum=0,first4=0,qsum=0,qn=0,rows="";
- for(let i=1;i<=15;i++){const p=getProg(s.id,i),pct=weekPct(s.id,i);sum+=pct;if(i<=4)first4+=pct;if(p.quiz!==null){qsum+=p.quiz;qn++}
- rows+=`<tr><td>Week ${i}</td><td>${course[i-1][0]}</td><td>${weekStatus(s.id,i)}</td><td><div class="progress" style="min-width:90px"><div class="bar" style="width:${pct}%"></div></div><small>${pct}%</small></td><td>${p.quiz!==null?p.quiz+"%":"—"}</td><td>${p.reflection?"✓":"—"}</td></tr>`}
- const overallPctVal=Math.round(sum/15),first4avg=Math.round(first4/4),quizavg=qn?Math.round(qsum/qn):0;
- sProgress.textContent=overallPctVal+"%";sFirst4.textContent=first4avg+"%";sQuiz.textContent=quizavg+"%";
+ let sum=0,first4=0,rows="";
+ const midterm=getProg(s.id,ASSESSMENT_SCHEME.midtermWeek);
+ for(let i=1;i<=15;i++){
+   const p=getProg(s.id,i),pct=weekPct(s.id,i);
+   sum+=pct;if(i<=4)first4+=pct;
+   rows+=`<tr><td>Week ${i}</td><td>${course[i-1][0]}</td><td>${weekStatus(s.id,i)}</td><td><div class="progress" style="min-width:90px"><div class="bar" style="width:${pct}%"></div></div><small>${pct}%</small></td><td>${i===ASSESSMENT_SCHEME.midtermWeek?(p.quiz!==null?p.quiz+"%":"Pending"):"—"}</td><td>${p.reflection?"✓":"—"}</td></tr>`;
+ }
+ const overallPctVal=Math.round(sum/15),first4avg=Math.round(first4/4);
+ sProgress.textContent=overallPctVal+"%";sFirst4.textContent=first4avg+"%";sQuiz.textContent=midterm.quiz!==null?midterm.quiz+"%":"—";
  studentOverallBar.style.width=studentGroupBar.style.width=overallPctVal+"%";studentGroupPct.textContent=overallPctVal+"%";studentRows.innerHTML=rows;
  studentWeekDetails.innerHTML=[1,2,3,4].map(w=>detailWeek(s.id,w)).join("");calculateStudentGroupAverage(s)
 }
 function activityBox(name,done,text){return `<div class="student-activity"><b>${name}</b><div class="${done?'activity-done':'activity-pending'}">${done?(text||"Completed ✓"):"Pending"}</div></div>`}
 function detailWeek(id,w){
- const p=getProg(id,w),st=getTaskStates(p),pct=weekPct(id,w);let a="";
- a+=activityBox("Guided Reading",st[0]);
- a+=activityBox("Lecture Viewed",st[1]);
+ const p=getProg(id,w),pct=weekPct(id,w);
+ let a="";
  a+=activityBox("Pre-Class Reflection",p.preClassReflection);
- // In-Class Activity and Mini Case/Application are instructor-led teaching activities only
- // and are intentionally not shown in the student progress view.
- a+=activityBox("Knowledge Check / Quiz",p.quiz!==null,p.quiz!==null?p.quiz+"%":"");
- if(w<=3)a+=activityBox("Assignment",st[3]);
  a+=activityBox("Post-Class Reflection",p.reflection);
- return `<div class="student-week"><div class="student-week-head"><div><b>Week ${w}: ${course[w-1][0]}</b><div class="muted">${weekStatus(id,w)} • ${trackedActivityCount(id,w)}/${w<=3?6:5} student activities</div></div><strong>${pct}%</strong></div><div class="progress" style="margin-top:9px"><div class="bar" style="width:${pct}%"></div></div><div class="student-activities">${a}</div></div>`
+ return `<div class="student-week"><div class="student-week-head"><div><b>Week ${w}: ${course[w-1][0]}</b><div class="muted">${weekStatus(id,w)} • ${trackedActivityCount(id,w)}/2 reflections</div></div><strong>${pct}%</strong></div><div class="progress" style="margin-top:9px"><div class="bar" style="width:${pct}%"></div></div><div class="student-activities">${a}</div></div>`;
 }
 function studentFirst4Average(id){return Math.round((weekPct(id,1)+weekPct(id,2)+weekPct(id,3)+weekPct(id,4))/4)}
 
@@ -1082,7 +1114,7 @@ function renderPendingReviews(){
     preclass:"Pre-Class Reflection",
     activity:"In-Class Activity",
     case:"Mini Case / Application",
-    assignment:"Assignment",
+    assignment:"Individual Final Assignment",
     reflection:"Post-Class Reflection"
   };
   const pending=[];
@@ -1098,7 +1130,7 @@ function renderPendingReviews(){
 
         // From Week 4 onward, Major Assignment review applies only
         // in the final submission weeks: 6, 9, 12 and 15.
-        if(w>=4 && key==="assignment" && ![6,9,12,15].includes(w)) return;
+        if(key==="assignment" && w!==ASSESSMENT_SCHEME.finalAssignmentWeek) return;
 
         if(!workSubmitted(p,key)) return;
 
@@ -1112,7 +1144,7 @@ function renderPendingReviews(){
           group:s.group||"",
           week:w,
           key,
-          label: key==="assignment" && w>=4 ? "Major Assignment" : labels[key],
+          label: key==="assignment" ? "Individual Final Assignment" : labels[key],
           status: status==="Not Submitted" ? "Submitted" : status
         });
       });
@@ -1332,7 +1364,7 @@ function reviewGuide(w,key){
 function wordCount_(s){return String(s||"").trim()?String(s||"").trim().split(/\s+/).length:0}
 
 function activityLabel_(key){
- const x={preclass:"Pre-Class Reflection",activity:"In-Class Activity",case:"Mini Case",assignment:"Assignment",reflection:"Post-Class Reflection"};
+ const x={preclass:"Pre-Class Reflection",activity:"In-Class Activity",case:"Mini Case",assignment:"Individual Final Assignment",reflection:"Post-Class Reflection"};
  return x[key]||key;
 }
 async function requestAiFeedback(id,w,key){
@@ -1521,7 +1553,7 @@ async function openStudentReview(id){
    preclass:"Pre-Class Reflection",
    activity:"In-Class Activity",
    case:"Mini Case",
-   assignment:"Assignment",
+   assignment:"Individual Final Assignment",
    reflection:"Post-Class Reflection"
  };
  let cards="";
@@ -1620,33 +1652,39 @@ function renderAll(){
 
 function openWeek(n){currentPageId="week";currentWeek=n;currentTab="overview";wkNum.textContent="Week "+n;wkTitle.textContent=course[n-1][0];renderWeekTabs();renderWeekBody();showPage("week");sendHeartbeat()}
 function renderWeekTabs(){
- const majorDueWeeks=[6,9,12,15];
  let tabs=adminUnlocked
-   ? ["overview","slides","preclass","content","activity","case","quiz","reflection"]
-   : ["overview","slides","preclass","content","quiz","reflection"];
+   ? ["overview","slides","preclass","content","activity","case","reflection"]
+   : ["overview","slides","preclass","content","reflection"];
 
- // Major Assignment appears only in the agreed submission weeks.
- if(majorDueWeeks.includes(currentWeek)) tabs.splice(tabs.indexOf("reflection"),0,"assignment");
+ if(currentWeek===ASSESSMENT_SCHEME.midtermWeek) tabs.splice(tabs.indexOf("reflection"),0,"quiz");
+ if(currentWeek===ASSESSMENT_SCHEME.finalAssignmentWeek) tabs.splice(tabs.indexOf("reflection"),0,"assignment");
 
  weekTabs.innerHTML=tabs.map(t=>{
    const av=activityAvailability(currentWeek,t);
    const lock=(!adminUnlocked && !av.open)?" 🔒":"";
-   const labelMap={activity:"In-Class Activity",case:"Mini Case / Application",assignment:(currentWeek>=4?"Major Assignment":"Assignment")}; const label=labelMap[t]||t[0].toUpperCase()+t.slice(1); return `<button class="tab ${t===currentTab?"active":""}" onclick="currentTab='${t}';renderWeekTabs();renderWeekBody();sendHeartbeat()">${label}${lock}</button>`
+   const labelMap={activity:"In-Class Activity",case:"Mini Case / Application",quiz:"Mid-Term Exam",assignment:"Individual Final Assignment"}; const label=labelMap[t]||t[0].toUpperCase()+t.slice(1); return `<button class="tab ${t===currentTab?"active":""}" onclick="currentTab='${t}';renderWeekTabs();renderWeekBody();sendHeartbeat()">${label}${lock}</button>`
  }).join("")
 }
 function renderWeekBody(){
  const d=packs[currentWeek],s=student(),p=s?getProg(s.id,currentWeek):blankProg();
  if(!adminUnlocked && ["activity","case"].includes(currentTab)){ currentTab="overview"; }
- if(![6,9,12,15].includes(currentWeek) && currentTab==="assignment"){ currentTab="overview"; }
+ if(currentWeek!==ASSESSMENT_SCHEME.finalAssignmentWeek && currentTab==="assignment"){ currentTab="overview"; }
+ if(currentWeek!==ASSESSMENT_SCHEME.midtermWeek && currentTab==="quiz"){ currentTab="overview"; }
  const av=activityAvailability(currentWeek,currentTab);
  if(!adminUnlocked && !av.open && currentTab!=="overview"){lockedCard(currentTab,av);return}
  if(!d){
-   weekBody.innerHTML=`${scheduleCard(currentWeek)}${isMajorDueWeek(currentWeek)?majorCard(currentWeek):""}<div class="card"><h3>${course[currentWeek-1][0]}</h3><p>${course[currentWeek-1][1]}</p><div class="notice">Detailed weekly learning content for this week will be added progressively. The approved Major Assignment roadmap is already active.</div></div>`;
+   weekBody.innerHTML=`${scheduleCard(currentWeek)}${currentWeek===1?assessmentSchemeCard():""}${currentWeek===ASSESSMENT_SCHEME.finalAssignmentWeek?finalAssignmentCard():""}<div class="card"><h3>${course[currentWeek-1][0]}</h3><p>${course[currentWeek-1][1]}</p><div class="notice">Detailed weekly learning content for this week will be added progressively. The approved Major Assignment roadmap is already active.</div></div>`;
    return
  }
  if(currentTab==="overview"){
    const st=getTaskStates(p);
-   weekBody.innerHTML=`${scheduleCard(currentWeek)}${isMajorDueWeek(currentWeek)?majorCard(currentWeek):""}<div class="layout"><div class="card"><h3>Learning Outcomes</h3><ol>${d.objectives.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol></div><div class="card"><h3>Progress Checklist</h3><label class="task"><input type="checkbox" ${st[0]?"checked":""} onchange="setTask(0,this.checked)"> Guided Reading</label><label class="task"><input type="checkbox" ${st[1]?"checked":""} disabled> Lecture Viewed <span class="muted">(automatic)</span></label><div class="task">Pre-Class Reflection: <b>${p.preClassReflection?"Completed ✓":"Pending"}</b></div>${adminUnlocked?`<div class="task">In-Class Activity: <b>Teaching activity only</b></div><div class="task">Mini Case / Application: <b>Teaching activity only</b></div>`:""}<div class="task">Knowledge Check / Quiz: <b>${p.quiz!==null?"Submitted ✓":"Pending"}</b></div><div class="task">Assignment: <b>${st[3]?"Submitted ✓":"Pending"}</b></div><div class="task">Post-Class Reflection: <b>${p.reflection?"Completed ✓":"Pending"}</b></div><div class="success">${currentWeek<=3?"Weekly completion is based on the original 8-activity structure.":"From Week 4 onward, weekly completion uses 5 student-facing items only: Guided Reading, Lecture Viewed, Pre-Class Reflection, Knowledge Check, and Post-Class Reflection. In-class activities are teaching-only and are not assessed."}</div></div></div>`
+   weekBody.innerHTML=`${scheduleCard(currentWeek)}${currentWeek===1?assessmentSchemeCard():""}${currentWeek===ASSESSMENT_SCHEME.finalAssignmentWeek?finalAssignmentCard():""}<div class="layout"><div class="card"><h3>Learning Outcomes</h3><ol>${d.objectives.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol></div><div class="card"><h3>Weekly Activities</h3>
+<div class="task">Pre-Class Reflection: <b>${p.preClassReflection?"Completed ✓":"Pending"}</b></div>
+<div class="task">Post-Class Reflection: <b>${p.reflection?"Completed ✓":"Pending"}</b></div>
+${currentWeek===ASSESSMENT_SCHEME.midtermWeek?`<div class="task">Mid-Term Exam (12%): <b>${p.quiz!==null?"Completed ✓":"Pending"}</b></div>`:""}
+${currentWeek===ASSESSMENT_SCHEME.finalAssignmentWeek?`<div class="task">Individual Final Assignment (20%): <b>${p.assignmentText||p.assignmentPdfUrl?"Submitted ✓":"Pending"}</b></div>`:""}
+<div class="success">Weekly recurring activities are limited to Pre-Class Reflection and Post-Class Reflection only.</div>
+</div></div></div>`
  }
  if(currentTab==="slides"){
    const pdf=`Week${currentWeek}_Lecture.pdf`,ppt=`Week${currentWeek}_Lecture.pptx`;
@@ -1657,21 +1695,20 @@ function renderWeekBody(){
  if(currentTab==="activity")weekBody.innerHTML=`<div class="card"><h3>In-Class Activity — Completed during class</h3><div class="notice"><b>In-class only:</b> Available only from 8:00 PM to 10:00 PM (Makkah time) on the scheduled lecture day.</div><p>${d.activity}</p><p class="muted">Complete and submit this activity during the live class only.</p><textarea id="activityText" placeholder="Write your activity response...">${p.activityText||""}</textarea><div class="file-actions"><button class="btn good" onclick="submitActivity()">Submit Activity</button></div>${reviewPanelStudent(p.reviews.activity)}</div>`;
  if(currentTab==="case")weekBody.innerHTML=`<div class="card"><h3>Mini Case / Application — Completed during class</h3><div class="notice"><b>In-class only:</b> Available only from 8:00 PM to 10:00 PM (Makkah time) on the scheduled lecture day.</div><h4>${d.caseTitle}</h4><p>${d.caseText}</p><ol>${d.caseQuestions.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol><p class="muted">Write your case analysis below. Your instructor can review it and return feedback.</p><textarea id="caseText" placeholder="Write your case analysis...">${p.caseText||""}</textarea><div class="file-actions"><button class="btn good" onclick="submitCase()">Submit Mini Case</button></div>${reviewPanelStudent(p.reviews.case)}</div>`;
  if(currentTab==="quiz")renderQuiz(d);
- if(currentTab==="assignment" && currentWeek>=4 && ![6,9,12,15].includes(currentWeek)){
-   currentTab="overview";
-   renderWeekTabs();
-   return renderWeekBody();
+ if(currentTab==="assignment"){
+   if(currentWeek!==ASSESSMENT_SCHEME.finalAssignmentWeek){
+     currentTab="overview";renderWeekTabs();return renderWeekBody();
+   }
+   weekBody.innerHTML=`${scheduleCard(currentWeek)}${finalAssignmentCard()}<div class="card"><h3>Submit Individual Final Assignment • 20%</h3>
+   <div class="${activityAvailability(currentWeek,"assignment").late?"notice":"success"}">${activityAvailability(currentWeek,"assignment").label}</div>
+   <p class="muted">Submit one individual assignment. You may write your answer below, upload a PDF, or submit both.</p>
+   <label><b>Written response</b></label>
+   <textarea id="assignmentText" placeholder="Write or paste your individual final assignment here...">${p.assignmentText||""}</textarea>
+   <div style="margin-top:14px"><label><b>PDF file</b></label><input id="assignmentPdf" type="file" accept="application/pdf,.pdf"></div>
+   ${p.assignmentPdfUrl?`<div class="success" style="margin-top:12px"><b>Uploaded PDF:</b> <a href="${p.assignmentPdfUrl}" target="_blank" rel="noopener">${p.assignmentPdfName||"Open PDF"}</a></div>`:""}
+   <div class="file-actions"><button id="assignmentSubmitBtn" class="btn good" onclick="submitAssignment()">Submit Individual Final Assignment</button></div>
+   <p id="assignmentMsg" class="muted"></p>${reviewPanelStudent(p.reviews.assignment)}</div>`;
  }
- if(currentTab==="assignment")weekBody.innerHTML=`<div class="card"><h3>Week ${currentWeek} Assignment</h3><p>${d.assignment}</p>
-<div class="${activityAvailability(currentWeek,"assignment").late?"notice":"success"}">${activityAvailability(currentWeek,"assignment").label}</div>
-<p class="muted">You may write your answer below, upload a PDF, or submit both. Maximum PDF size: 5 MB.</p>
-<label><b>Written response</b></label>
-<textarea id="assignmentText" placeholder="Write or paste your assignment here...">${p.assignmentText||""}</textarea>
-<div style="margin-top:14px"><label><b>PDF file</b></label><input id="assignmentPdf" type="file" accept="application/pdf,.pdf"></div>
-${p.assignmentPdfUrl?`<div class="success" style="margin-top:12px"><b>Uploaded PDF:</b> <a href="${p.assignmentPdfUrl}" target="_blank" rel="noopener">${p.assignmentPdfName||"Open PDF"}</a></div>`:""}
-<div class="file-actions"><button id="assignmentSubmitBtn" class="btn good" onclick="submitAssignment()">Submit Assignment</button></div>
-<p id="assignmentMsg" class="muted"></p>
-${reviewPanelStudent(p.reviews.assignment)}</div>`;
  if(currentTab==="reflection")weekBody.innerHTML=`<div class="card"><h3>Post-Class Reflection</h3><p>Write one concept you will apply in your work or quality practice, and explain how.</p><textarea id="reflectionText" placeholder="Your reflection...">${p.reflectionText||""}</textarea><div class="file-actions"><button class="btn good" onclick="saveReflection()">Save Reflection</button></div><p class="muted">${p.reflection?"Completed ✓":"Not yet completed"}</p>${reviewPanelStudent(p.reviews.reflection)}</div>`
 }
 function reviewPanelStudent(r){if(!r)return"";const status=r.status||"Submitted",fb=(r.feedback||"").trim(),cls=status==="Reviewed"?"success":status==="Needs Revision"?"notice":"muted";return `<div class="${cls}" style="margin-top:12px"><b>Instructor review:</b> ${status}${fb?`<br><b>Feedback:</b> ${fb}`:""}</div>`}
@@ -1723,7 +1760,7 @@ async function submitAssignment(){
  }
 
  const btn=document.getElementById("assignmentSubmitBtn");
- btn.disabled=true;btn.textContent=file?"Uploading PDF...":"Submitting...";
+ btn.disabled=true;btn.textContent=file?"Uploading PDF...":"Submitting Mid-Term Exam...";
  assignmentMsg.className="muted";assignmentMsg.textContent=file?"Uploading your PDF...":"Saving your assignment...";
 
  try{
@@ -1769,10 +1806,10 @@ async function savePreClassReflection(){
 function renderQuiz(d){
  const p=student()?getProg(student().id,currentWeek):blankProg();
  if(currentWeek>=4 && p.quiz!==null){
-   weekBody.innerHTML=`${scheduleCard(currentWeek)}<div class="card quiz"><h3>Knowledge Check</h3><div class="success"><b>Quiz completed.</b><br>Score: ${p.quiz}%<br>Only one attempt is allowed.</div></div>`;
+   weekBody.innerHTML=`${scheduleCard(currentWeek)}<div class="card quiz"><h3>Mid-Term Exam • 12%</h3><div class="success"><b>Quiz completed.</b><br>Score: ${p.quiz}%<br>Only one attempt is allowed.</div></div>`;
    return;
  }
- weekBody.innerHTML=`${scheduleCard(currentWeek)}<div class="card quiz"><h3>Knowledge Check</h3><div class="notice">Answer all questions before submitting. The quiz counts as one completed activity; your score is recorded separately.</div>${d.quiz.map((q,qi)=>`<div class="topic"><p><b>${qi+1}. ${q[0]}</b></p>${q[1].map((a,ai)=>`<label><input style="width:auto" type="radio" name="q${qi}" value="${ai}"> ${a}</label>`).join("")}</div>`).join("")}<div class="file-actions"><button id="submitQuizBtn" class="btn" onclick="gradeCurrentQuiz()">Submit Quiz</button></div><p id="quizMsg" class="${p.quiz!==null?'success':'muted'}">${p.quiz!==null?`Previous score: ${p.quiz}%`:""}</p></div>`
+ weekBody.innerHTML=`${scheduleCard(currentWeek)}<div class="card quiz"><h3>Mid-Term Exam • 12%</h3><div class="notice">Answer all questions before submitting. This is the single Mid-Term Exam for the course. Your score contributes 12% to the final course grade.</div>${d.quiz.map((q,qi)=>`<div class="topic"><p><b>${qi+1}. ${q[0]}</b></p>${q[1].map((a,ai)=>`<label><input style="width:auto" type="radio" name="q${qi}" value="${ai}"> ${a}</label>`).join("")}</div>`).join("")}<div class="file-actions"><button id="submitQuizBtn" class="btn" onclick="gradeCurrentQuiz()">Submit Mid-Term Exam</button></div><p id="quizMsg" class="${p.quiz!==null?'success':'muted'}">${p.quiz!==null?`Previous score: ${p.quiz}%`:""}</p></div>`
 }
 async function gradeCurrentQuiz(){
  if(adminUnlocked){alert("Instructor mode is view-only for student submissions.");return}
@@ -1780,17 +1817,17 @@ async function gradeCurrentQuiz(){
  const av=activityAvailability(currentWeek,"quiz");
  if(!av.open){alert(av.label);renderWeekTabs();renderWeekBody();return}
  const existing=getProg(s.id,currentWeek);
- if(currentWeek>=4 && existing.quiz!==null){alert("Only one quiz attempt is allowed.");return}
+ if(currentWeek>=4 && existing.quiz!==null){alert("Only one Mid-Term Exam attempt is allowed.");return}
  const d=packs[currentWeek],answers=[];let firstMissing=-1;
  d.quiz.forEach((q,qi)=>{const x=document.querySelector(`input[name=q${qi}]:checked`);answers.push(x);if(!x&&firstMissing<0)firstMissing=qi});
  if(firstMissing>=0){quizMsg.className="error";quizMsg.textContent=`Please answer all questions before submitting. Question ${firstMissing+1} is unanswered.`;document.querySelectorAll(".topic")[firstMissing]?.scrollIntoView({behavior:"smooth",block:"center"});return}
  let correct=0;answers.forEach((x,qi)=>{if(+x.value===d.quiz[qi][2])correct++});
  const score=Math.round(correct/d.quiz.length*100),p=getProg(s.id,currentWeek),btn=document.getElementById("submitQuizBtn");
- btn.disabled=true;btn.textContent="Submitting...";quizMsg.className="muted";quizMsg.textContent="Saving your quiz...";
+ btn.disabled=true;btn.textContent="Submitting Mid-Term Exam...";quizMsg.className="muted";quizMsg.textContent="Saving your Mid-Term Exam...";
  p.quiz=score;db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();
  const ok=await pushProgress(s.id,currentWeek);
  if(ok){quizMsg.className="success";quizMsg.textContent=`Submitted and saved ✓ Score: ${score}% (${correct}/${d.quiz.length})`;btn.textContent="Submitted ✓"}
- else{quizMsg.className="error";quizMsg.textContent=`Score calculated: ${score}%, but central saving failed. Please check the connection and press Submit Quiz again.`;btn.disabled=false;btn.textContent="Retry Submit"}
+ else{quizMsg.className="error";quizMsg.textContent=`Score calculated: ${score}%, but central saving failed. Please check the connection and press Submit Mid-Term Exam again.`;btn.disabled=false;btn.textContent="Retry Submit"}
 }
 async function saveReflection(){
  if(adminUnlocked){alert("Instructor mode is view-only for student submissions.");return}const s=student();if(!s){alert("Please register first.");return}const av=activityAvailability(currentWeek,"reflection");if(!av.open){alert(av.label);renderWeekTabs();renderWeekBody();return}const text=(reflectionText.value||"").trim();if(!text){alert("Please write your reflection.");return}const p=getProg(s.id,currentWeek);p.reflection=true;p.reflectionText=text;setReviewSubmitted(p,"reflection");db.progress[pkey(s.id,currentWeek)]=p;save();renderAll();renderWeekBody();const ok=await pushProgress(s.id,currentWeek);if(!ok)alert("Reflection could not be saved centrally.")}
