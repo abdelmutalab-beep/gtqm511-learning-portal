@@ -85,7 +85,6 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 <button class="nav active" data-page="home">Home</button>
 <button class="nav" data-page="register">Register</button>
 <button class="nav" data-page="student">Student</button>
-<button class="nav" data-page="groups">Groups</button>
 <button class="nav" id="adminNav" data-page="instructor">Instructor</button>
 <button class="nav" id="lang">العربية</button>
 </nav></div></header>
@@ -124,29 +123,10 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 <div class="card stat"><span class="muted">Overall Course Progress</span><strong id="sProgress">0%</strong><div class="progress"><div id="studentOverallBar" class="bar" style="width:0%"></div></div></div>
 <div class="card stat"><span class="muted">Weeks 1–4 Progress</span><strong id="sFirst4">0%</strong></div>
 <div class="card stat"><span class="muted">Mid-Term Exam</span><strong id="sQuiz">—</strong></div>
-<div class="card stat"><span class="muted">Group</span><strong id="sGroup">—</strong></div>
+
 </div>
 <div class="card section"><div class="section-head"><h3 style="margin:0">Weeks 1–4 Reflection Progress</h3><span class="muted">Pre-Class + Post-Class Reflection only</span></div><div id="studentWeekDetails"></div></div>
-<div class="card section"><div class="section-head"><h3 style="margin:0">Group Progress</h3><span id="studentGroupLabel" class="muted">—</span></div>
-<div class="two"><div><p class="muted">Your Progress</p><div class="progress"><div id="studentGroupBar" class="bar" style="width:0%"></div></div><p><b id="studentGroupPct">0%</b></p></div>
-<div><p class="muted">Group Average</p><div class="progress"><div id="groupAverageBar" class="bar" style="width:0%"></div></div><p><b id="groupAveragePct">—</b></p></div></div>
-<p id="groupNote" class="muted" style="font-size:12px"></p></div>
 <div class="card section" style="overflow:auto"><h3>15-Week Course Progress</h3><table><thead><tr><th>Week</th><th>Topic</th><th>Status</th><th>Progress</th><th>Mid-Term</th><th>Post-Class Reflection</th></tr></thead><tbody id="studentRows"></tbody></table></div>
-</section>
-
-<section id="groups" class="page hidden">
-<div class="section-head"><h2>Group Dashboard</h2><span class="muted">Based on centrally loaded data</span></div>
-<div id="groupCards" class="grid"></div>
-
-<div id="studentGroupWorkPanel" class="card section hidden">
-  <div class="section-head">
-    <div><h3 style="margin:0">Group Work</h3><span id="groupWorkIdentity" class="muted">Sign in as a student to view group work.</span></div>
-    <button class="btn alt" onclick="loadMyGroupWork()">Refresh Group Work</button>
-  </div>
-  <div id="groupWorkBody" class="muted">No group data loaded.</div>
-</div>
-
-<div class="card section" style="overflow:auto"><h3>Group Membership</h3><table><thead><tr><th>Group</th><th>Students</th><th>Average Progress</th><th>Quiz Average</th></tr></thead><tbody id="groupRows"></tbody></table></div>
 </section>
 
 <section id="instructor" class="page hidden">
@@ -154,32 +134,12 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 <button class="btn alt" onclick="refreshInstructor()">Refresh Data</button></div>
 <div class="grid">
 <div class="card stat"><span class="muted">Registered Students</span><strong id="iStudents">0</strong></div>
-<div class="card stat"><span class="muted">Groups</span><strong id="iGroups">0</strong></div>
+
 <div class="card stat"><span class="muted">Active Students Avg.</span><strong id="iCompletion">0%</strong></div>
 <div class="card stat"><span class="muted">At-Risk Students</span><strong id="iRisk">0</strong></div>
 </div>
 <div class="section card" style="overflow:auto"><h3>Student Tracking</h3>
-<table><thead><tr><th>Name</th><th>ID</th><th>Group</th><th>W1</th><th>W2</th><th>W3</th><th>W4</th><th>W1–4 Avg.</th><th>Risk</th><th>Action</th></tr></thead><tbody id="rosterRows"></tbody></table></div>
-
-<div class="section card">
-  <div class="section-head">
-    <div><h3 style="margin:0">Group Leaders</h3><span class="muted">Only the assigned leader can submit group work.</span></div>
-  </div>
-  <div id="groupLeaderManager" class="grid"></div>
-</div>
-
-<div class="section card hidden">
-  <div class="section-head">
-    <div><h3 style="margin:0">Group Work Review</h3><span class="muted">Leader submits once; members confirm participation; instructor reviews once. Result, feedback and participation adjustment are visible to every member.</span></div>
-  </div>
-  <div style="overflow:auto">
-    <table>
-      <thead><tr><th>Group</th><th>Week</th><th>Leader</th><th>Status</th><th>Score</th><th>Participation</th><th>Action</th></tr></thead>
-      <tbody id="groupWorkReviewRows"></tbody>
-    </table>
-  </div>
-  <div id="groupReviewWorkspace" class="section"></div>
-</div>
+<table><thead><tr><th>Name</th><th>ID</th><th>W1</th><th>W2</th><th>W3</th><th>W4</th><th>W1–4 Avg.</th><th>Risk</th><th>Action</th></tr></thead><tbody id="rosterRows"></tbody></table></div>
 
 <div class="section card">
   <div class="section-head">
@@ -197,7 +157,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
   </div>
   <div style="overflow:auto">
     <table>
-      <thead><tr><th>Student</th><th>ID</th><th>Group</th><th>Current Page</th><th>Last Seen</th><th>Status</th></tr></thead>
+      <thead><tr><th>Student</th><th>ID</th><th>Current Page</th><th>Last Seen</th><th>Status</th></tr></thead>
       <tbody id="liveRows"></tbody>
     </table>
   </div>
@@ -216,7 +176,7 @@ footer{max-width:1250px;margin:28px auto;padding:0 16px 25px;color:var(--muted);
 </section>
 </main>
 
-<footer>G TQM 511 Learning Portal • v46 • Reflections + Mid-Term + One Individual Final Assignment</footer>
+<footer>G TQM 511 Learning Portal • v47 • Assessment Scheme on Every Week + Group System Removed</footer>
 
 <script>
 const course=[
@@ -310,7 +270,7 @@ const FINAL_ASSIGNMENT={
 
 function assessmentSchemeCard(){
   return `<div class="card" style="margin-bottom:14px">
-    <div class="section-head"><h3 style="margin:0">Course Assessment Scheme</h3><span class="pill">100%</span></div>
+    <div class="section-head"><h3 style="margin:0">Course Assessment Scheme</h3><span class="pill">Applies to all weeks</span></div>
     <div class="grid">
       <div class="card stat"><span class="muted">Pre + Post Reflections</span><strong>8%</strong></div>
       <div class="card stat"><span class="muted">Mid-Term Exam</span><strong>12%</strong></div>
@@ -543,7 +503,6 @@ function applyProgressRows(rows){
 function currentPageLabel(){
  if(currentPageId==="week") return `Week ${currentWeek} • ${currentTab}`;
  if(currentPageId==="student") return "Student Progress";
- if(currentPageId==="groups") return "Groups";
  if(currentPageId==="register") return "Register";
  if(currentPageId==="instructor") return "Instructor";
  return "Home";
@@ -587,7 +546,7 @@ function renderLiveActivity(){
    return `<tr>
      <td>${escapeHtml(x.name||"—")}</td>
      <td>${escapeHtml(x.studentId||"—")}</td>
-     <td>${escapeHtml(x.group||"—")}</td>
+     
      <td>${escapeHtml(x.currentPage||"—")}</td>
      <td>${formatLastSeen(x.lastSeen)}</td>
      <td>${statusHtml}</td>
@@ -599,7 +558,7 @@ async function loadStudentById(id){
  const sResp=await apiGet({action:"student",identifier:id});if(!sResp.student)return null;
  const pResp=await apiGet({action:"progress",studentId:String(sResp.student.id)});const s=sResp.student;
  db.students=[{name:s.name,id:String(s.id),email:s.email||"",group:s.group||""}];db.activeStudentId=String(s.id);
- if(s.group&&!db.groups.includes(s.group))db.groups.push(s.group);applyProgressRows(pResp.progress||[]);save();renderAll();startHeartbeat();loadMyGroupWork();return s
+ applyProgressRows(pResp.progress||[]);save();renderAll();startHeartbeat();return s
 }
 async function pushProgress(id,w){
  const q=getProg(id,w),st=getTaskStates(q);setSaveStatus("Saving...",true);
@@ -624,7 +583,7 @@ async function showPage(id){
  if(id==="instructor"&&!adminUnlocked){await unlockInstructor();return}
  document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));document.getElementById(id).classList.remove("hidden");
  document.querySelectorAll(".nav[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===id));
- if(id==="student")renderStudent();if(id==="groups"){renderGroups();loadMyGroupWork();}if(id==="instructor")renderInstructor();window.scrollTo({top:0,behavior:"smooth"})
+ if(id==="student")renderStudent();if(id==="instructor")renderInstructor();window.scrollTo({top:0,behavior:"smooth"})
 }
 document.querySelectorAll(".nav[data-page]").forEach(b=>{
  if(b.id==="adminNav") b.onclick=()=>unlockInstructor();
@@ -678,7 +637,7 @@ async function refreshStudentProgress(){
 }
 
 function renderStudent(){
- const s=student();studentName.textContent=s?`${s.name} • ${s.id}`:"No student registered";sGroup.textContent=s?(s.group||"—"):"—";studentGroupLabel.textContent=s?(s.group||"—"):"—";
+ const s=student();studentName.textContent=s?`${s.name} • ${s.id}`:"No student registered";
  if(!s){sProgress.textContent=sFirst4.textContent=sQuiz.textContent="0%";studentOverallBar.style.width=studentGroupBar.style.width="0%";studentGroupPct.textContent="0%";studentWeekDetails.innerHTML=studentRows.innerHTML="";return}
  let sum=0,first4=0,rows="";
  const midterm=getProg(s.id,ASSESSMENT_SCHEME.midtermWeek);
@@ -690,7 +649,7 @@ function renderStudent(){
  const overallPctVal=Math.round(sum/15),first4avg=Math.round(first4/4);
  sProgress.textContent=overallPctVal+"%";sFirst4.textContent=first4avg+"%";sQuiz.textContent=midterm.quiz!==null?midterm.quiz+"%":"—";
  studentOverallBar.style.width=studentGroupBar.style.width=overallPctVal+"%";studentGroupPct.textContent=overallPctVal+"%";studentRows.innerHTML=rows;
- studentWeekDetails.innerHTML=[1,2,3,4].map(w=>detailWeek(s.id,w)).join("");calculateStudentGroupAverage(s)
+ studentWeekDetails.innerHTML=[1,2,3,4].map(w=>detailWeek(s.id,w)).join("")
 }
 function activityBox(name,done,text){return `<div class="student-activity"><b>${name}</b><div class="${done?'activity-done':'activity-pending'}">${done?(text||"Completed ✓"):"Pending"}</div></div>`}
 function detailWeek(id,w){
@@ -1047,10 +1006,6 @@ async function unlockInstructor(){
     }));
     applyProgressRows(snap.progress||[]);
     liveActivity=Array.isArray(snap.activity)?snap.activity:[];
-    allGroupLeaders=Array.isArray(snap.groupLeaders)?snap.groupLeaders:[];
-    allGroupWork=Array.isArray(snap.groupWork)?snap.groupWork:[];
-    allGroupConfirmations=Array.isArray(snap.groupConfirmations)?snap.groupConfirmations:[];
-    allGroupHistory=Array.isArray(snap.groupHistory)?snap.groupHistory:[];
 
     save();
 
@@ -1175,8 +1130,6 @@ function renderInstructor(){
 
  // Render the core progress table FIRST so optional dashboard panels can never hide student progress.
  iStudents.textContent=(db.students||[]).length;
- const groups=[...new Set((db.students||[]).map(s=>s.group).filter(Boolean))];
- iGroups.textContent=groups.length;
 
  const active=(db.students||[]).filter(s=>studentStarted(s.id));
  const vals=active.map(s=>studentFirst4Average(s.id));
@@ -1187,7 +1140,7 @@ function renderInstructor(){
  rosterRows.innerHTML=(db.students||[]).length ? (db.students||[]).map(s=>{
    const av=studentFirst4Average(s.id),status=studentRiskStatus(s.id);
    return `<tr>
-     <td>${escapeHtml(s.name)}</td><td>${escapeHtml(s.id)}</td><td>${escapeHtml(s.group||"—")}</td>
+     <td>${escapeHtml(s.name)}</td><td>${escapeHtml(s.id)}</td>
      <td>${weekPct(s.id,1)}%</td><td>${weekPct(s.id,2)}%</td><td>${weekPct(s.id,3)}%</td><td>${weekPct(s.id,4)}%</td>
      <td>${studentStarted(s.id)?av+"%":"—"}</td><td>${escapeHtml(status)}</td>
      <td><div class="file-actions" style="margin:0">
@@ -1203,8 +1156,6 @@ function renderInstructor(){
    try{ if(typeof fn==="function")fn(); }
    catch(e){ console.error(name+" failed:",e); }
  };
- safe("Group leader manager",typeof renderGroupLeaderManager==="function"?renderGroupLeaderManager:null);
- safe("Group work review",typeof renderGroupWorkReview==="function"?renderGroupWorkReview:null);
  safe("Live activity",typeof renderLiveActivity==="function"?renderLiveActivity:null);
  safe("Pending reviews",typeof renderPendingReviews==="function"?renderPendingReviews:null);
 }
@@ -1646,7 +1597,6 @@ function initAccess(){
 function renderAll(){
  try{renderWeeks();}catch(e){console.error("renderWeeks failed:",e);}
  try{renderStudent();}catch(e){console.error("renderStudent failed:",e);}
- try{if(typeof renderGroups==="function")renderGroups();}catch(e){console.error("renderGroups failed:",e);}
  try{if(adminUnlocked && typeof renderInstructor==="function")renderInstructor();}catch(e){console.error("renderInstructor failed:",e);}
 }
 
@@ -1673,12 +1623,12 @@ function renderWeekBody(){
  const av=activityAvailability(currentWeek,currentTab);
  if(!adminUnlocked && !av.open && currentTab!=="overview"){lockedCard(currentTab,av);return}
  if(!d){
-   weekBody.innerHTML=`${scheduleCard(currentWeek)}${currentWeek===1?assessmentSchemeCard():""}${currentWeek===ASSESSMENT_SCHEME.finalAssignmentWeek?finalAssignmentCard():""}<div class="card"><h3>${course[currentWeek-1][0]}</h3><p>${course[currentWeek-1][1]}</p><div class="notice">Detailed weekly learning content for this week will be added progressively. The approved Major Assignment roadmap is already active.</div></div>`;
+   weekBody.innerHTML=`${scheduleCard(currentWeek)}${assessmentSchemeCard()}${currentWeek===ASSESSMENT_SCHEME.finalAssignmentWeek?finalAssignmentCard():""}<div class="card"><h3>${course[currentWeek-1][0]}</h3><p>${course[currentWeek-1][1]}</p><div class="notice">Detailed weekly learning content for this week will be added progressively. The approved Major Assignment roadmap is already active.</div></div>`;
    return
  }
  if(currentTab==="overview"){
    const st=getTaskStates(p);
-   weekBody.innerHTML=`${scheduleCard(currentWeek)}${currentWeek===1?assessmentSchemeCard():""}${currentWeek===ASSESSMENT_SCHEME.finalAssignmentWeek?finalAssignmentCard():""}<div class="layout"><div class="card"><h3>Learning Outcomes</h3><ol>${d.objectives.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol></div><div class="card"><h3>Weekly Activities</h3>
+   weekBody.innerHTML=`${scheduleCard(currentWeek)}${assessmentSchemeCard()}${currentWeek===ASSESSMENT_SCHEME.finalAssignmentWeek?finalAssignmentCard():""}<div class="layout"><div class="card"><h3>Learning Outcomes</h3><ol>${d.objectives.map(x=>`<li style="margin:8px 0">${x}</li>`).join("")}</ol></div><div class="card"><h3>Weekly Activities</h3>
 <div class="task">Pre-Class Reflection: <b>${p.preClassReflection?"Completed ✓":"Pending"}</b></div>
 <div class="task">Post-Class Reflection: <b>${p.reflection?"Completed ✓":"Pending"}</b></div>
 ${currentWeek===ASSESSMENT_SCHEME.midtermWeek?`<div class="task">Mid-Term Exam (12%): <b>${p.quiz!==null?"Completed ✓":"Pending"}</b></div>`:""}
