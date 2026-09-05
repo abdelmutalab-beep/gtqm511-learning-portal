@@ -76,16 +76,19 @@ try{
   if(expanded)expanded.textContent='Weeks 1–5 expanded';
 }catch(e){}
 
-// Use the HTML lecture deck for Week 5 because it is optimized for the online portal.
+// Use the reviewed PDF and PowerPoint files for Week 5.
 const __renderWeekBodyBase=renderWeekBody;
 renderWeekBody=function(){
   if(currentWeek===5 && currentTab==='slides'){
     const av=activityAvailability(currentWeek,currentTab);
     if(!adminUnlocked && !av.open){lockedCard(currentTab,av);return;}
     weekBody.innerHTML=`<div class="card"><h3>Week 5 Lecture • Personality and Values</h3>
-      <div class="file-actions"><a class="btn" href="Week5_Lecture.html" target="_blank" onclick="markLectureViewed()">Open Lecture</a></div>
-      <iframe class="slide-frame" src="Week5_Lecture.html" onload="markLectureViewed()"></iframe>
-      <p class="muted">Primary source: Robbins & Judge, Organizational Behavior, Updated 18th ed., Global Edition, Chapter 4.</p></div>`;
+      <div class="file-actions">
+        <a class="btn" href="Week5_Lecture.pdf" target="_blank" onclick="markLectureViewed()">Open PDF</a>
+        <a class="btn alt" href="Week5_Lecture.pptx" target="_blank" onclick="markLectureViewed()">Open PowerPoint</a>
+      </div>
+      <iframe class="slide-frame" src="Week5_Lecture.pdf#view=FitH" onload="markLectureViewed()"></iframe>
+      <p class="muted">Reviewed lecture files: PDF and editable PowerPoint.</p></div>`;
     return;
   }
   return __renderWeekBodyBase();
