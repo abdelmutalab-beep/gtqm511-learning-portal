@@ -3,10 +3,10 @@
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>G TQM 511 Learning Portal</title></head>
 <body style="font-family:Arial,sans-serif;padding:24px">Loading G TQM 511 Learning Portal...
 <script>
-fetch('index-base.html?v=20260905w5',{cache:'no-store'})
+fetch('index-base.html?v=20260905w5b',{cache:'no-store'})
  .then(r=>{if(!r.ok)throw new Error('Could not load portal base');return r.text()})
  .then(html=>{
-   const patch='<script src="week5-patch.js?v=20260905w5"><\/script>';
+   const patch='<script src="week5-patch.js?v=20260905w5b"><\/script>';
    html=html.replace('</body>',patch+'</body>');
    document.open();document.write(html);document.close();
  })
