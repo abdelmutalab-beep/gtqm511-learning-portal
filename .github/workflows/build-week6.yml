@@ -1,0 +1,46 @@
+name: Build Week 6 lecture files
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'week6-generator.js'
+      - '.github/workflows/build-week6.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: |
+          npm install pptxgenjs
+          sudo apt-get update
+          sudo apt-get install -y libreoffice unzip
+      - name: Extract university logo from Week 5 deck
+        run: |
+          rm -rf /tmp/w5media && mkdir -p /tmp/w5media
+          unzip -j Week5_Lecture.pptx 'ppt/media/*' -d /tmp/w5media
+          cp "$(find /tmp/w5media -type f | head -1)" week5_logo.png
+      - name: Generate PowerPoint
+        run: node week6-generator.js
+      - name: Generate PDF
+        run: |
+          mkdir -p /tmp/w6pdf
+          libreoffice --headless --convert-to pdf --outdir /tmp/w6pdf Week6_Lecture.pptx
+          cp /tmp/w6pdf/Week6_Lecture.pdf ./Week6_Lecture.pdf
+      - name: Commit generated lecture files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Week6_Lecture.pptx Week6_Lecture.pdf
+          if git diff --cached --quiet; then
+            echo "No generated changes"
+          else
+            git commit -m "Add Week 6 lecture PowerPoint and PDF"
+            git push
+          fi
