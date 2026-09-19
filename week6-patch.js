@@ -75,12 +75,12 @@ reviewGuides[6]={
   }
 };
 
-// Week 6 is delivered on Saturday, 19 September 2026, 3:30–6:30 PM Makkah time.
+// Week 6 is postponed to Saturday, 26 September 2026, 3:30–6:30 PM Makkah time.
 // From Week 6 onward, the live teaching slot is 3 hours. Weeks 4–5 retain their historical schedule.
 const _week6OriginalWeekSchedule=weekSchedule;
 weekSchedule=function(w){
   if(w<6) return _week6OriginalWeekSchedule(w);
-  const lecture=addDays(new Date("2026-09-19T15:30:00+03:00"),(w-6)*7);
+  const lecture=addDays(new Date("2026-09-26T15:30:00+03:00"),(w-6)*7);
 
   const guidedOpen=addDays(lecture,-3);
   guidedOpen.setUTCHours(17,0,0,0); // Wednesday 8:00 PM Makkah
