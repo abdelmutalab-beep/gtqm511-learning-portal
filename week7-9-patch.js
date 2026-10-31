@@ -133,7 +133,7 @@
 // guided reading opens Wednesday 20:00, pre-class opens Friday 20:00 and closes at
 // Saturday 15:30, slides open Saturday 14:00; post-class closes Tuesday 23:59.
 // Do not reschedule historic lectures or change assessments and student submissions.
-// Late pre-class reopening for Weeks 7, 8 and 9 is an EXCEPTION, not the regular deadline.
+// Late pre-class and post-class reopening for Weeks 7, 8 and 9 is an EXCEPTION, not the regular deadline.
 (function(){
   const latePreClassWeeks=new Set([7,8,9]);
   const policyAvailability=activityAvailability;
@@ -142,9 +142,9 @@
       return {open:true,reopened:true,
         label:"Reopened for late Pre-Class Reflection submissions • Weeks 7–9 • No new close date set"};
     }
-    if(!adminUnlocked && Number(w)===9 && tab==="reflection"){
+    if(!adminUnlocked && latePreClassWeeks.has(Number(w)) && tab==="reflection"){
       return {open:true,reopened:true,
-        label:"Reopened for late Post-Class Reflection submissions • Week 9 • No new close date set"};
+        label:"Reopened for late Post-Class Reflection submissions • Weeks 7–9 • No new close date set"};
     }
     return policyAvailability(w,tab);
   };
@@ -171,7 +171,7 @@
 
     html=html.replace(previousPre,revisedPre);
 
-    if(number===9){
+    {
       const priorPost='<div><b>Post-Class Reflection</b><p class="muted">Opens: '+
         fmtRiyadh(s.postclassOpen)+'<br>Closes at the end of Tuesday: '+
         fmtRiyadh(s.postclassClose)+'</p></div>';
@@ -181,6 +181,9 @@
         '<br><b style="color:#14805e">Late submissions: OPEN NOW</b>'+
         '<br>New closing date: not yet specified by instructor.</p></div>';
       html=html.replace(priorPost,reopenedPost);
+    }
+
+    if(number===9){
       const otherActivities='<div class="card" style="margin-top:10px">'+
         '<h3>Week 9 • Approved activity schedule</h3>'+
         '<p class="muted">The historical lecture timetable is preserved. '+ 
