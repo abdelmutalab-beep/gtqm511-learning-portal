@@ -126,3 +126,34 @@
     if(!adminUnlocked&&avail.open&&student())markLectureViewed();
   };
 })();
+
+
+// Reopen Week 9 Pre-Class Reflection, instructor-authorized late submission window
+// Original Week 9 lecture date: 17 October 2026 at 3:30 PM Makkah.
+// Preserve all historical dates, student progress and other week deadlines.
+(function(){
+  const previousAvailability = activityAvailability;
+  activityAvailability = function(w,tab){
+    if(Number(w)===9 && tab==="preclass" && !adminUnlocked){
+      return {open:true,label:"Reopened for student submissions • Week 9 • No new closing date set",reopened:true};
+    }
+    return previousAvailability(w,tab);
+  };
+
+  const previousScheduleCard = scheduleCard;
+  scheduleCard = function(w){
+    const html=previousScheduleCard(w);
+    if(Number(w)!==9) return html;
+    const s=weekSchedule(w);
+    const oldSection='<div><b>Pre-Class Reflection</b><p class="muted">Opens: '+fmtRiyadh(s.preclassOpen)+'<br>Final reminder window: '+fmtRiyadh(s.preclassReminder)+'<br>Closes exactly at lecture start: '+fmtRiyadh(s.preclassClose)+'</p></div>';
+    const newSection='<div><b>Pre-Class Reflection — REOPENED</b><p class="muted">Open for student submissions now.<br>The earlier deadline of 17 Oct 2026 no longer applies.<br>No new deadline has been set.</p></div>';
+    return html.replace(oldSection,newSection);
+  };
+
+  try {
+    if(currentPageId==="week" && Number(currentWeek)===9){
+      renderWeekTabs();
+      renderWeekBody();
+    }
+  }catch(e){console.warn("Week 9 reopened window: UI refresh pending",e);}
+})();
