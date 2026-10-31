@@ -128,32 +128,75 @@
 })();
 
 
-// Reopen Week 9 Pre-Class Reflection, instructor-authorized late submission window
-// Original Week 9 lecture date: 17 October 2026 at 3:30 PM Makkah.
-// Preserve all historical dates, student progress and other week deadlines.
+// Weeks 7–9: restore policy-aligned calendar display and open late pre-class reflections.
+// Policy: from Week 6, Saturday live teaching 15:30–18:30 Makkah;
+// guided reading opens Wednesday 20:00, pre-class opens Friday 20:00 and closes at
+// Saturday 15:30, slides open Saturday 14:00; post-class closes Tuesday 23:59.
+// Do not reschedule historic lectures or change assessments and student submissions.
+// Late pre-class reopening for Weeks 7, 8 and 9 is an EXCEPTION, not the regular deadline.
 (function(){
-  const previousAvailability = activityAvailability;
-  activityAvailability = function(w,tab){
-    if(Number(w)===9 && tab==="preclass" && !adminUnlocked){
-      return {open:true,label:"Reopened for student submissions • Week 9 • No new closing date set",reopened:true};
+  const latePreClassWeeks=new Set([7,8,9]);
+  const policyAvailability=activityAvailability;
+  activityAvailability=function(w,tab){
+    if(!adminUnlocked && tab==="preclass" && latePreClassWeeks.has(Number(w))){
+      return {open:true,reopened:true,
+        label:"Reopened for late Pre-Class Reflection submissions • Weeks 7–9 • No new close date set"};
     }
-    return previousAvailability(w,tab);
+    return policyAvailability(w,tab);
   };
 
-  const previousScheduleCard = scheduleCard;
-  scheduleCard = function(w){
-    const html=previousScheduleCard(w);
-    if(Number(w)!==9) return html;
-    const s=weekSchedule(w);
-    const oldSection='<div><b>Pre-Class Reflection</b><p class="muted">Opens: '+fmtRiyadh(s.preclassOpen)+'<br>Final reminder window: '+fmtRiyadh(s.preclassReminder)+'<br>Closes exactly at lecture start: '+fmtRiyadh(s.preclassClose)+'</p></div>';
-    const newSection='<div><b>Pre-Class Reflection — REOPENED</b><p class="muted">Open for student submissions now.<br>The earlier deadline of 17 Oct 2026 no longer applies.<br>No new deadline has been set.</p></div>';
-    return html.replace(oldSection,newSection);
+  const originalScheduleCard=scheduleCard;
+  scheduleCard=function(w){
+    const number=Number(w);
+    let html=originalScheduleCard(w);
+    if(!latePreClassWeeks.has(number))return html;
+
+    const s=weekSchedule(number);
+    const previousPre='<div><b>Pre-Class Reflection</b><p class="muted">Opens: '+
+      fmtRiyadh(s.preclassOpen)+
+      '<br>Final reminder window: '+fmtRiyadh(s.preclassReminder)+
+      '<br>Closes exactly at lecture start: '+fmtRiyadh(s.preclassClose)+
+      '</p></div>';
+
+    const revisedPre='<div><b>Pre-Class Reflection • REOPENED</b>'+
+      '<p class="muted">Original window: '+fmtRiyadh(s.preclassOpen)+
+      ' → '+fmtRiyadh(s.preclassClose)+
+      '<br>Original final reminder: '+fmtRiyadh(s.preclassReminder)+
+      '<br><b style="color:#14805e">Late submissions: OPEN NOW</b>'+
+      '<br>Late-submission closing date: not yet specified by instructor.</p></div>';
+
+    html=html.replace(previousPre,revisedPre);
+
+    if(number===9){
+      const otherActivities='<div class="card" style="margin-top:10px">'+
+        '<h3>Week 9 • Approved activity schedule</h3>'+
+        '<p class="muted">The historical lecture timetable is preserved. '+ 
+        'Late Pre-Class Reflection reopening is an instructor-authorized exception.</p>'+
+        '<div class="two">'+
+        '<div><b>Guided Reading / Core Content</b><p class="muted">Available to students (original opening: '+
+          fmtRiyadh(s.guidedOpen)+').</p></div>'+
+        '<div><b>Lecture Slides</b><p class="muted">Available from '+
+          fmtRiyadh(s.slidesOpen)+'.</p></div>'+
+        '<div><b>Live lecture</b><p class="muted">'+
+          fmtRiyadh(s.lectureOpen)+' → '+fmtRiyadh(s.lectureClose)+'.</p></div>'+
+        '<div><b>In-Class Activity & Mini Case</b><p class="muted">'+
+          fmtRiyadh(s.lectureOpen)+' → '+fmtRiyadh(s.lectureClose)+
+          '. Instructor-led during class; not a separate student homework/submission.</p></div>'+
+        '<div><b>Post-Class Reflection</b><p class="muted">Original window: '+
+          fmtRiyadh(s.postclassOpen)+' → '+fmtRiyadh(s.postclassClose)+
+          '. Closed as originally scheduled; no extension has been set.</p></div>'+
+        '<div><b>Week 9 project milestone</b><p class="muted">'+
+          'Develop the analysis using workplace evidence and academic literature. '+ 
+          'This is project guidance; final individual submission is in Week 15 only.</p></div>'+
+        '</div></div>';
+      html+=otherActivities;
+    }
+    return html;
   };
 
-  try {
-    if(currentPageId==="week" && Number(currentWeek)===9){
-      renderWeekTabs();
-      renderWeekBody();
+  try{
+    if(currentPageId==="week" && latePreClassWeeks.has(Number(currentWeek))){
+      renderWeekTabs();renderWeekBody();
     }
-  }catch(e){console.warn("Week 9 reopened window: UI refresh pending",e);}
+  }catch(e){console.warn("Updated deadline display will appear on page reload",e);}
 })();
