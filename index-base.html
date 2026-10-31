@@ -445,6 +445,11 @@ function activityAvailability(w,tab){
  // all weeks and activities remain fully accessible regardless of schedule.
  if(adminUnlocked)return {open:true,label:"Instructor access • no time restriction",instructor:true};
 
+ // Instructor-approved late resubmission window for Weeks 7–9 (both reflections).
+ // Applied during rendering and at the student submission validation step.
+ if([7,8,9].includes(Number(w)) && ["preclass","reflection"].includes(tab)){
+   return {open:true,reopened:true,label:"REOPENED • Students can submit • No new deadline set"};
+ }
  if(w<4)return {open:true,label:"Available"};
  const s=weekSchedule(w),now=nowMs();
 
@@ -520,9 +525,9 @@ function scheduleCard(w){
  return `<div class="card" style="margin-bottom:14px"><h3>Week ${w} Schedule • Makkah Time</h3>${accessNote}
  <div class="two">
   <div><b>Guided Reading / Core Content</b><p class="muted">Opens: ${fmtRiyadh(s.guidedOpen)}<br>Remains available after opening.</p></div>
-  <div><b>Pre-Class Reflection</b><p class="muted">Opens: ${fmtRiyadh(s.preclassOpen)}<br>Final reminder window: ${fmtRiyadh(s.preclassReminder)}<br>Closes exactly at lecture start: ${fmtRiyadh(s.preclassClose)}</p></div>
+  <div><b>Pre-Class Reflection</b><p class="muted">${[7,8,9].includes(w) ? '<b style="color:#14805e">REOPENED - submissions allowed now</b><br>No new deadline set. Original: '+fmtRiyadh(s.preclassOpen)+' to '+fmtRiyadh(s.preclassClose) : 'Opens: '+fmtRiyadh(s.preclassOpen)+'<br>Final reminder window: '+fmtRiyadh(s.preclassReminder)+'<br>Closes exactly at lecture start: '+fmtRiyadh(s.preclassClose)}</p></div>
   ${adminUnlocked?`<div><b>Instructor In-Class Activity</b><p class="muted">${fmtRiyadh(s.lecture)} → ${fmtRiyadh(s.lectureClose)}<br>Teaching activity only • not visible to students • not assessed.</p></div><div><b>Instructor Mini Case / Application</b><p class="muted">${fmtRiyadh(s.lecture)} → ${fmtRiyadh(s.lectureClose)}<br>Teaching activity only • not visible to students • not assessed.</p></div>`:""}
-  <div><b>Post-Class Reflection</b><p class="muted">Opens: ${fmtRiyadh(s.postclassOpen)}<br>Closes at the end of Tuesday: ${fmtRiyadh(s.postclassClose)}</p></div>
+  <div><b>Post-Class Reflection</b><p class="muted">${[7,8,9].includes(w) ? '<b style="color:#14805e">REOPENED - submissions allowed now</b><br>No new deadline set. Original: '+fmtRiyadh(s.postclassOpen)+' to '+fmtRiyadh(s.postclassClose) : 'Opens: '+fmtRiyadh(s.postclassOpen)+'<br>Closes at the end of Tuesday: '+fmtRiyadh(s.postclassClose)}</p></div>
   ${w===ASSESSMENT_SCHEME.midtermWeek?`<div><b>Mid-Term Exam • 12%</b><p class="muted">Saturday, 26 September 2026 • 8:00 PM (Makkah Time)<br>Duration: 60 minutes • one attempt</p></div>`:""}
   ${w===ASSESSMENT_SCHEME.finalAssignmentWeek?`<div><b>Individual Final Assignment • 20%</b><p class="muted">${FINAL_ASSIGNMENT.title}<br>Due: ${FINAL_ASSIGNMENT.deadline}</p></div>`:""}
  </div></div>`;
