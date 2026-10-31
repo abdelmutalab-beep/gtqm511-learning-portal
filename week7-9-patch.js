@@ -142,6 +142,10 @@
       return {open:true,reopened:true,
         label:"Reopened for late Pre-Class Reflection submissions • Weeks 7–9 • No new close date set"};
     }
+    if(!adminUnlocked && Number(w)===9 && tab==="reflection"){
+      return {open:true,reopened:true,
+        label:"Reopened for late Post-Class Reflection submissions • Week 9 • No new close date set"};
+    }
     return policyAvailability(w,tab);
   };
 
@@ -168,10 +172,19 @@
     html=html.replace(previousPre,revisedPre);
 
     if(number===9){
+      const priorPost='<div><b>Post-Class Reflection</b><p class="muted">Opens: '+
+        fmtRiyadh(s.postclassOpen)+'<br>Closes at the end of Tuesday: '+
+        fmtRiyadh(s.postclassClose)+'</p></div>';
+      const reopenedPost='<div><b>Post-Class Reflection • REOPENED</b>'+
+        '<p class="muted">Original window: '+fmtRiyadh(s.postclassOpen)+' → '+
+        fmtRiyadh(s.postclassClose)+
+        '<br><b style="color:#14805e">Late submissions: OPEN NOW</b>'+
+        '<br>New closing date: not yet specified by instructor.</p></div>';
+      html=html.replace(priorPost,reopenedPost);
       const otherActivities='<div class="card" style="margin-top:10px">'+
         '<h3>Week 9 • Approved activity schedule</h3>'+
         '<p class="muted">The historical lecture timetable is preserved. '+ 
-        'Late Pre-Class Reflection reopening is an instructor-authorized exception.</p>'+
+        'Late Pre-Class and Post-Class Reflection reopening is an instructor-authorized exception.</p>'+
         '<div class="two">'+
         '<div><b>Guided Reading / Core Content</b><p class="muted">Available to students (original opening: '+
           fmtRiyadh(s.guidedOpen)+').</p></div>'+
@@ -184,7 +197,7 @@
           '. Instructor-led during class; not a separate student homework/submission.</p></div>'+
         '<div><b>Post-Class Reflection</b><p class="muted">Original window: '+
           fmtRiyadh(s.postclassOpen)+' → '+fmtRiyadh(s.postclassClose)+
-          '. Closed as originally scheduled; no extension has been set.</p></div>'+
+          '. Late submissions: OPEN NOW; no new closing date set.</p></div>'+
         '<div><b>Week 9 project milestone</b><p class="muted">'+
           'Develop the analysis using workplace evidence and academic literature. '+ 
           'This is project guidance; final individual submission is in Week 15 only.</p></div>'+
