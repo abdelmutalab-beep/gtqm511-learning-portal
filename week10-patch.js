@@ -3,6 +3,21 @@
 // Independent practice quiz is formative/ungraded; pre/post reflection remains the only weekly recurring assessed work.
 (function(){
   const week=10;
+  // Week 10 lecture was rescheduled to Saturday 7 Nov 2026, 15:30–18:30 (Makkah).
+  // Change ONLY Week 10, preserving the approved activity intervals and policies.
+  const _week10PriorSchedule=weekSchedule;
+  weekSchedule=function(w){
+    const s=_week10PriorSchedule(w);
+    if(Number(w)!==10 || !s) return s;
+    const newLecture=new Date("2026-11-07T15:30:00+03:00");
+    const delta=newLecture.getTime()-s.lecture.getTime();
+    const shifted={...s};
+    for(const [key,value] of Object.entries(s)){
+      if(value instanceof Date) shifted[key]=new Date(value.getTime()+delta);
+    }
+    return shifted;
+  };
+
   packs[week]={
     objectives:[
       "Distinguish work groups from work teams by collective goals, positive synergy, complementary skills and mutual accountability.",
