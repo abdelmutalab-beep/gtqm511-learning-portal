@@ -385,7 +385,7 @@ function addDays(date,days){const d=new Date(date.getTime());d.setUTCDate(d.getU
 function addMinutes(date,mins){return new Date(date.getTime()+mins*60000)}
 function weekSchedule(w){
  if(w<4)return null;
- const lecture=addDays(new Date(WEEK4_LECTURE_ISO),(w-4)*7);
+ const lecture=Number(w)===10 ? new Date("2026-11-07T15:30:00+03:00") : addDays(new Date(WEEK4_LECTURE_ISO),(w-4)*7);
 
  // Content opens Wednesday 8:00 PM Makkah = 72 hours before lecture.
  const guidedOpen=addDays(lecture,-3);
@@ -405,10 +405,10 @@ function weekSchedule(w){
 
  // In-Class Activity / Mini Case are available only during the live lecture (8:00–10:00 PM Makkah).
  const lectureOpen=lecture;
- const lectureClose=addMinutes(lecture,120);
+ const lectureClose=addMinutes(lecture,Number(w)===10?180:120);
 
  // Post-class reflection opens at lecture end, Saturday 10:00 PM.
- const postclassOpen=addMinutes(lecture,120);
+ const postclassOpen=new Date(lectureClose.getTime());
 
  // Mid-Term Exam window (used only in Week 8) opens 10:05 PM for 30 minutes.
  const quizOpen=addMinutes(lecture,125);
