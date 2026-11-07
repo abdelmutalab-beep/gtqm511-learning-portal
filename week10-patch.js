@@ -42,8 +42,8 @@
       "What behavior or coordination risk might prevent success and how would you manage it?"
     ],
     quiz:[
-      ["A strong work team is defined most closely by:",["Shared goals, positive synergy and mutual accountability","Working in one room","Having the same department","Keeping tasks independent"],0],
-      ["What team type best fits a discharge process spanning pharmacy, ward, billing and transport?",["Single-unit problem-solving","Cross-functional","Only virtual","Informal friendship"],1],
+      ["Department heads meet monthly to share progress reports. Each head delivers results independently; there is no shared output. This is a:",["Work team","Work group","Self-managed team","Cross-functional team"],1],
+      ["A hospital must redesign discharge handoffs across ward, pharmacy, billing and transport. Which team structure is MOST appropriate?",["Single-unit problem-solving team","Single-unit self-managed team","Cross-functional team","Virtual team only"],2],
       ["Problem-solving teams typically:",["Discuss improvements and recommend changes","Have universal authority over policy","Always work remotely","Avoid performance indicators"],0],
       ["A self-managed work team normally:",["Coordinates much of its own work","Works without quality standards","Needs no communication","Has no shared goals"],0],
       ["Which is an example of team CONTEXT?",["Resources, leadership and trust","One individual's personality only","The oldest member's age","One job description only"],0],
@@ -155,8 +155,8 @@
       document.getElementById("wk10Check").onclick=()=>{
         let n=0,done=0;
         const explanations=[
-          "Work teams generate collective performance and share accountability.",
-          "The discharge process crosses departments, so a cross-functional arrangement is most suitable.",
+          "This is a work group: department heads exchange information while remaining responsible for independent outputs.",
+          "The discharge process crosses functional boundaries, so a cross-functional team is most suitable.",
           "Problem-solving teams may recommend improvements without automatically having full authority.",
           "Self-managed teams organize and coordinate a substantial part of their own work.",
           "Resources, leadership and trust are context conditions.",
