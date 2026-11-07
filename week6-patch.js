@@ -80,7 +80,9 @@ reviewGuides[6]={
 const _week6OriginalWeekSchedule=weekSchedule;
 weekSchedule=function(w){
   if(w<6) return _week6OriginalWeekSchedule(w);
-  const lecture=addDays(new Date("2026-09-26T15:30:00+03:00"),(w-6)*7);
+  const lecture=Number(w)===10
+    ? new Date("2026-11-07T15:30:00+03:00") // approved Week 10 revised date
+    : addDays(new Date("2026-09-26T15:30:00+03:00"),(w-6)*7);
 
   const guidedOpen=addDays(lecture,-3);
   guidedOpen.setUTCHours(17,0,0,0); // Wednesday 8:00 PM Makkah
