@@ -180,6 +180,7 @@
       return;
     }
     parentBody();
+    if((currentTab==='preclass'||currentTab==='reflection')&&!adminUnlocked&&!activityAvailability(week,currentTab).open)return;
     const p=student()?getProg(student().id,week):blankProg();
     if(currentTab==="overview"){
       const div=document.createElement("div");div.className="card";div.style.marginTop="14px";
