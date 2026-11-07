@@ -93,6 +93,7 @@
   ];
   const escapeHtml=(x)=>String(x).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const resources=()=>'<div class="file-actions" style="margin:12px 0">'+
+    '<a class="btn good" target="_blank" rel="noopener" href="week10-student-pack.html">Open Student Pack (No Drive Login)</a>'+
     '<a class="btn" target="_blank" rel="noopener" href="'+links.pdf+'">18-slide lecture PDF</a>'+
     '<a class="btn alt" target="_blank" rel="noopener" href="'+links.ppt+'">PowerPoint</a>'+
     '<a class="btn alt" target="_blank" rel="noopener" href="'+links.guide+'">Student Study Guide</a>'+
